@@ -15,3 +15,10 @@
 *.exe
 *.out
 *.app
+*.hex
+*.lst
+*.asm
+*.cod
+
+# Nano files
+*~
