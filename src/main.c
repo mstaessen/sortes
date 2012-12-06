@@ -8,4 +8,8 @@ void main() {
 	LCDInit();
 
 	LCD_show(0, "Hello, world!", 13);
+    
+    while(1) {
+        // NOP
+    }
 }
