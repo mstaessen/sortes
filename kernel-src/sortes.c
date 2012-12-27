@@ -68,6 +68,32 @@ void Button_setInterrupt(Button button, interruptFunction func)
     }
 }
 
+bool Button_hasInterrupt(Button button)
+{
+    switch (button) {
+        case BUTTON_ONE:
+            return buttonOneInterruptFunction != NULL;
+            break;
+        case BUTTON_TWO:
+            return buttonTwoInterruptFunction != NULL;
+            break;
+    }
+    return false;
+}
+
+interruptFunction Button_getInterrupt(Button button)
+{
+    switch (button) {
+        case BUTTON_ONE:
+            return buttonOneInterruptFunction;
+            break;
+        case BUTTON_TWO:
+            return buttonTwoInterruptFunction;
+            break;
+    }
+    return NULL;
+}
+
 void Button_clearInterrupt(Button button)
 {
     switch (button) {
@@ -146,7 +172,7 @@ void LCD_setLine(Line line, char *content)
     LCDUpdate();
 }
 
-void Timer_setInterval(time_t time, interruptFunction func)
+void Timer_setInterval(time_t timeout, time_t interval, interruptFunction func)
 {
     T0CONbits.T08BIT = 1;
     T0CONbits.T0CS = 0;
@@ -158,5 +184,10 @@ void Timer_setInterval(time_t time, interruptFunction func)
     
     // TODO configure timer for interrupt
     timerInterruptFunction = func;
+}
+
+void Timer_setTimeout(time_t time, interruptFunction func)
+{
+    
 }
 
