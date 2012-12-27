@@ -1,17 +1,19 @@
-#include "time_input.c"
+#include <stdlib.h>
+#include "time_input.h"
+#include "time.h"
 #include "sortes.h"
 
 interruptFunction btnOneInterrupt, btnTwoInterrupt;
 
 void storeInterrupts() {
-    Button_setActive(BUTTON_ONE);
+    Button_setActive(BUTTON_ONE, true);
     if (Button_hasInterrupt(BUTTON_ONE)) {
         btnOneInterrupt = Button_getInterrupt(BUTTON_ONE);
     } else {
         btnOneInterrupt = NULL;
     }
 
-    Button_setActive(BUTTON_TWO);
+    Button_setActive(BUTTON_TWO, true);
     if (Button_hasInterrupt(BUTTON_TWO)) {
         btnOneInterrupt = Button_getInterrupt(BUTTON_TWO);
     } else {
@@ -29,7 +31,7 @@ void restoreInterrupts() {
     }
 
     if (btnTwoInterrupt) {
-        Button_setInterrupt(BUTTON_Two, btnTwoInterrupt);
+        Button_setInterrupt(BUTTON_TWO, btnTwoInterrupt);
         btnTwoInterrupt = NULL;
     } else {
         Button_clearInterrupt(BUTTON_TWO);
@@ -39,9 +41,9 @@ void restoreInterrupts() {
 
 typedef enum {INPUT_HOURS, INPUT_MINUTES, INPUT_SECONDS} InputState;
 
-InputState state;
-Time time;
-bool done;
+static InputState state;
+static Time time;
+static bool done;
 
 void printTime() {
     outputTime(time);
@@ -53,7 +55,6 @@ void nextNumber() {
     else if (state == INPUT_MINUTES)
         state = INPUT_SECONDS;
     else {
-        state = NULL;
         done = true;
     }
 }
@@ -78,6 +79,7 @@ void setInterrupts() {
 Time inputTime(char *text) {
     time = createTime();
     done = false;
+    state = INPUT_HOURS;
     
     if (!time)
         return NULL;
@@ -96,9 +98,7 @@ Time inputTime(char *text) {
     // reset the interrupts
     restoreInterrupts();
     
-    Time retVal = time;
-    time = NULL;
-    return retVal;
+    return time;
 }
 
 void outputTime(Time t)

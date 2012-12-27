@@ -1,5 +1,6 @@
 #include "time_input.h"
 #include "sortes.h"
+#include <stdlib.h>
 
 Time currentTime, alarmTime;
 
@@ -47,7 +48,7 @@ int main(void) {
     LCD_clear();
     
     wholeSecond = true;
-    Timer_setTimeout(500, 500, tick);
+    Timer_setInterval(500, 500, tick);
     
     while (true);
     

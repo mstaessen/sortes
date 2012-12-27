@@ -1,6 +1,8 @@
 #include "time.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
 
 struct TimeStruct {
     uint hours, minutes, seconds;
@@ -17,7 +19,7 @@ Time createTime() {
 }
 
 void Time_setSeconds(Time time, uint s) {
-    if (s >= 0 && s < 60)
+    if (s < 60)
         time->seconds = s;
 }
 
@@ -26,7 +28,7 @@ uint Time_getSeconds(Time time) {
 }
 
 void Time_setMinutes(Time time, uint m) {
-    if (m >= 0 && m < 60)
+    if (m < 60)
         time->minutes = m;
 }
 
@@ -35,7 +37,7 @@ uint Time_getMinutes(Time time) {
 }
 
 void Time_setHours(Time time, uint h) {
-    if (h >= 0 && h < 24)
+    if (h < 24)
         time->hours = h;
 }
 
@@ -60,7 +62,7 @@ void Time_addHour(Time time) {
 }
 
 void Time_tick(Time time) {
-    Time_addSecond(time)
+    Time_addSecond(time);
     if (time->seconds == 0) {
         Time_addMinute(time);
         if (time->minutes == 0) {
