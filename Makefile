@@ -25,20 +25,24 @@ APP_HEADERS=include/GenericTypeDefs.h \
 
 INCLUDES=-Iinclude -I/usr/local/share/sdcc/include/ -I/usr/local/share/sdcc/include/pic16
 
-main: init obj/main.o obj/lcd.o obj/incl/lcd.o
+main: init obj/program.o obj/incl/lcd.o obj/kernel/kernel.o
 	$(LD) $(LDFLAGS) obj/main.o obj/lcd.o obj/incl/lcd.o 
 
 init:
-	mkdir -p obj/incl
+	mkdir -p obj/incl obj/kernel
 
 obj/%.o: src/%.c
 	@echo "Building object $@"
-	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
+	$(CC) $(CFLAGS) $(INCLUDES) -Ikernel-src/ -o $@ $<
 
 obj/incl/lcd.o : lib/LCDBlocking.c
 	@echo "Building object $@"
 	$(CC) -c -mpic16 -p18f97j60  -o $@ \
               -L/usr/local/lib/pic16  $<
+
+obj/kernel/%.o: kernel-src/%.c
+	@echo "Building kernel object $@"
+	$(CC) $(CFLAGS) $(INCLUDE) -o $@ $<
 
 clean : 
 	$(RM) -rf obj main.hex main.cod main.lst
