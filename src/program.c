@@ -30,7 +30,7 @@ void tick() {
 
 int main(void) {
     LCD_init();
-    Led_init();
+    Led_init(LED_ONE);
     
     currentTime = inputTime("Set cur time:");
     if (currentTime == NULL) {

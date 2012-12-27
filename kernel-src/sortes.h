@@ -15,7 +15,7 @@ typedef unsigned int time_t;
 typedef enum { BUTTON_ONE, BUTTON_TWO } Button;
 
 void Button_setActive(Button button, bool active);
-void Button_isActive(Button button);
+bool Button_isActive(Button button);
 
 void Button_setInterrupt(Button button, interruptFunction func);
 bool Button_hasInterrupt(Button button);
@@ -26,7 +26,7 @@ void Button_clearInterrupt(Button button);
 
 typedef enum { LED_ONE, LED_TWO, LED_THREE } Led;
 
-void Led_init();
+void Led_init(Led led);
 
 void Led_setState(Led led, bool on);
 

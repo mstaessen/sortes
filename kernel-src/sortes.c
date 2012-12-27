@@ -143,7 +143,7 @@ bool Led_getState(Led led)
             return LED0_IO;
             break;
         case LED_TWO:
-            return LED1_IO
+            return LED1_IO;
             break;
         case LED_THREE:
             return LED2_IO;
@@ -164,11 +164,16 @@ void LCD_setBacklightState(bool on)
 
 void LCD_setLine(Line line, char *content)
 {
-    strncpy((char *)&LCDText, content, min((int) strlen(content), 16));
+    char *start = (char *)&LCDText;
+    if (line == LINE_TWO)
+        start += 16;
+    
+    strncpy( start, content, min((int) strlen(content), 16) );
     // Clear the rest of the line...
-    for(size_t i = strlen(content) + 1; i < 16; i++) {
+    /*size_t i;
+    for(i = strlen(content) + 1; i < 16; i++) {
         strncpy((char *)&LCDText + i, " ", 1);
-    }
+    }*/
     LCDUpdate();
 }
 
