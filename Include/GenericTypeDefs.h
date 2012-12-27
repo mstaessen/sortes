@@ -58,11 +58,11 @@ typedef enum _BOOL { FALSE = 0, TRUE } BOOL;	// Undefined size
 typedef unsigned char		BYTE;				// 8-bit unsigned
 typedef unsigned short int	WORD;				// 16-bit unsigned
 typedef unsigned long		DWORD;				// 32-bit unsigned
-typedef unsigned long long	QWORD;				// 64-bit unsigned
+//typedef unsigned long long	QWORD;				// 64-bit unsigned
 typedef signed char			CHAR;				// 8-bit signed
 typedef signed short int	SHORT;				// 16-bit signed
 typedef signed long			LONG;				// 32-bit signed
-typedef signed long long	LONGLONG;			// 64-bit signed
+//typedef signed long long	LONGLONG;			// 64-bit signed
 
 /* Alternate definitions */
 typedef void                VOID;
@@ -78,13 +78,13 @@ typedef signed int          INT;
 typedef signed char         INT8;
 typedef signed short int    INT16;
 typedef signed long int     INT32;
-typedef signed long long    INT64;
+//typedef signed long long    INT64;
 
 typedef unsigned int        UINT;
 typedef unsigned char       UINT8;
 typedef unsigned short int  UINT16;
 typedef unsigned long int   UINT32;  // other name for 32-bit integer
-typedef unsigned long long  UINT64;
+//typedef unsigned long long  UINT64;
 
 typedef union _BYTE_VAL
 {
@@ -193,7 +193,7 @@ typedef union _DWORD_VAL
 
 typedef union _QWORD_VAL
 {
-    QWORD Val;
+//    QWORD Val;
 	DWORD d[2];
 	WORD w[4];
     BYTE v[8];
