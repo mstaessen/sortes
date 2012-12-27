@@ -42,7 +42,7 @@ obj/incl/lcd.o : lib/LCDBlocking.c
 
 obj/kernel/%.o: kernel-src/%.c
 	@echo "Building kernel object $@"
-	$(CC) $(CFLAGS) $(INCLUDE) -o $@ $<
+	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 clean : 
 	$(RM) -rf obj main.hex main.cod main.lst

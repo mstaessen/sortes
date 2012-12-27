@@ -1,6 +1,6 @@
 #include "sortes.h"
-#include "include/HardwareProfile.h"
-#include "include/LCDBlocking.h"
+#include "HardwareProfile.h"
+#include "LCDBlocking.h"
 #include <string.h>
 #include <stdlib.h>
 
