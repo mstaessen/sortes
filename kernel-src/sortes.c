@@ -152,6 +152,11 @@ bool Led_getState(Led led)
     return false;
 }
 
+void LCD_clear() {
+    LCD_setLine(LINE_ONE, "");
+    LCD_setLine(LINE_TWO, "");
+}
+
 void LCD_init()
 {
     LCDInit();

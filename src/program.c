@@ -1,6 +1,9 @@
 #include "time_input.h"
 #include "sortes.h"
 #include <stdlib.h>
+#include <malloc.h>
+
+unsigned char _MALLOC_SPEC heap[256];
 
 Time currentTime, alarmTime;
 
