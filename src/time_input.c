@@ -7,14 +7,12 @@
 interruptFunction btnOneInterrupt, btnTwoInterrupt;
 
 void storeInterrupts() {
-    Button_setActive(BUTTON_ONE, true);
     if (Button_hasInterrupt(BUTTON_ONE)) {
         btnOneInterrupt = Button_getInterrupt(BUTTON_ONE);
     } else {
         btnOneInterrupt = NULL;
     }
 
-    Button_setActive(BUTTON_TWO, true);
     if (Button_hasInterrupt(BUTTON_TWO)) {
         btnOneInterrupt = Button_getInterrupt(BUTTON_TWO);
     } else {
@@ -73,6 +71,9 @@ void addOne() {
 }
 
 void setInterrupts() {
+    Button_setActive(BUTTON_ONE, true);
+    Button_setActive(BUTTON_TWO, true);
+    
     Button_setInterrupt(BUTTON_ONE, &addOne);
     Button_setInterrupt(BUTTON_TWO, &nextNumber);
 }

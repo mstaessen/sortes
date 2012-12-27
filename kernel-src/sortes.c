@@ -15,19 +15,22 @@ int min(int a, int b)
 
 void interrupt(void) __interrupt (1)
 {
-    if (BUTTON0_IO && buttonOneInterruptFunction) {
-        buttonOneInterruptFunction();
-        BUTTON0_IO = 0;
+    if (INTCON3bits.INT3F) {
+        INTCON3bits.INT3F = 0;
+        if (buttonOneInterruptFunction)
+            buttonOneInterruptFunction();
     }
     
-    if (BUTTON1_IO && buttonTwoInterruptFunction) {
-        buttonTwoInterruptFunction();
-        BUTTON1_IO = 0;
+    if (INTCON3bits.INT1F) {
+        INTCON3bits.INT1F = 0;
+        if (buttonTwoInterruptFunction)
+            buttonTwoInterruptFunction();
     }
     
-    if (INTCONbits.T0IF && timerInterruptFunction) {
-        timerInterruptFunction();
+    if (INTCONbits.T0IF) {
         INTCONbits.T0IF = 0;
+        if (timerInterruptFunction)
+            timerInterruptFunction();
     }
 }
 
@@ -41,6 +44,10 @@ void Button_setActive(Button button, bool active)
             BUTTON1_TRIS = active;
             break;
     }
+    
+    INTCONbits.GIE = 1;
+    INTCON3bits.INT1P = 1;
+    INTCON3bits.INT1IE = 1;
 }
 
 bool Button_isActive(Button button)
