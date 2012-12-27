@@ -1,6 +1,6 @@
 AS = gpasm
 CC = sdcc
-CFLAGS= -c -mpic16 -p18f97j60
+CFLAGS= -c -mpic16 -p18f97j60 --use-non-free
 LD = sdcc
 LDFLAGS= -mpic16 -p18f97j60 -L/usr/local/lib/pic16 -llibio18f97j60.lib \
          -llibdev18f97j60.lib -llibc18f.a -L include
@@ -37,7 +37,7 @@ obj/%.o: src/%.c
 
 obj/incl/lcd.o : lib/LCDBlocking.c
 	@echo "Building object $@"
-	$(CC) -c -mpic16 -p18f97j60  -o $@ \
+	$(CC) $(CFLAGS) -o $@ \
               -L/usr/local/lib/pic16  $<
 
 obj/kernel/%.o: kernel-src/%.c
