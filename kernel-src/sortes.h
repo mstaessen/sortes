@@ -1,6 +1,9 @@
 #ifndef __SORTES_H__
 #define __SORTES_H__
 
+#define __SDCC__
+#define __18F97J60
+
 #include "bool.h"
 
 typedef void (*interruptFunction)();
