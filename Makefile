@@ -25,7 +25,7 @@ APP_HEADERS=include/GenericTypeDefs.h \
 
 INCLUDES=-Iinclude -I/usr/local/share/sdcc/include/ -I/usr/local/share/sdcc/include/pic16
 
-main: init obj/program.o obj/incl/lcd.o obj/kernel/kernel.o
+main: init obj/program.o obj/time.o obj/time_input.o obj/incl/lcd.o obj/kernel/sortes.o
 	$(LD) $(LDFLAGS) obj/main.o obj/lcd.o obj/incl/lcd.o 
 
 init:
