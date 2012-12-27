@@ -27,4 +27,6 @@ void Time_addHour(Time);
 
 void Time_tick(Time);
 
+bool Time_equals(Time, Time);
+
 #endif

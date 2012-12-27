@@ -68,3 +68,11 @@ void Time_tick(Time time) {
         }
     }
 }
+
+bool Time_equals(Time a, Time b) {
+    if (a == b)
+        return true;
+    return (a->hours == b->hours)
+        && (a->minutes == b->minutes)
+            && (a->seconds == b->seconds);
+}

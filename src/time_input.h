@@ -4,5 +4,6 @@
 #include "time.h"
 
 Time inputTime(char *);
+void outputTime(Time);
 
 #endif

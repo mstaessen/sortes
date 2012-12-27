@@ -4,12 +4,14 @@
 interruptFunction btnOneInterrupt, btnTwoInterrupt;
 
 void storeInterrupts() {
+    Button_setActive(BUTTON_ONE);
     if (Button_hasInterrupt(BUTTON_ONE)) {
         btnOneInterrupt = Button_getInterrupt(BUTTON_ONE);
     } else {
         btnOneInterrupt = NULL;
     }
 
+    Button_setActive(BUTTON_TWO);
     if (Button_hasInterrupt(BUTTON_TWO)) {
         btnOneInterrupt = Button_getInterrupt(BUTTON_TWO);
     } else {
@@ -23,6 +25,7 @@ void restoreInterrupts() {
         btnOneInterrupt = NULL;
     } else {
         Button_clearInterrupt(BUTTON_ONE);
+        Button_setActive(BUTTON_ONE, false);
     }
 
     if (btnTwoInterrupt) {
@@ -30,6 +33,7 @@ void restoreInterrupts() {
         btnTwoInterrupt = NULL;
     } else {
         Button_clearInterrupt(BUTTON_TWO);
+        Button_setActive(BUTTON_TWO, false);
     }
 }
 
@@ -40,9 +44,7 @@ Time time;
 bool done;
 
 void printTime() {
-    char timeStr[9];
-    Time_print(time, timeStr);
-    LCD_setLine(LINE_TWO, timeStr);
+    outputTime(time);
 }
 
 void nextNumber() {
@@ -97,4 +99,10 @@ Time inputTime(char *text) {
     Time retVal = time;
     time = NULL;
     return retVal;
+}
+
+void outputTime(Time t)
+    char timeStr[9];
+    Time_print(t, timeStr);
+    LCD_setLine(LINE_TWO, timeStr);
 }
