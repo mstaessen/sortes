@@ -36,6 +36,8 @@ typedef enum { LINE_ONE, LINE_TWO } Line;
 
 void LCD_init();
 
+void LCD_setBacklightState(bool on);
+
 void LCD_setLine(Line line, char *content);
 
 void LCD_clear();
