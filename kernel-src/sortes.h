@@ -3,6 +3,7 @@
 
 #define __SDCC__
 #define __18F97J60
+#include <pic18fregs.h>
 
 #include "bool.h"
 
