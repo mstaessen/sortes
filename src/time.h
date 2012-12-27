@@ -1,6 +1,8 @@
 #ifndef __TIME_H_
 #define __TIME_H_
 
+#include "bool.h"
+
 typedef unsigned int uint;
 
 struct TimeStruct;
