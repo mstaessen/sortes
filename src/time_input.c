@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "time_input.h"
 #include "time.h"
 #include "sortes.h"
@@ -101,8 +102,8 @@ Time inputTime(char *text) {
     return time;
 }
 
-void outputTime(Time t)
-    char timeStr[9];
-    Time_print(t, timeStr);
-    LCD_setLine(LINE_TWO, timeStr);
+void outputTime(Time t) {
+    char str[9];
+    Time_print(t, str);
+    LCD_setLine(LINE_TWO, str);
 }
