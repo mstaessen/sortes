@@ -1,0 +1,1176 @@
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00001 ;--------------------------------------------------------
+               00002 ; File Created by SDCC : free open source ANSI-C Compiler
+               00003 ; Version 2.9.4 #5595 (Dec 17 2009) (UNIX)
+               00004 ; This file was generated Fri Mar 19 11:42:06 2010
+               00005 ;--------------------------------------------------------
+               00006 ; PIC16 port for the Microchip 16-bit core micros
+               00007 ;--------------------------------------------------------
+               00008         list    p=18f97j60
+               00009 
+               00010         radix dec
+               00011 
+               00012 ;--------------------------------------------------------
+               00013 ; public variables in this module
+               00014 ;--------------------------------------------------------
+               00015         global _delay_1ms
+               00016         global _delay_ms
+               00017         global _init_board
+               00018         global _main
+               00019 
+               00020 ;--------------------------------------------------------
+               00021 ; extern variables in this module
+               00022 ;--------------------------------------------------------
+               00023         extern _EBSTCONbits
+               00024         extern _MISTATbits
+               00025         extern _EFLOCONbits
+               00026         extern _MACON1bits
+               00027         extern _MACON2bits
+               00028         extern _MACON3bits
+               00029         extern _MACON4bits
+               00030         extern _MACLCON1bits
+               00031         extern _MACLCON2bits
+               00032         extern _MICONbits
+               00033         extern _MICMDbits
+               00034         extern _EWOLIEbits
+               00035         extern _EWOLIRbits
+               00036         extern _ERXFCONbits
+               00037         extern _EIEbits
+               00038         extern _ESTATbits
+               00039         extern _ECON2bits
+               00040         extern _EIRbits
+               00041         extern _EDATAbits
+               00042         extern _SSP2CON2bits
+               00043         extern _SSP2CON1bits
+               00044         extern _SSP2STATbits
+               00045         extern _ECCP2DELbits
+               00046         extern _ECCP2ASbits
+               00047         extern _ECCP3DELbits
+               00048         extern _ECCP3ASbits
+               00049         extern _RCSTA2bits
+               00050         extern _TXSTA2bits
+               00051         extern _CCP5CONbits
+               00052         extern _CCP4CONbits
+               00053         extern _T4CONbits
+               00054         extern _ECCP1DELbits
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00055         extern _BAUDCON2bits
+               00056         extern _BAUDCTL2bits
+               00057         extern _BAUDCONbits
+               00058         extern _BAUDCON1bits
+               00059         extern _BAUDCTLbits
+               00060         extern _BAUDCTL1bits
+               00061         extern _PORTAbits
+               00062         extern _PORTBbits
+               00063         extern _PORTCbits
+               00064         extern _PORTDbits
+               00065         extern _PORTEbits
+               00066         extern _PORTFbits
+               00067         extern _PORTGbits
+               00068         extern _PORTHbits
+               00069         extern _PORTJbits
+               00070         extern _LATAbits
+               00071         extern _LATBbits
+               00072         extern _LATCbits
+               00073         extern _LATDbits
+               00074         extern _LATEbits
+               00075         extern _LATFbits
+               00076         extern _LATGbits
+               00077         extern _LATHbits
+               00078         extern _LATJbits
+               00079         extern _DDRAbits
+               00080         extern _TRISAbits
+               00081         extern _DDRBbits
+               00082         extern _TRISBbits
+               00083         extern _DDRCbits
+               00084         extern _TRISCbits
+               00085         extern _DDRDbits
+               00086         extern _TRISDbits
+               00087         extern _DDREbits
+               00088         extern _TRISEbits
+               00089         extern _DDRFbits
+               00090         extern _TRISFbits
+               00091         extern _DDRGbits
+               00092         extern _TRISGbits
+               00093         extern _DDRHbits
+               00094         extern _TRISHbits
+               00095         extern _DDRJbits
+               00096         extern _TRISJbits
+               00097         extern _OSCTUNEbits
+               00098         extern _MEMCONbits
+               00099         extern _PIE1bits
+               00100         extern _PIR1bits
+               00101         extern _IPR1bits
+               00102         extern _PIE2bits
+               00103         extern _PIR2bits
+               00104         extern _IPR2bits
+               00105         extern _PIE3bits
+               00106         extern _PIR3bits
+               00107         extern _IPR3bits
+               00108         extern _EECON1bits
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00109         extern _RCSTAbits
+               00110         extern _RCSTA1bits
+               00111         extern _TXSTAbits
+               00112         extern _TXSTA1bits
+               00113         extern _PSPCONbits
+               00114         extern _T3CONbits
+               00115         extern _CMCONbits
+               00116         extern _CVRCONbits
+               00117         extern _ECCP1ASbits
+               00118         extern _CCP3CONbits
+               00119         extern _ECCP3CONbits
+               00120         extern _CCP2CONbits
+               00121         extern _ECCP2CONbits
+               00122         extern _CCP1CONbits
+               00123         extern _ECCP1CONbits
+               00124         extern _ADCON2bits
+               00125         extern _ADCON1bits
+               00126         extern _ADCON0bits
+               00127         extern _SSP1CON2bits
+               00128         extern _SSPCON2bits
+               00129         extern _SSP1CON1bits
+               00130         extern _SSPCON1bits
+               00131         extern _SSP1STATbits
+               00132         extern _SSPSTATbits
+               00133         extern _T2CONbits
+               00134         extern _T1CONbits
+               00135         extern _RCONbits
+               00136         extern _WDTCONbits
+               00137         extern _ECON1bits
+               00138         extern _OSCCONbits
+               00139         extern _T0CONbits
+               00140         extern _STATUSbits
+               00141         extern _INTCON3bits
+               00142         extern _INTCON2bits
+               00143         extern _INTCONbits
+               00144         extern _STKPTRbits
+               00145         extern _MAADR5
+               00146         extern _MAADR6
+               00147         extern _MAADR3
+               00148         extern _MAADR4
+               00149         extern _MAADR1
+               00150         extern _MAADR2
+               00151         extern _EBSTSD
+               00152         extern _EBSTCON
+               00153         extern _EBSTCS
+               00154         extern _EBSTCSL
+               00155         extern _EBSTCSH
+               00156         extern _MISTAT
+               00157         extern _EFLOCON
+               00158         extern _EPAUS
+               00159         extern _EPAUSL
+               00160         extern _EPAUSH
+               00161         extern _MACON1
+               00162         extern _MACON2
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00163         extern _MACON3
+               00164         extern _MACON4
+               00165         extern _MABBIPG
+               00166         extern _MAIPG
+               00167         extern _MAIPGL
+               00168         extern _MAIPGH
+               00169         extern _MACLCON1
+               00170         extern _MACLCON2
+               00171         extern _MAMXFL
+               00172         extern _MAMXFLL
+               00173         extern _MAMXFLH
+               00174         extern _MICON
+               00175         extern _MICMD
+               00176         extern _MIREGADR
+               00177         extern _MIWR
+               00178         extern _MIWRL
+               00179         extern _MIWRH
+               00180         extern _MIRD
+               00181         extern _MIRDL
+               00182         extern _MIRDH
+               00183         extern _EHT0
+               00184         extern _EHT1
+               00185         extern _EHT2
+               00186         extern _EHT3
+               00187         extern _EHT4
+               00188         extern _EHT5
+               00189         extern _EHT6
+               00190         extern _EHT7
+               00191         extern _EPMM0
+               00192         extern _EPMM1
+               00193         extern _EPMM2
+               00194         extern _EPMM3
+               00195         extern _EPMM4
+               00196         extern _EPMM5
+               00197         extern _EPMM6
+               00198         extern _EPMM7
+               00199         extern _EPMCS
+               00200         extern _EPMCSL
+               00201         extern _EPMCSH
+               00202         extern _EPMO
+               00203         extern _EPMOL
+               00204         extern _EPMOH
+               00205         extern _EWOLIE
+               00206         extern _EWOLIR
+               00207         extern _ERXFCON
+               00208         extern _EPKTCNT
+               00209         extern _EWRPT
+               00210         extern _EWRPTL
+               00211         extern _EWRPTH
+               00212         extern _ETXST
+               00213         extern _ETXSTL
+               00214         extern _ETXSTH
+               00215         extern _ETXND
+               00216         extern _ETXNDL
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00217         extern _ETXNDH
+               00218         extern _ERXST
+               00219         extern _ERXSTL
+               00220         extern _ERXSTH
+               00221         extern _ERXND
+               00222         extern _ERXNDL
+               00223         extern _ERXNDH
+               00224         extern _ERXRDPT
+               00225         extern _ERXRDPTL
+               00226         extern _ERXRDPTH
+               00227         extern _ERXWRPT
+               00228         extern _ERXWRPTL
+               00229         extern _ERXWRPTH
+               00230         extern _EDMAST
+               00231         extern _EDMASTL
+               00232         extern _EDMASTH
+               00233         extern _EDMAND
+               00234         extern _EDMANDL
+               00235         extern _EDMANDH
+               00236         extern _EDMADST
+               00237         extern _EDMADSTL
+               00238         extern _EDMADSTH
+               00239         extern _EDMACS
+               00240         extern _EDMACSL
+               00241         extern _EDMACSH
+               00242         extern _EIE
+               00243         extern _ESTAT
+               00244         extern _ECON2
+               00245         extern _EIR
+               00246         extern _EDATA
+               00247         extern _SSP2CON2
+               00248         extern _SSP2CON1
+               00249         extern _SSP2STAT
+               00250         extern _SSP2ADD
+               00251         extern _SSP2BUF
+               00252         extern _ECCP2DEL
+               00253         extern _ECCP2AS
+               00254         extern _ECCP3DEL
+               00255         extern _ECCP3AS
+               00256         extern _RCSTA2
+               00257         extern _TXSTA2
+               00258         extern _TXREG2
+               00259         extern _RCREG2
+               00260         extern _SPBRG2
+               00261         extern _CCP5CON
+               00262         extern _CCPR5
+               00263         extern _CCPR5L
+               00264         extern _CCPR5H
+               00265         extern _CCP4CON
+               00266         extern _CCPR4
+               00267         extern _CCPR4L
+               00268         extern _CCPR4H
+               00269         extern _T4CON
+               00270         extern _PR4
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00271         extern _TMR4
+               00272         extern _ECCP1DEL
+               00273         extern _ERDPT
+               00274         extern _ERDPTL
+               00275         extern _ERDPTH
+               00276         extern _BAUDCON2
+               00277         extern _BAUDCTL2
+               00278         extern _SPBRGH2
+               00279         extern _BAUDCON
+               00280         extern _BAUDCON1
+               00281         extern _BAUDCTL
+               00282         extern _BAUDCTL1
+               00283         extern _SPBRGH
+               00284         extern _SPBRGH1
+               00285         extern _PORTA
+               00286         extern _PORTB
+               00287         extern _PORTC
+               00288         extern _PORTD
+               00289         extern _PORTE
+               00290         extern _PORTF
+               00291         extern _PORTG
+               00292         extern _PORTH
+               00293         extern _PORTJ
+               00294         extern _LATA
+               00295         extern _LATB
+               00296         extern _LATC
+               00297         extern _LATD
+               00298         extern _LATE
+               00299         extern _LATF
+               00300         extern _LATG
+               00301         extern _LATH
+               00302         extern _LATJ
+               00303         extern _DDRA
+               00304         extern _TRISA
+               00305         extern _DDRB
+               00306         extern _TRISB
+               00307         extern _DDRC
+               00308         extern _TRISC
+               00309         extern _DDRD
+               00310         extern _TRISD
+               00311         extern _DDRE
+               00312         extern _TRISE
+               00313         extern _DDRF
+               00314         extern _TRISF
+               00315         extern _DDRG
+               00316         extern _TRISG
+               00317         extern _DDRH
+               00318         extern _TRISH
+               00319         extern _DDRJ
+               00320         extern _TRISJ
+               00321         extern _OSCTUNE
+               00322         extern _MEMCON
+               00323         extern _PIE1
+               00324         extern _PIR1
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00325         extern _IPR1
+               00326         extern _PIE2
+               00327         extern _PIR2
+               00328         extern _IPR2
+               00329         extern _PIE3
+               00330         extern _PIR3
+               00331         extern _IPR3
+               00332         extern _EECON1
+               00333         extern _EECON2
+               00334         extern _RCSTA
+               00335         extern _RCSTA1
+               00336         extern _TXSTA
+               00337         extern _TXSTA1
+               00338         extern _TXREG
+               00339         extern _TXREG1
+               00340         extern _RCREG
+               00341         extern _RCREG1
+               00342         extern _SPBRG
+               00343         extern _SPBRG1
+               00344         extern _PSPCON
+               00345         extern _T3CON
+               00346         extern _TMR3L
+               00347         extern _TMR3H
+               00348         extern _CMCON
+               00349         extern _CVRCON
+               00350         extern _ECCP1AS
+               00351         extern _CCP3CON
+               00352         extern _ECCP3CON
+               00353         extern _CCPR3
+               00354         extern _CCPR3L
+               00355         extern _CCPR3H
+               00356         extern _CCP2CON
+               00357         extern _ECCP2CON
+               00358         extern _CCPR2
+               00359         extern _CCPR2L
+               00360         extern _CCPR2H
+               00361         extern _CCP1CON
+               00362         extern _ECCP1CON
+               00363         extern _CCPR1
+               00364         extern _CCPR1L
+               00365         extern _CCPR1H
+               00366         extern _ADCON2
+               00367         extern _ADCON1
+               00368         extern _ADCON0
+               00369         extern _ADRES
+               00370         extern _ADRESL
+               00371         extern _ADRESH
+               00372         extern _SSP1CON2
+               00373         extern _SSPCON2
+               00374         extern _SSP1CON1
+               00375         extern _SSPCON1
+               00376         extern _SSP1STAT
+               00377         extern _SSPSTAT
+               00378         extern _SSP1ADD
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00379         extern _SSPADD
+               00380         extern _SSP1BUF
+               00381         extern _SSPBUF
+               00382         extern _T2CON
+               00383         extern _PR2
+               00384         extern _TMR2
+               00385         extern _T1CON
+               00386         extern _TMR1L
+               00387         extern _TMR1H
+               00388         extern _RCON
+               00389         extern _WDTCON
+               00390         extern _ECON1
+               00391         extern _OSCCON
+               00392         extern _T0CON
+               00393         extern _TMR0L
+               00394         extern _TMR0H
+               00395         extern _STATUS
+               00396         extern _FSR2L
+               00397         extern _FSR2H
+               00398         extern _PLUSW2
+               00399         extern _PREINC2
+               00400         extern _POSTDEC2
+               00401         extern _POSTINC2
+               00402         extern _INDF2
+               00403         extern _BSR
+               00404         extern _FSR1L
+               00405         extern _FSR1H
+               00406         extern _PLUSW1
+               00407         extern _PREINC1
+               00408         extern _POSTDEC1
+               00409         extern _POSTINC1
+               00410         extern _INDF1
+               00411         extern _WREG
+               00412         extern _FSR0L
+               00413         extern _FSR0H
+               00414         extern _PLUSW0
+               00415         extern _PREINC0
+               00416         extern _POSTDEC0
+               00417         extern _POSTINC0
+               00418         extern _INDF0
+               00419         extern _INTCON3
+               00420         extern _INTCON2
+               00421         extern _INTCON
+               00422         extern _PROD
+               00423         extern _PRODL
+               00424         extern _PRODH
+               00425         extern _TABLAT
+               00426         extern _TBLPTR
+               00427         extern _TBLPTRL
+               00428         extern _TBLPTRH
+               00429         extern _TBLPTRU
+               00430         extern _PC
+               00431         extern _PCL
+               00432         extern _PCLATH
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+               00433         extern _PCLATU
+               00434         extern _STKPTR
+               00435         extern _TOS
+               00436         extern _TOSL
+               00437         extern _TOSH
+               00438         extern _TOSU
+               00439 ;--------------------------------------------------------
+               00440 ;       Equates to used internal registers
+               00441 ;--------------------------------------------------------
+  00000FD8     00442 STATUS  equ     0xfd8
+  00000FE8     00443 WREG    equ     0xfe8
+  00000FE1     00444 FSR1L   equ     0xfe1
+  00000FD9     00445 FSR2L   equ     0xfd9
+  00000FE5     00446 POSTDEC1        equ     0xfe5
+  00000FE4     00447 PREINC1 equ     0xfe4
+  00000FDB     00448 PLUSW2  equ     0xfdb
+  00000FF4     00449 PRODH   equ     0xff4
+               00450 
+               00451 
+               00452 ; Internal registers
+               00453 .registers      udata_ovr       0x0000
+               00454 r0x00   res     1
+               00455 r0x01   res     1
+               00456 r0x02   res     1
+               00457 r0x03   res     1
+               00458 
+               00459 ;--------------------------------------------------------
+               00460 ; interrupt vector 
+               00461 ;--------------------------------------------------------
+               00462 
+               00463 ;--------------------------------------------------------
+               00464 ; global & static initialisations
+               00465 ;--------------------------------------------------------
+               00466 ; I code from now on!
+               00467 ; ; Starting pCode block
+               00468 S_led__main     code
+0000 00469 _main:
+               00470 ;       .line   37; led.c       init_board();
+0000 EC00 F000 00471         CALL    _init_board
+               00472 ;       .line   38; led.c       LATJbits.LATJ0=1; // switch LED on
+0004 8000      00473         BSF     _LATJbits, 0
+               00474 ;       .line   39; led.c       LATJbits.LATJ1=0; // switch LED off
+0006 9200      00475         BCF     _LATJbits, 1
+0008 00476 _00127_DS_:
+               00477 ;       .line   41; led.c       delay_ms(1000);
+0008 0E03      00478         MOVLW   0x03
+000A 6EE5      00479         MOVWF   POSTDEC1
+000C 0EE8      00480         MOVLW   0xe8
+000E 6EE5      00481         MOVWF   POSTDEC1
+0010 EC00 F000 00482         CALL    _delay_ms
+0014 0E02      00483         MOVLW   0x02
+0016 26E1      00484         ADDWF   FSR1L, F
+               00485 ;       .line   42; led.c       LATJbits.LATJ0^=1; // toggle LED
+0018 6A00      00486         CLRF    r0x00
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+001A B000      00487         BTFSC   _LATJbits, 0
+001C 2A00      00488         INCF    r0x00, F
+001E 0E01      00489         MOVLW   0x01
+0020 1A00      00490         XORWF   r0x00, F
+0022 5000      00491         MOVF    r0x00, W
+0024 0B01      00492         ANDLW   0x01
+0026 6EF4      00493         MOVWF   PRODH
+0028 5000      00494         MOVF    _LATJbits, W
+002A 0BFE      00495         ANDLW   0xfe
+002C 10F4      00496         IORWF   PRODH, W
+002E 6E00      00497         MOVWF   _LATJbits
+               00498 ;       .line   43; led.c       LATJbits.LATJ1^=1; // toggle LED
+0030 6A00      00499         CLRF    r0x00
+0032 B200      00500         BTFSC   _LATJbits, 1
+0034 2A00      00501         INCF    r0x00, F
+0036 0E01      00502         MOVLW   0x01
+0038 1A00      00503         XORWF   r0x00, F
+003A 5000      00504         MOVF    r0x00, W
+003C 0B01      00505         ANDLW   0x01
+003E 44E8      00506         RLNCF   WREG, W
+0040 6EF4      00507         MOVWF   PRODH
+0042 5000      00508         MOVF    _LATJbits, W
+0044 0BFD      00509         ANDLW   0xfd
+0046 10F4      00510         IORWF   PRODH, W
+0048 6E00      00511         MOVWF   _LATJbits
+004A D000      00512         BRA     _00127_DS_
+004C 0012      00513         RETURN  
+               00514 
+               00515 ; ; Starting pCode block
+               00516 S_led__init_board       code
+0000 00517 _init_board:
+               00518 ;       .line   31; led.c       void init_board(void) {
+0000 CFD9 FFE5 00519         MOVFF   FSR2L, POSTDEC1
+0004 CFE1 FFD9 00520         MOVFF   FSR1L, FSR2L
+               00521 ;       .line   32; led.c       TRISJbits.TRISJ0=0; // configure PORTJ0 for output (LED)
+0008 9000      00522         BCF     _TRISJbits, 0
+               00523 ;       .line   33; led.c       TRISJbits.TRISJ1=0; // configure PORTJ1 for output (LED)
+000A 9200      00524         BCF     _TRISJbits, 1
+000C CFE4 FFD9 00525         MOVFF   PREINC1, FSR2L
+0010 0012      00526         RETURN  
+               00527 
+               00528 ; ; Starting pCode block
+               00529 S_led__delay_ms code
+0000 00530 _delay_ms:
+               00531 ;       .line   24; led.c       void delay_ms(unsigned int ms) {
+0000 CFD9 FFE5 00532         MOVFF   FSR2L, POSTDEC1
+0004 CFE1 FFD9 00533         MOVFF   FSR1L, FSR2L
+0008 C000 FFE5 00534         MOVFF   r0x00, POSTDEC1
+000C C000 FFE5 00535         MOVFF   r0x01, POSTDEC1
+0010 C000 FFE5 00536         MOVFF   r0x02, POSTDEC1
+0014 C000 FFE5 00537         MOVFF   r0x03, POSTDEC1
+0018 0E02      00538         MOVLW   0x02
+001A CFDB F000 00539         MOVFF   PLUSW2, r0x00
+001E 0E03      00540         MOVLW   0x03
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0020 CFDB F000 00541         MOVFF   PLUSW2, r0x01
+0024 00542 _00113_DS_:
+               00543 ;       .line   25; led.c       while (ms--) {
+0024 C000 F000 00544         MOVFF   r0x00, r0x02
+0028 C000 F000 00545         MOVFF   r0x01, r0x03
+002C 0EFF      00546         MOVLW   0xff
+002E 2600      00547         ADDWF   r0x00, F
+0030 A0D8      00548         BTFSS   STATUS, 0
+0032 0600      00549         DECF    r0x01, F
+0034 5000      00550         MOVF    r0x02, W
+0036 1000      00551         IORWF   r0x03, W
+0038 E000      00552         BZ      _00116_DS_
+               00553 ;       .line   26; led.c       delay_1ms();
+003A EC00 F000 00554         CALL    _delay_1ms
+003E D000      00555         BRA     _00113_DS_
+0040 00556 _00116_DS_:
+0040 CFE4 F000 00557         MOVFF   PREINC1, r0x03
+0044 CFE4 F000 00558         MOVFF   PREINC1, r0x02
+0048 CFE4 F000 00559         MOVFF   PREINC1, r0x01
+004C CFE4 F000 00560         MOVFF   PREINC1, r0x00
+0050 CFE4 FFD9 00561         MOVFF   PREINC1, FSR2L
+0054 0012      00562         RETURN  
+               00563 
+               00564 ; ; Starting pCode block
+               00565 S_led__delay_1ms        code
+0000 00566 _delay_1ms:
+               00567 ;       .line   9; led.c        void delay_1ms(void) {
+0000 CFD9 FFE5 00568         MOVFF   FSR2L, POSTDEC1
+0004 CFE1 FFD9 00569         MOVFF   FSR1L, FSR2L
+               00570 ;       .line   10; led.c       TMR0H=(0x10000-EXEC_FREQ/1000)>>8;
+0008 0ED8      00571         MOVLW   0xd8
+000A 6E00      00572         MOVWF   _TMR0H
+               00573 ;       .line   11; led.c       TMR0L=(0x10000-EXEC_FREQ/1000)&0xff;
+000C 0EF0      00574         MOVLW   0xf0
+000E 6E00      00575         MOVWF   _TMR0L
+               00576 ;       .line   12; led.c       T0CONbits.TMR0ON=0; // disable timer0
+0010 9E00      00577         BCF     _T0CONbits, 7
+               00578 ;       .line   13; led.c       T0CONbits.T08BIT=0; // use timer0 16-bit counter
+0012 9C00      00579         BCF     _T0CONbits, 6
+               00580 ;       .line   14; led.c       T0CONbits.T0CS=0; // use timer0 instruction cycle clock
+0014 9A00      00581         BCF     _T0CONbits, 5
+               00582 ;       .line   15; led.c       T0CONbits.PSA=1; // disable timer0 prescaler
+0016 8600      00583         BSF     _T0CONbits, 3
+               00584 ;       .line   16; led.c       INTCONbits.T0IF=0; // clear timer0 overflow bit
+0018 9400      00585         BCF     _INTCONbits, 2
+               00586 ;       .line   17; led.c       T0CONbits.TMR0ON=1; // enable timer0
+001A 8E00      00587         BSF     _T0CONbits, 7
+001C 00588 _00105_DS_:
+               00589 ;       .line   18; led.c       while (!INTCONbits.T0IF) {} // wait for timer0 overflow
+001C A400      00590         BTFSS   _INTCONbits, 2
+001E D000      00591         BRA     _00105_DS_
+               00592 ;       .line   19; led.c       INTCONbits.T0IF=0; // clear timer0 overflow bit
+0020 9400      00593         BCF     _INTCONbits, 2
+               00594 ;       .line   20; led.c       T0CONbits.TMR0ON=0; // disable timer0
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+0022 9E00      00595         BCF     _T0CONbits, 7
+0024 CFE4 FFD9 00596         MOVFF   PREINC1, FSR2L
+0028 0012      00597         RETURN  
+               00598 
+               00599 
+               00600 
+               00601 ; Statistics:
+               00602 ; code size:      224 (0x00e0) bytes ( 0.17%)
+               00603 ;                 112 (0x0070) words
+               00604 ; udata size:       0 (0x0000) bytes ( 0.00%)
+               00605 ; access size:      4 (0x0004) bytes
+               00606 
+               00607 
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+FSR1L                             00000FE1
+FSR2L                             00000FD9
+PLUSW2                            00000FDB
+POSTDEC1                          00000FE5
+PREINC1                           00000FE4
+PRODH                             00000FF4
+STATUS                            00000FD8
+WREG                              00000FE8
+_00105_DS_                        0000001C
+_00113_DS_                        00000024
+_00116_DS_                        00000040
+_00127_DS_                        00000008
+_ADCON0                           00000000
+_ADCON0bits                       00000000
+_ADCON1                           00000000
+_ADCON1bits                       00000000
+_ADCON2                           00000000
+_ADCON2bits                       00000000
+_ADRES                            00000000
+_ADRESH                           00000000
+_ADRESL                           00000000
+_BAUDCON                          00000000
+_BAUDCON1                         00000000
+_BAUDCON1bits                     00000000
+_BAUDCON2                         00000000
+_BAUDCON2bits                     00000000
+_BAUDCONbits                      00000000
+_BAUDCTL                          00000000
+_BAUDCTL1                         00000000
+_BAUDCTL1bits                     00000000
+_BAUDCTL2                         00000000
+_BAUDCTL2bits                     00000000
+_BAUDCTLbits                      00000000
+_BSR                              00000000
+_CCP1CON                          00000000
+_CCP1CONbits                      00000000
+_CCP2CON                          00000000
+_CCP2CONbits                      00000000
+_CCP3CON                          00000000
+_CCP3CONbits                      00000000
+_CCP4CON                          00000000
+_CCP4CONbits                      00000000
+_CCP5CON                          00000000
+_CCP5CONbits                      00000000
+_CCPR1                            00000000
+_CCPR1H                           00000000
+_CCPR1L                           00000000
+_CCPR2                            00000000
+_CCPR2H                           00000000
+_CCPR2L                           00000000
+_CCPR3                            00000000
+_CCPR3H                           00000000
+_CCPR3L                           00000000
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_CCPR4                            00000000
+_CCPR4H                           00000000
+_CCPR4L                           00000000
+_CCPR5                            00000000
+_CCPR5H                           00000000
+_CCPR5L                           00000000
+_CMCON                            00000000
+_CMCONbits                        00000000
+_CVRCON                           00000000
+_CVRCONbits                       00000000
+_DDRA                             00000000
+_DDRAbits                         00000000
+_DDRB                             00000000
+_DDRBbits                         00000000
+_DDRC                             00000000
+_DDRCbits                         00000000
+_DDRD                             00000000
+_DDRDbits                         00000000
+_DDRE                             00000000
+_DDREbits                         00000000
+_DDRF                             00000000
+_DDRFbits                         00000000
+_DDRG                             00000000
+_DDRGbits                         00000000
+_DDRH                             00000000
+_DDRHbits                         00000000
+_DDRJ                             00000000
+_DDRJbits                         00000000
+_EBSTCON                          00000000
+_EBSTCONbits                      00000000
+_EBSTCS                           00000000
+_EBSTCSH                          00000000
+_EBSTCSL                          00000000
+_EBSTSD                           00000000
+_ECCP1AS                          00000000
+_ECCP1ASbits                      00000000
+_ECCP1CON                         00000000
+_ECCP1CONbits                     00000000
+_ECCP1DEL                         00000000
+_ECCP1DELbits                     00000000
+_ECCP2AS                          00000000
+_ECCP2ASbits                      00000000
+_ECCP2CON                         00000000
+_ECCP2CONbits                     00000000
+_ECCP2DEL                         00000000
+_ECCP2DELbits                     00000000
+_ECCP3AS                          00000000
+_ECCP3ASbits                      00000000
+_ECCP3CON                         00000000
+_ECCP3CONbits                     00000000
+_ECCP3DEL                         00000000
+_ECCP3DELbits                     00000000
+_ECON1                            00000000
+_ECON1bits                        00000000
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_ECON2                            00000000
+_ECON2bits                        00000000
+_EDATA                            00000000
+_EDATAbits                        00000000
+_EDMACS                           00000000
+_EDMACSH                          00000000
+_EDMACSL                          00000000
+_EDMADST                          00000000
+_EDMADSTH                         00000000
+_EDMADSTL                         00000000
+_EDMAND                           00000000
+_EDMANDH                          00000000
+_EDMANDL                          00000000
+_EDMAST                           00000000
+_EDMASTH                          00000000
+_EDMASTL                          00000000
+_EECON1                           00000000
+_EECON1bits                       00000000
+_EECON2                           00000000
+_EFLOCON                          00000000
+_EFLOCONbits                      00000000
+_EHT0                             00000000
+_EHT1                             00000000
+_EHT2                             00000000
+_EHT3                             00000000
+_EHT4                             00000000
+_EHT5                             00000000
+_EHT6                             00000000
+_EHT7                             00000000
+_EIE                              00000000
+_EIEbits                          00000000
+_EIR                              00000000
+_EIRbits                          00000000
+_EPAUS                            00000000
+_EPAUSH                           00000000
+_EPAUSL                           00000000
+_EPKTCNT                          00000000
+_EPMCS                            00000000
+_EPMCSH                           00000000
+_EPMCSL                           00000000
+_EPMM0                            00000000
+_EPMM1                            00000000
+_EPMM2                            00000000
+_EPMM3                            00000000
+_EPMM4                            00000000
+_EPMM5                            00000000
+_EPMM6                            00000000
+_EPMM7                            00000000
+_EPMO                             00000000
+_EPMOH                            00000000
+_EPMOL                            00000000
+_ERDPT                            00000000
+_ERDPTH                           00000000
+_ERDPTL                           00000000
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_ERXFCON                          00000000
+_ERXFCONbits                      00000000
+_ERXND                            00000000
+_ERXNDH                           00000000
+_ERXNDL                           00000000
+_ERXRDPT                          00000000
+_ERXRDPTH                         00000000
+_ERXRDPTL                         00000000
+_ERXST                            00000000
+_ERXSTH                           00000000
+_ERXSTL                           00000000
+_ERXWRPT                          00000000
+_ERXWRPTH                         00000000
+_ERXWRPTL                         00000000
+_ESTAT                            00000000
+_ESTATbits                        00000000
+_ETXND                            00000000
+_ETXNDH                           00000000
+_ETXNDL                           00000000
+_ETXST                            00000000
+_ETXSTH                           00000000
+_ETXSTL                           00000000
+_EWOLIE                           00000000
+_EWOLIEbits                       00000000
+_EWOLIR                           00000000
+_EWOLIRbits                       00000000
+_EWRPT                            00000000
+_EWRPTH                           00000000
+_EWRPTL                           00000000
+_FSR0H                            00000000
+_FSR0L                            00000000
+_FSR1H                            00000000
+_FSR1L                            00000000
+_FSR2H                            00000000
+_FSR2L                            00000000
+_INDF0                            00000000
+_INDF1                            00000000
+_INDF2                            00000000
+_INTCON                           00000000
+_INTCON2                          00000000
+_INTCON2bits                      00000000
+_INTCON3                          00000000
+_INTCON3bits                      00000000
+_INTCONbits                       00000000
+_IPR1                             00000000
+_IPR1bits                         00000000
+_IPR2                             00000000
+_IPR2bits                         00000000
+_IPR3                             00000000
+_IPR3bits                         00000000
+_LATA                             00000000
+_LATAbits                         00000000
+_LATB                             00000000
+_LATBbits                         00000000
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_LATC                             00000000
+_LATCbits                         00000000
+_LATD                             00000000
+_LATDbits                         00000000
+_LATE                             00000000
+_LATEbits                         00000000
+_LATF                             00000000
+_LATFbits                         00000000
+_LATG                             00000000
+_LATGbits                         00000000
+_LATH                             00000000
+_LATHbits                         00000000
+_LATJ                             00000000
+_LATJbits                         00000000
+_MAADR1                           00000000
+_MAADR2                           00000000
+_MAADR3                           00000000
+_MAADR4                           00000000
+_MAADR5                           00000000
+_MAADR6                           00000000
+_MABBIPG                          00000000
+_MACLCON1                         00000000
+_MACLCON1bits                     00000000
+_MACLCON2                         00000000
+_MACLCON2bits                     00000000
+_MACON1                           00000000
+_MACON1bits                       00000000
+_MACON2                           00000000
+_MACON2bits                       00000000
+_MACON3                           00000000
+_MACON3bits                       00000000
+_MACON4                           00000000
+_MACON4bits                       00000000
+_MAIPG                            00000000
+_MAIPGH                           00000000
+_MAIPGL                           00000000
+_MAMXFL                           00000000
+_MAMXFLH                          00000000
+_MAMXFLL                          00000000
+_MEMCON                           00000000
+_MEMCONbits                       00000000
+_MICMD                            00000000
+_MICMDbits                        00000000
+_MICON                            00000000
+_MICONbits                        00000000
+_MIRD                             00000000
+_MIRDH                            00000000
+_MIRDL                            00000000
+_MIREGADR                         00000000
+_MISTAT                           00000000
+_MISTATbits                       00000000
+_MIWR                             00000000
+_MIWRH                            00000000
+_MIWRL                            00000000
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_OSCCON                           00000000
+_OSCCONbits                       00000000
+_OSCTUNE                          00000000
+_OSCTUNEbits                      00000000
+_PC                               00000000
+_PCL                              00000000
+_PCLATH                           00000000
+_PCLATU                           00000000
+_PIE1                             00000000
+_PIE1bits                         00000000
+_PIE2                             00000000
+_PIE2bits                         00000000
+_PIE3                             00000000
+_PIE3bits                         00000000
+_PIR1                             00000000
+_PIR1bits                         00000000
+_PIR2                             00000000
+_PIR2bits                         00000000
+_PIR3                             00000000
+_PIR3bits                         00000000
+_PLUSW0                           00000000
+_PLUSW1                           00000000
+_PLUSW2                           00000000
+_PORTA                            00000000
+_PORTAbits                        00000000
+_PORTB                            00000000
+_PORTBbits                        00000000
+_PORTC                            00000000
+_PORTCbits                        00000000
+_PORTD                            00000000
+_PORTDbits                        00000000
+_PORTE                            00000000
+_PORTEbits                        00000000
+_PORTF                            00000000
+_PORTFbits                        00000000
+_PORTG                            00000000
+_PORTGbits                        00000000
+_PORTH                            00000000
+_PORTHbits                        00000000
+_PORTJ                            00000000
+_PORTJbits                        00000000
+_POSTDEC0                         00000000
+_POSTDEC1                         00000000
+_POSTDEC2                         00000000
+_POSTINC0                         00000000
+_POSTINC1                         00000000
+_POSTINC2                         00000000
+_PR2                              00000000
+_PR4                              00000000
+_PREINC0                          00000000
+_PREINC1                          00000000
+_PREINC2                          00000000
+_PROD                             00000000
+_PRODH                            00000000
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_PRODL                            00000000
+_PSPCON                           00000000
+_PSPCONbits                       00000000
+_RCON                             00000000
+_RCONbits                         00000000
+_RCREG                            00000000
+_RCREG1                           00000000
+_RCREG2                           00000000
+_RCSTA                            00000000
+_RCSTA1                           00000000
+_RCSTA1bits                       00000000
+_RCSTA2                           00000000
+_RCSTA2bits                       00000000
+_RCSTAbits                        00000000
+_SPBRG                            00000000
+_SPBRG1                           00000000
+_SPBRG2                           00000000
+_SPBRGH                           00000000
+_SPBRGH1                          00000000
+_SPBRGH2                          00000000
+_SSP1ADD                          00000000
+_SSP1BUF                          00000000
+_SSP1CON1                         00000000
+_SSP1CON1bits                     00000000
+_SSP1CON2                         00000000
+_SSP1CON2bits                     00000000
+_SSP1STAT                         00000000
+_SSP1STATbits                     00000000
+_SSP2ADD                          00000000
+_SSP2BUF                          00000000
+_SSP2CON1                         00000000
+_SSP2CON1bits                     00000000
+_SSP2CON2                         00000000
+_SSP2CON2bits                     00000000
+_SSP2STAT                         00000000
+_SSP2STATbits                     00000000
+_SSPADD                           00000000
+_SSPBUF                           00000000
+_SSPCON1                          00000000
+_SSPCON1bits                      00000000
+_SSPCON2                          00000000
+_SSPCON2bits                      00000000
+_SSPSTAT                          00000000
+_SSPSTATbits                      00000000
+_STATUS                           00000000
+_STATUSbits                       00000000
+_STKPTR                           00000000
+_STKPTRbits                       00000000
+_T0CON                            00000000
+_T0CONbits                        00000000
+_T1CON                            00000000
+_T1CONbits                        00000000
+_T2CON                            00000000
+_T2CONbits                        00000000
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_T3CON                            00000000
+_T3CONbits                        00000000
+_T4CON                            00000000
+_T4CONbits                        00000000
+_TABLAT                           00000000
+_TBLPTR                           00000000
+_TBLPTRH                          00000000
+_TBLPTRL                          00000000
+_TBLPTRU                          00000000
+_TMR0H                            00000000
+_TMR0L                            00000000
+_TMR1H                            00000000
+_TMR1L                            00000000
+_TMR2                             00000000
+_TMR3H                            00000000
+_TMR3L                            00000000
+_TMR4                             00000000
+_TOS                              00000000
+_TOSH                             00000000
+_TOSL                             00000000
+_TOSU                             00000000
+_TRISA                            00000000
+_TRISAbits                        00000000
+_TRISB                            00000000
+_TRISBbits                        00000000
+_TRISC                            00000000
+_TRISCbits                        00000000
+_TRISD                            00000000
+_TRISDbits                        00000000
+_TRISE                            00000000
+_TRISEbits                        00000000
+_TRISF                            00000000
+_TRISFbits                        00000000
+_TRISG                            00000000
+_TRISGbits                        00000000
+_TRISH                            00000000
+_TRISHbits                        00000000
+_TRISJ                            00000000
+_TRISJbits                        00000000
+_TXREG                            00000000
+_TXREG1                           00000000
+_TXREG2                           00000000
+_TXSTA                            00000000
+_TXSTA1                           00000000
+_TXSTA1bits                       00000000
+_TXSTA2                           00000000
+_TXSTA2bits                       00000000
+_TXSTAbits                        00000000
+_WDTCON                           00000000
+_WDTCONbits                       00000000
+_WREG                             00000000
+__18F97J60                        00000001
+_delay_1ms                        00000000
+_delay_ms                         00000000
+gpasm-0.13.7 beta               Objects/led.asm3-19-2010  11:42:06          PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+ 
+_init_board                       00000000
+_main                             00000000
+r0x00                             00000000
+r0x01                             00000001
+r0x02                             00000002
+r0x03                             00000003
+
+
+Errors   :       0
+Warnings :       0 reported,       0 suppressed
+Messages :       0 reported,       0 suppressed
+

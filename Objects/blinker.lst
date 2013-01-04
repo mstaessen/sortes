@@ -1,0 +1,1185 @@
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;--------------------------------------------------------
+                      00002 ; File Created by SDCC : free open source ANSI-C Compiler
+                      00003 ; Version 3.2.0 #8008 (Jul  6 2012) (Mac OS X i386)
+                      00004 ; This file was generated Fri Jan  4 00:33:16 2013
+                      00005 ;--------------------------------------------------------
+                      00006 ; PIC16 port for the Microchip 16-bit core micros
+                      00007 ;--------------------------------------------------------
+                      00008         list    p=18f97j60
+                      00009 
+                      00010         radix dec
+                      00011 
+                      00012 ;--------------------------------------------------------
+                      00013 ; public variables in this module
+                      00014 ;--------------------------------------------------------
+                      00015         global  _offsetTMR1
+                      00016         global  _high_isr
+                      00017         global  _configure
+                      00018         global  _main
+                      00019 
+                      00020 ;--------------------------------------------------------
+                      00021 ; extern variables in this module
+                      00022 ;--------------------------------------------------------
+                      00023         extern  _EBSTCONbits
+                      00024         extern  _MISTATbits
+                      00025         extern  _EFLOCONbits
+                      00026         extern  _MACON1bits
+                      00027         extern  _MACON2bits
+                      00028         extern  _MACON3bits
+                      00029         extern  _MACON4bits
+                      00030         extern  _MACLCON1bits
+                      00031         extern  _MACLCON2bits
+                      00032         extern  _MICONbits
+                      00033         extern  _MICMDbits
+                      00034         extern  _EWOLIEbits
+                      00035         extern  _EWOLIRbits
+                      00036         extern  _ERXFCONbits
+                      00037         extern  _EIEbits
+                      00038         extern  _ESTATbits
+                      00039         extern  _ECON2bits
+                      00040         extern  _EIRbits
+                      00041         extern  _EDATAbits
+                      00042         extern  _SSP2CON2bits
+                      00043         extern  _SSP2CON1bits
+                      00044         extern  _SSP2STATbits
+                      00045         extern  _ECCP2DELbits
+                      00046         extern  _ECCP2ASbits
+                      00047         extern  _ECCP3DELbits
+                      00048         extern  _ECCP3ASbits
+                      00049         extern  _RCSTA2bits
+                      00050         extern  _TXSTA2bits
+                      00051         extern  _CCP5CONbits
+                      00052         extern  _CCP4CONbits
+                      00053         extern  _T4CONbits
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00054         extern  _ECCP1DELbits
+                      00055         extern  _BAUDCON2bits
+                      00056         extern  _BAUDCTL2bits
+                      00057         extern  _BAUDCONbits
+                      00058         extern  _BAUDCON1bits
+                      00059         extern  _BAUDCTLbits
+                      00060         extern  _BAUDCTL1bits
+                      00061         extern  _PORTAbits
+                      00062         extern  _PORTBbits
+                      00063         extern  _PORTCbits
+                      00064         extern  _PORTDbits
+                      00065         extern  _PORTEbits
+                      00066         extern  _PORTFbits
+                      00067         extern  _PORTGbits
+                      00068         extern  _PORTHbits
+                      00069         extern  _PORTJbits
+                      00070         extern  _LATAbits
+                      00071         extern  _LATBbits
+                      00072         extern  _LATCbits
+                      00073         extern  _LATDbits
+                      00074         extern  _LATEbits
+                      00075         extern  _LATFbits
+                      00076         extern  _LATGbits
+                      00077         extern  _LATHbits
+                      00078         extern  _LATJbits
+                      00079         extern  _DDRAbits
+                      00080         extern  _TRISAbits
+                      00081         extern  _DDRBbits
+                      00082         extern  _TRISBbits
+                      00083         extern  _DDRCbits
+                      00084         extern  _TRISCbits
+                      00085         extern  _DDRDbits
+                      00086         extern  _TRISDbits
+                      00087         extern  _DDREbits
+                      00088         extern  _TRISEbits
+                      00089         extern  _DDRFbits
+                      00090         extern  _TRISFbits
+                      00091         extern  _DDRGbits
+                      00092         extern  _TRISGbits
+                      00093         extern  _DDRHbits
+                      00094         extern  _TRISHbits
+                      00095         extern  _DDRJbits
+                      00096         extern  _TRISJbits
+                      00097         extern  _OSCTUNEbits
+                      00098         extern  _MEMCONbits
+                      00099         extern  _PIE1bits
+                      00100         extern  _PIR1bits
+                      00101         extern  _IPR1bits
+                      00102         extern  _PIE2bits
+                      00103         extern  _PIR2bits
+                      00104         extern  _IPR2bits
+                      00105         extern  _PIE3bits
+                      00106         extern  _PIR3bits
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00107         extern  _IPR3bits
+                      00108         extern  _EECON1bits
+                      00109         extern  _RCSTAbits
+                      00110         extern  _RCSTA1bits
+                      00111         extern  _TXSTAbits
+                      00112         extern  _TXSTA1bits
+                      00113         extern  _PSPCONbits
+                      00114         extern  _T3CONbits
+                      00115         extern  _CMCONbits
+                      00116         extern  _CVRCONbits
+                      00117         extern  _ECCP1ASbits
+                      00118         extern  _CCP3CONbits
+                      00119         extern  _ECCP3CONbits
+                      00120         extern  _CCP2CONbits
+                      00121         extern  _ECCP2CONbits
+                      00122         extern  _CCP1CONbits
+                      00123         extern  _ECCP1CONbits
+                      00124         extern  _ADCON2bits
+                      00125         extern  _ADCON1bits
+                      00126         extern  _ADCON0bits
+                      00127         extern  _SSP1CON2bits
+                      00128         extern  _SSPCON2bits
+                      00129         extern  _SSP1CON1bits
+                      00130         extern  _SSPCON1bits
+                      00131         extern  _SSP1STATbits
+                      00132         extern  _SSPSTATbits
+                      00133         extern  _T2CONbits
+                      00134         extern  _T1CONbits
+                      00135         extern  _RCONbits
+                      00136         extern  _WDTCONbits
+                      00137         extern  _ECON1bits
+                      00138         extern  _OSCCONbits
+                      00139         extern  _T0CONbits
+                      00140         extern  _STATUSbits
+                      00141         extern  _INTCON3bits
+                      00142         extern  _INTCON2bits
+                      00143         extern  _INTCONbits
+                      00144         extern  _STKPTRbits
+                      00145         extern  _stdin
+                      00146         extern  _stdout
+                      00147         extern  _LCDText
+                      00148         extern  _MAADR5
+                      00149         extern  _MAADR6
+                      00150         extern  _MAADR3
+                      00151         extern  _MAADR4
+                      00152         extern  _MAADR1
+                      00153         extern  _MAADR2
+                      00154         extern  _EBSTSD
+                      00155         extern  _EBSTCON
+                      00156         extern  _EBSTCS
+                      00157         extern  _EBSTCSL
+                      00158         extern  _EBSTCSH
+                      00159         extern  _MISTAT
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00160         extern  _EFLOCON
+                      00161         extern  _EPAUS
+                      00162         extern  _EPAUSL
+                      00163         extern  _EPAUSH
+                      00164         extern  _MACON1
+                      00165         extern  _MACON2
+                      00166         extern  _MACON3
+                      00167         extern  _MACON4
+                      00168         extern  _MABBIPG
+                      00169         extern  _MAIPG
+                      00170         extern  _MAIPGL
+                      00171         extern  _MAIPGH
+                      00172         extern  _MACLCON1
+                      00173         extern  _MACLCON2
+                      00174         extern  _MAMXFL
+                      00175         extern  _MAMXFLL
+                      00176         extern  _MAMXFLH
+                      00177         extern  _MICON
+                      00178         extern  _MICMD
+                      00179         extern  _MIREGADR
+                      00180         extern  _MIWR
+                      00181         extern  _MIWRL
+                      00182         extern  _MIWRH
+                      00183         extern  _MIRD
+                      00184         extern  _MIRDL
+                      00185         extern  _MIRDH
+                      00186         extern  _EHT0
+                      00187         extern  _EHT1
+                      00188         extern  _EHT2
+                      00189         extern  _EHT3
+                      00190         extern  _EHT4
+                      00191         extern  _EHT5
+                      00192         extern  _EHT6
+                      00193         extern  _EHT7
+                      00194         extern  _EPMM0
+                      00195         extern  _EPMM1
+                      00196         extern  _EPMM2
+                      00197         extern  _EPMM3
+                      00198         extern  _EPMM4
+                      00199         extern  _EPMM5
+                      00200         extern  _EPMM6
+                      00201         extern  _EPMM7
+                      00202         extern  _EPMCS
+                      00203         extern  _EPMCSL
+                      00204         extern  _EPMCSH
+                      00205         extern  _EPMO
+                      00206         extern  _EPMOL
+                      00207         extern  _EPMOH
+                      00208         extern  _EWOLIE
+                      00209         extern  _EWOLIR
+                      00210         extern  _ERXFCON
+                      00211         extern  _EPKTCNT
+                      00212         extern  _EWRPT
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00213         extern  _EWRPTL
+                      00214         extern  _EWRPTH
+                      00215         extern  _ETXST
+                      00216         extern  _ETXSTL
+                      00217         extern  _ETXSTH
+                      00218         extern  _ETXND
+                      00219         extern  _ETXNDL
+                      00220         extern  _ETXNDH
+                      00221         extern  _ERXST
+                      00222         extern  _ERXSTL
+                      00223         extern  _ERXSTH
+                      00224         extern  _ERXND
+                      00225         extern  _ERXNDL
+                      00226         extern  _ERXNDH
+                      00227         extern  _ERXRDPT
+                      00228         extern  _ERXRDPTL
+                      00229         extern  _ERXRDPTH
+                      00230         extern  _ERXWRPT
+                      00231         extern  _ERXWRPTL
+                      00232         extern  _ERXWRPTH
+                      00233         extern  _EDMAST
+                      00234         extern  _EDMASTL
+                      00235         extern  _EDMASTH
+                      00236         extern  _EDMAND
+                      00237         extern  _EDMANDL
+                      00238         extern  _EDMANDH
+                      00239         extern  _EDMADST
+                      00240         extern  _EDMADSTL
+                      00241         extern  _EDMADSTH
+                      00242         extern  _EDMACS
+                      00243         extern  _EDMACSL
+                      00244         extern  _EDMACSH
+                      00245         extern  _EIE
+                      00246         extern  _ESTAT
+                      00247         extern  _ECON2
+                      00248         extern  _EIR
+                      00249         extern  _EDATA
+                      00250         extern  _SSP2CON2
+                      00251         extern  _SSP2CON1
+                      00252         extern  _SSP2STAT
+                      00253         extern  _SSP2ADD
+                      00254         extern  _SSP2BUF
+                      00255         extern  _ECCP2DEL
+                      00256         extern  _ECCP2AS
+                      00257         extern  _ECCP3DEL
+                      00258         extern  _ECCP3AS
+                      00259         extern  _RCSTA2
+                      00260         extern  _TXSTA2
+                      00261         extern  _TXREG2
+                      00262         extern  _RCREG2
+                      00263         extern  _SPBRG2
+                      00264         extern  _CCP5CON
+                      00265         extern  _CCPR5
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00266         extern  _CCPR5L
+                      00267         extern  _CCPR5H
+                      00268         extern  _CCP4CON
+                      00269         extern  _CCPR4
+                      00270         extern  _CCPR4L
+                      00271         extern  _CCPR4H
+                      00272         extern  _T4CON
+                      00273         extern  _PR4
+                      00274         extern  _TMR4
+                      00275         extern  _ECCP1DEL
+                      00276         extern  _ERDPT
+                      00277         extern  _ERDPTL
+                      00278         extern  _ERDPTH
+                      00279         extern  _BAUDCON2
+                      00280         extern  _BAUDCTL2
+                      00281         extern  _SPBRGH2
+                      00282         extern  _BAUDCON
+                      00283         extern  _BAUDCON1
+                      00284         extern  _BAUDCTL
+                      00285         extern  _BAUDCTL1
+                      00286         extern  _SPBRGH
+                      00287         extern  _SPBRGH1
+                      00288         extern  _PORTA
+                      00289         extern  _PORTB
+                      00290         extern  _PORTC
+                      00291         extern  _PORTD
+                      00292         extern  _PORTE
+                      00293         extern  _PORTF
+                      00294         extern  _PORTG
+                      00295         extern  _PORTH
+                      00296         extern  _PORTJ
+                      00297         extern  _LATA
+                      00298         extern  _LATB
+                      00299         extern  _LATC
+                      00300         extern  _LATD
+                      00301         extern  _LATE
+                      00302         extern  _LATF
+                      00303         extern  _LATG
+                      00304         extern  _LATH
+                      00305         extern  _LATJ
+                      00306         extern  _DDRA
+                      00307         extern  _TRISA
+                      00308         extern  _DDRB
+                      00309         extern  _TRISB
+                      00310         extern  _DDRC
+                      00311         extern  _TRISC
+                      00312         extern  _DDRD
+                      00313         extern  _TRISD
+                      00314         extern  _DDRE
+                      00315         extern  _TRISE
+                      00316         extern  _DDRF
+                      00317         extern  _TRISF
+                      00318         extern  _DDRG
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00319         extern  _TRISG
+                      00320         extern  _DDRH
+                      00321         extern  _TRISH
+                      00322         extern  _DDRJ
+                      00323         extern  _TRISJ
+                      00324         extern  _OSCTUNE
+                      00325         extern  _MEMCON
+                      00326         extern  _PIE1
+                      00327         extern  _PIR1
+                      00328         extern  _IPR1
+                      00329         extern  _PIE2
+                      00330         extern  _PIR2
+                      00331         extern  _IPR2
+                      00332         extern  _PIE3
+                      00333         extern  _PIR3
+                      00334         extern  _IPR3
+                      00335         extern  _EECON1
+                      00336         extern  _EECON2
+                      00337         extern  _RCSTA
+                      00338         extern  _RCSTA1
+                      00339         extern  _TXSTA
+                      00340         extern  _TXSTA1
+                      00341         extern  _TXREG
+                      00342         extern  _TXREG1
+                      00343         extern  _RCREG
+                      00344         extern  _RCREG1
+                      00345         extern  _SPBRG
+                      00346         extern  _SPBRG1
+                      00347         extern  _PSPCON
+                      00348         extern  _T3CON
+                      00349         extern  _TMR3L
+                      00350         extern  _TMR3H
+                      00351         extern  _CMCON
+                      00352         extern  _CVRCON
+                      00353         extern  _ECCP1AS
+                      00354         extern  _CCP3CON
+                      00355         extern  _ECCP3CON
+                      00356         extern  _CCPR3
+                      00357         extern  _CCPR3L
+                      00358         extern  _CCPR3H
+                      00359         extern  _CCP2CON
+                      00360         extern  _ECCP2CON
+                      00361         extern  _CCPR2
+                      00362         extern  _CCPR2L
+                      00363         extern  _CCPR2H
+                      00364         extern  _CCP1CON
+                      00365         extern  _ECCP1CON
+                      00366         extern  _CCPR1
+                      00367         extern  _CCPR1L
+                      00368         extern  _CCPR1H
+                      00369         extern  _ADCON2
+                      00370         extern  _ADCON1
+                      00371         extern  _ADCON0
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00372         extern  _ADRES
+                      00373         extern  _ADRESL
+                      00374         extern  _ADRESH
+                      00375         extern  _SSP1CON2
+                      00376         extern  _SSPCON2
+                      00377         extern  _SSP1CON1
+                      00378         extern  _SSPCON1
+                      00379         extern  _SSP1STAT
+                      00380         extern  _SSPSTAT
+                      00381         extern  _SSP1ADD
+                      00382         extern  _SSPADD
+                      00383         extern  _SSP1BUF
+                      00384         extern  _SSPBUF
+                      00385         extern  _T2CON
+                      00386         extern  _PR2
+                      00387         extern  _TMR2
+                      00388         extern  _T1CON
+                      00389         extern  _TMR1L
+                      00390         extern  _TMR1H
+                      00391         extern  _RCON
+                      00392         extern  _WDTCON
+                      00393         extern  _ECON1
+                      00394         extern  _OSCCON
+                      00395         extern  _T0CON
+                      00396         extern  _TMR0L
+                      00397         extern  _TMR0H
+                      00398         extern  _STATUS
+                      00399         extern  _FSR2L
+                      00400         extern  _FSR2H
+                      00401         extern  _PLUSW2
+                      00402         extern  _PREINC2
+                      00403         extern  _POSTDEC2
+                      00404         extern  _POSTINC2
+                      00405         extern  _INDF2
+                      00406         extern  _BSR
+                      00407         extern  _FSR1L
+                      00408         extern  _FSR1H
+                      00409         extern  _PLUSW1
+                      00410         extern  _PREINC1
+                      00411         extern  _POSTDEC1
+                      00412         extern  _POSTINC1
+                      00413         extern  _INDF1
+                      00414         extern  _WREG
+                      00415         extern  _FSR0L
+                      00416         extern  _FSR0H
+                      00417         extern  _PLUSW0
+                      00418         extern  _PREINC0
+                      00419         extern  _POSTDEC0
+                      00420         extern  _POSTINC0
+                      00421         extern  _INDF0
+                      00422         extern  _INTCON3
+                      00423         extern  _INTCON2
+                      00424         extern  _INTCON
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00425         extern  _PROD
+                      00426         extern  _PRODL
+                      00427         extern  _PRODH
+                      00428         extern  _TABLAT
+                      00429         extern  _TBLPTR
+                      00430         extern  _TBLPTRL
+                      00431         extern  _TBLPTRH
+                      00432         extern  _TBLPTRU
+                      00433         extern  _PC
+                      00434         extern  _PCL
+                      00435         extern  _PCLATH
+                      00436         extern  _PCLATU
+                      00437         extern  _STKPTR
+                      00438         extern  _TOS
+                      00439         extern  _TOSL
+                      00440         extern  _TOSH
+                      00441         extern  _TOSU
+                      00442 
+                      00443 ;--------------------------------------------------------
+                      00444 ;       Equates to used internal registers
+                      00445 ;--------------------------------------------------------
+  00000FD8            00446 STATUS  equ     0xfd8
+  00000FFA            00447 PCLATH  equ     0xffa
+  00000FFB            00448 PCLATU  equ     0xffb
+  00000FE8            00449 WREG    equ     0xfe8
+  00000FE0            00450 BSR     equ     0xfe0
+  00000FE9            00451 FSR0L   equ     0xfe9
+  00000FEA            00452 FSR0H   equ     0xfea
+  00000FE1            00453 FSR1L   equ     0xfe1
+  00000FD9            00454 FSR2L   equ     0xfd9
+  00000FE5            00455 POSTDEC1        equ     0xfe5
+  00000FE4            00456 PREINC1 equ     0xfe4
+  00000FF3            00457 PRODL   equ     0xff3
+  00000FF4            00458 PRODH   equ     0xff4
+                      00459 
+                      00460 
+                      00461 ; Internal registers
+                      00462 .registers      udata_ovr       0x0000
+000000                00463 r0x00   res     1
+                      00464 
+                      00465 ;--------------------------------------------------------
+                      00466 ; interrupt vector
+                      00467 ;--------------------------------------------------------
+                      00468 
+                      00469 ;--------------------------------------------------------
+                      00470 ; global & static initialisations
+                      00471 ;--------------------------------------------------------
+                      00472 ; ; Starting pCode block for absolute section
+                      00473 ; ;-----------------------------------------
+                      00474 S_blinker_ivec_0x1_high_isr     code    0X000008
+000008                00475 ivec_0x1_high_isr:
+000008 EF00 F???      00476         GOTO    _high_isr
+                      00477 
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00478 ; I code from now on!
+                      00479 ; ; Starting pCode block
+                      00480 S_blinker__main code
+000000                00481 _main:
+                      00482 ;       .line   56; blinker.c   configure();
+000000 EC?? F???      00483         CALL    _configure
+                      00484 ;       .line   57; blinker.c   offsetTMR1();
+000004 EC?? F???      00485         CALL    _offsetTMR1
+                      00486 ;       .line   60; blinker.c   LED0_IO = 1;
+000008 80??           00487         BSF     _LATJbits, 0
+                      00488 ;       .line   62; blinker.c   LED1_IO = 0;
+00000A 92??           00489         BCF     _LATJbits, 1
+00000C                00490 _00123_DS_:
+                      00491 ;       .line   64; blinker.c   while (1);
+00000C D???           00492         BRA     _00123_DS_
+00000E 0012           00493         RETURN  
+                      00494 
+                      00495 ; ; Starting pCode block
+                      00496 S_blinker__configure    code
+000000                00497 _configure:
+                      00498 ;       .line   26; blinker.c   void configure(void)
+000000 CFD9 FFE5      00499         MOVFF   FSR2L, POSTDEC1
+000004 CFE1 FFD9      00500         MOVFF   FSR1L, FSR2L
+                      00501 ;       .line   29; blinker.c   LED0_TRIS = 0;
+000008 90??           00502         BCF     _TRISJbits, 0
+                      00503 ;       .line   31; blinker.c   LED1_TRIS = 0;
+00000A 92??           00504         BCF     _TRISJbits, 1
+                      00505 ;       .line   34; blinker.c   INTCONbits.GIE = 1;
+00000C 8E??           00506         BSF     _INTCONbits, 7
+                      00507 ;       .line   35; blinker.c   INTCONbits.PEIE = 1;
+00000E 8C??           00508         BSF     _INTCONbits, 6
+                      00509 ;       .line   38; blinker.c   T1CONbits.TMR1ON = 1; 
+000010 80??           00510         BSF     _T1CONbits, 0
+                      00511 ;       .line   40; blinker.c   T1CONbits.RD16 = 1; 
+000012 8E??           00512         BSF     _T1CONbits, 7
+                      00513 ;       .line   42; blinker.c   T1CONbits.TMR1CS = 1;
+000014 82??           00514         BSF     _T1CONbits, 1
+                      00515 ;       .line   44; blinker.c   T1CONbits.T1OSCEN = 1;
+000016 86??           00516         BSF     _T1CONbits, 3
+                      00517 ;       .line   46; blinker.c   T1CONbits.T1CKPS0 = 0;
+000018 98??           00518         BCF     _T1CONbits, 4
+                      00519 ;       .line   47; blinker.c   T1CONbits.T1CKPS1 = 0;
+00001A 9A??           00520         BCF     _T1CONbits, 5
+                      00521 ;       .line   49; blinker.c   PIR1bits.TMR1IF = 0;
+00001C 90??           00522         BCF     _PIR1bits, 0
+                      00523 ;       .line   51; blinker.c   PIE1bits.TMR1IE = 1;
+00001E 80??           00524         BSF     _PIE1bits, 0
+000020 CFE4 FFD9      00525         MOVFF   PREINC1, FSR2L
+000024 0012           00526         RETURN  
+                      00527 
+                      00528 ; ; Starting pCode block
+                      00529 S_blinker__high_isr     code
+000000                00530 _high_isr:
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00531 ;       .line   12; blinker.c   void high_isr(void) __interrupt (1) 
+000000 CFD8 FFE5      00532         MOVFF   STATUS, POSTDEC1
+000004 CFE0 FFE5      00533         MOVFF   BSR, POSTDEC1
+000008 6EE5           00534         MOVWF   POSTDEC1
+00000A CFF3 FFE5      00535         MOVFF   PRODL, POSTDEC1
+00000E CFF4 FFE5      00536         MOVFF   PRODH, POSTDEC1
+000012 CFE9 FFE5      00537         MOVFF   FSR0L, POSTDEC1
+000016 CFEA FFE5      00538         MOVFF   FSR0H, POSTDEC1
+00001A CFFA FFE5      00539         MOVFF   PCLATH, POSTDEC1
+00001E CFFB FFE5      00540         MOVFF   PCLATU, POSTDEC1
+000022 CFD9 FFE5      00541         MOVFF   FSR2L, POSTDEC1
+000026 CFE1 FFD9      00542         MOVFF   FSR1L, FSR2L
+00002A C??? FFE5      00543         MOVFF   r0x00, POSTDEC1
+                      00544 ;       .line   14; blinker.c   if (PIR1bits.TMR1IF) {
+00002E A0??           00545         BTFSS   _PIR1bits, 0
+000030 D???           00546         BRA     _00112_DS_
+                      00547 ;       .line   15; blinker.c   LED0_IO ^= 1; 
+000032 6A??           00548         CLRF    r0x00
+000034 B0??           00549         BTFSC   _LATJbits, 0
+000036 2A??           00550         INCF    r0x00, F
+000038 70??           00551         BTG     r0x00, 0
+00003A 50??           00552         MOVF    r0x00, W
+00003C 0B01           00553         ANDLW   0x01
+00003E 6EF4           00554         MOVWF   PRODH
+000040 50??           00555         MOVF    _LATJbits, W
+000042 0BFE           00556         ANDLW   0xfe
+000044 10F4           00557         IORWF   PRODH, W
+000046 6E??           00558         MOVWF   _LATJbits
+                      00559 ;       .line   16; blinker.c   LED1_IO ^= 1; 
+000048 6A??           00560         CLRF    r0x00
+00004A B2??           00561         BTFSC   _LATJbits, 1
+00004C 2A??           00562         INCF    r0x00, F
+00004E 70??           00563         BTG     r0x00, 0
+000050 50??           00564         MOVF    r0x00, W
+000052 0B01           00565         ANDLW   0x01
+000054 44E8           00566         RLNCF   WREG, W
+000056 6EF4           00567         MOVWF   PRODH
+000058 50??           00568         MOVF    _LATJbits, W
+00005A 0BFD           00569         ANDLW   0xfd
+00005C 10F4           00570         IORWF   PRODH, W
+00005E 6E??           00571         MOVWF   _LATJbits
+                      00572 ;       .line   18; blinker.c   offsetTMR1();
+000060 EC?? F???      00573         CALL    _offsetTMR1
+                      00574 ;       .line   21; blinker.c   PIR1bits.TMR1IF = 0;
+000064 90??           00575         BCF     _PIR1bits, 0
+000066                00576 _00112_DS_:
+000066 CFE4 F???      00577         MOVFF   PREINC1, r0x00
+00006A CFE4 FFD9      00578         MOVFF   PREINC1, FSR2L
+00006E CFE4 FFFB      00579         MOVFF   PREINC1, PCLATU
+000072 CFE4 FFFA      00580         MOVFF   PREINC1, PCLATH
+000076 CFE4 FFEA      00581         MOVFF   PREINC1, FSR0H
+00007A CFE4 FFE9      00582         MOVFF   PREINC1, FSR0L
+00007E CFE4 FFF4      00583         MOVFF   PREINC1, PRODH
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000082 CFE4 FFF3      00584         MOVFF   PREINC1, PRODL
+000086 50E4           00585         MOVF    PREINC1, W
+000088 CFE4 FFE0      00586         MOVFF   PREINC1, BSR
+00008C CFE4 FFD8      00587         MOVFF   PREINC1, STATUS
+000090 0010           00588         RETFIE  
+                      00589 
+                      00590 ; ; Starting pCode block
+                      00591 S_blinker__offsetTMR1   code
+000000                00592 _offsetTMR1:
+                      00593 ;       .line   6; blinker.c    void offsetTMR1(void) 
+000000 CFD9 FFE5      00594         MOVFF   FSR2L, POSTDEC1
+000004 CFE1 FFD9      00595         MOVFF   FSR1L, FSR2L
+                      00596 ;       .line   8; blinker.c    TMR1H = 0x10000000;
+000008 6A??           00597         CLRF    _TMR1H
+                      00598 ;       .line   9; blinker.c    TMR1L = 0x00000000;
+00000A 6A??           00599         CLRF    _TMR1L
+00000C CFE4 FFD9      00600         MOVFF   PREINC1, FSR2L
+000010 0012           00601         RETURN  
+                      00602 
+                      00603 
+                      00604 
+                      00605 ; Statistics:
+                      00606 ; code size:      220 (0x00dc) bytes ( 0.17%)
+                      00607 ;                 110 (0x006e) words
+                      00608 ; udata size:       0 (0x0000) bytes ( 0.00%)
+                      00609 ; access size:      1 (0x0001) bytes
+                      00610 
+                      00611 
+                      00612         end
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE 13
+
+
+SYMBOL TABLE
+  LABEL                             VALUE
+
+BSR                               00000FE0
+FSR0H                             00000FEA
+FSR0L                             00000FE9
+FSR1L                             00000FE1
+FSR2L                             00000FD9
+PCLATH                            00000FFA
+PCLATU                            00000FFB
+POSTDEC1                          00000FE5
+PREINC1                           00000FE4
+PRODH                             00000FF4
+PRODL                             00000FF3
+STATUS                            00000FD8
+WREG                              00000FE8
+_00112_DS_                        00000066
+_00123_DS_                        0000000C
+_ADCON0                           00000000
+_ADCON0bits                       00000000
+_ADCON1                           00000000
+_ADCON1bits                       00000000
+_ADCON2                           00000000
+_ADCON2bits                       00000000
+_ADRES                            00000000
+_ADRESH                           00000000
+_ADRESL                           00000000
+_BAUDCON                          00000000
+_BAUDCON1                         00000000
+_BAUDCON1bits                     00000000
+_BAUDCON2                         00000000
+_BAUDCON2bits                     00000000
+_BAUDCONbits                      00000000
+_BAUDCTL                          00000000
+_BAUDCTL1                         00000000
+_BAUDCTL1bits                     00000000
+_BAUDCTL2                         00000000
+_BAUDCTL2bits                     00000000
+_BAUDCTLbits                      00000000
+_BSR                              00000000
+_CCP1CON                          00000000
+_CCP1CONbits                      00000000
+_CCP2CON                          00000000
+_CCP2CONbits                      00000000
+_CCP3CON                          00000000
+_CCP3CONbits                      00000000
+_CCP4CON                          00000000
+_CCP4CONbits                      00000000
+_CCP5CON                          00000000
+_CCP5CONbits                      00000000
+_CCPR1                            00000000
+_CCPR1H                           00000000
+_CCPR1L                           00000000
+_CCPR2                            00000000
+_CCPR2H                           00000000
+_CCPR2L                           00000000
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE 14
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_CCPR3                            00000000
+_CCPR3H                           00000000
+_CCPR3L                           00000000
+_CCPR4                            00000000
+_CCPR4H                           00000000
+_CCPR4L                           00000000
+_CCPR5                            00000000
+_CCPR5H                           00000000
+_CCPR5L                           00000000
+_CMCON                            00000000
+_CMCONbits                        00000000
+_CVRCON                           00000000
+_CVRCONbits                       00000000
+_DDRA                             00000000
+_DDRAbits                         00000000
+_DDRB                             00000000
+_DDRBbits                         00000000
+_DDRC                             00000000
+_DDRCbits                         00000000
+_DDRD                             00000000
+_DDRDbits                         00000000
+_DDRE                             00000000
+_DDREbits                         00000000
+_DDRF                             00000000
+_DDRFbits                         00000000
+_DDRG                             00000000
+_DDRGbits                         00000000
+_DDRH                             00000000
+_DDRHbits                         00000000
+_DDRJ                             00000000
+_DDRJbits                         00000000
+_EBSTCON                          00000000
+_EBSTCONbits                      00000000
+_EBSTCS                           00000000
+_EBSTCSH                          00000000
+_EBSTCSL                          00000000
+_EBSTSD                           00000000
+_ECCP1AS                          00000000
+_ECCP1ASbits                      00000000
+_ECCP1CON                         00000000
+_ECCP1CONbits                     00000000
+_ECCP1DEL                         00000000
+_ECCP1DELbits                     00000000
+_ECCP2AS                          00000000
+_ECCP2ASbits                      00000000
+_ECCP2CON                         00000000
+_ECCP2CONbits                     00000000
+_ECCP2DEL                         00000000
+_ECCP2DELbits                     00000000
+_ECCP3AS                          00000000
+_ECCP3ASbits                      00000000
+_ECCP3CON                         00000000
+_ECCP3CONbits                     00000000
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE 15
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_ECCP3DEL                         00000000
+_ECCP3DELbits                     00000000
+_ECON1                            00000000
+_ECON1bits                        00000000
+_ECON2                            00000000
+_ECON2bits                        00000000
+_EDATA                            00000000
+_EDATAbits                        00000000
+_EDMACS                           00000000
+_EDMACSH                          00000000
+_EDMACSL                          00000000
+_EDMADST                          00000000
+_EDMADSTH                         00000000
+_EDMADSTL                         00000000
+_EDMAND                           00000000
+_EDMANDH                          00000000
+_EDMANDL                          00000000
+_EDMAST                           00000000
+_EDMASTH                          00000000
+_EDMASTL                          00000000
+_EECON1                           00000000
+_EECON1bits                       00000000
+_EECON2                           00000000
+_EFLOCON                          00000000
+_EFLOCONbits                      00000000
+_EHT0                             00000000
+_EHT1                             00000000
+_EHT2                             00000000
+_EHT3                             00000000
+_EHT4                             00000000
+_EHT5                             00000000
+_EHT6                             00000000
+_EHT7                             00000000
+_EIE                              00000000
+_EIEbits                          00000000
+_EIR                              00000000
+_EIRbits                          00000000
+_EPAUS                            00000000
+_EPAUSH                           00000000
+_EPAUSL                           00000000
+_EPKTCNT                          00000000
+_EPMCS                            00000000
+_EPMCSH                           00000000
+_EPMCSL                           00000000
+_EPMM0                            00000000
+_EPMM1                            00000000
+_EPMM2                            00000000
+_EPMM3                            00000000
+_EPMM4                            00000000
+_EPMM5                            00000000
+_EPMM6                            00000000
+_EPMM7                            00000000
+_EPMO                             00000000
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE 16
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_EPMOH                            00000000
+_EPMOL                            00000000
+_ERDPT                            00000000
+_ERDPTH                           00000000
+_ERDPTL                           00000000
+_ERXFCON                          00000000
+_ERXFCONbits                      00000000
+_ERXND                            00000000
+_ERXNDH                           00000000
+_ERXNDL                           00000000
+_ERXRDPT                          00000000
+_ERXRDPTH                         00000000
+_ERXRDPTL                         00000000
+_ERXST                            00000000
+_ERXSTH                           00000000
+_ERXSTL                           00000000
+_ERXWRPT                          00000000
+_ERXWRPTH                         00000000
+_ERXWRPTL                         00000000
+_ESTAT                            00000000
+_ESTATbits                        00000000
+_ETXND                            00000000
+_ETXNDH                           00000000
+_ETXNDL                           00000000
+_ETXST                            00000000
+_ETXSTH                           00000000
+_ETXSTL                           00000000
+_EWOLIE                           00000000
+_EWOLIEbits                       00000000
+_EWOLIR                           00000000
+_EWOLIRbits                       00000000
+_EWRPT                            00000000
+_EWRPTH                           00000000
+_EWRPTL                           00000000
+_FSR0H                            00000000
+_FSR0L                            00000000
+_FSR1H                            00000000
+_FSR1L                            00000000
+_FSR2H                            00000000
+_FSR2L                            00000000
+_INDF0                            00000000
+_INDF1                            00000000
+_INDF2                            00000000
+_INTCON                           00000000
+_INTCON2                          00000000
+_INTCON2bits                      00000000
+_INTCON3                          00000000
+_INTCON3bits                      00000000
+_INTCONbits                       00000000
+_IPR1                             00000000
+_IPR1bits                         00000000
+_IPR2                             00000000
+_IPR2bits                         00000000
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE 17
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_IPR3                             00000000
+_IPR3bits                         00000000
+_LATA                             00000000
+_LATAbits                         00000000
+_LATB                             00000000
+_LATBbits                         00000000
+_LATC                             00000000
+_LATCbits                         00000000
+_LATD                             00000000
+_LATDbits                         00000000
+_LATE                             00000000
+_LATEbits                         00000000
+_LATF                             00000000
+_LATFbits                         00000000
+_LATG                             00000000
+_LATGbits                         00000000
+_LATH                             00000000
+_LATHbits                         00000000
+_LATJ                             00000000
+_LATJbits                         00000000
+_LCDText                          00000000
+_MAADR1                           00000000
+_MAADR2                           00000000
+_MAADR3                           00000000
+_MAADR4                           00000000
+_MAADR5                           00000000
+_MAADR6                           00000000
+_MABBIPG                          00000000
+_MACLCON1                         00000000
+_MACLCON1bits                     00000000
+_MACLCON2                         00000000
+_MACLCON2bits                     00000000
+_MACON1                           00000000
+_MACON1bits                       00000000
+_MACON2                           00000000
+_MACON2bits                       00000000
+_MACON3                           00000000
+_MACON3bits                       00000000
+_MACON4                           00000000
+_MACON4bits                       00000000
+_MAIPG                            00000000
+_MAIPGH                           00000000
+_MAIPGL                           00000000
+_MAMXFL                           00000000
+_MAMXFLH                          00000000
+_MAMXFLL                          00000000
+_MEMCON                           00000000
+_MEMCONbits                       00000000
+_MICMD                            00000000
+_MICMDbits                        00000000
+_MICON                            00000000
+_MICONbits                        00000000
+_MIRD                             00000000
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE 18
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_MIRDH                            00000000
+_MIRDL                            00000000
+_MIREGADR                         00000000
+_MISTAT                           00000000
+_MISTATbits                       00000000
+_MIWR                             00000000
+_MIWRH                            00000000
+_MIWRL                            00000000
+_OSCCON                           00000000
+_OSCCONbits                       00000000
+_OSCTUNE                          00000000
+_OSCTUNEbits                      00000000
+_PC                               00000000
+_PCL                              00000000
+_PCLATH                           00000000
+_PCLATU                           00000000
+_PIE1                             00000000
+_PIE1bits                         00000000
+_PIE2                             00000000
+_PIE2bits                         00000000
+_PIE3                             00000000
+_PIE3bits                         00000000
+_PIR1                             00000000
+_PIR1bits                         00000000
+_PIR2                             00000000
+_PIR2bits                         00000000
+_PIR3                             00000000
+_PIR3bits                         00000000
+_PLUSW0                           00000000
+_PLUSW1                           00000000
+_PLUSW2                           00000000
+_PORTA                            00000000
+_PORTAbits                        00000000
+_PORTB                            00000000
+_PORTBbits                        00000000
+_PORTC                            00000000
+_PORTCbits                        00000000
+_PORTD                            00000000
+_PORTDbits                        00000000
+_PORTE                            00000000
+_PORTEbits                        00000000
+_PORTF                            00000000
+_PORTFbits                        00000000
+_PORTG                            00000000
+_PORTGbits                        00000000
+_PORTH                            00000000
+_PORTHbits                        00000000
+_PORTJ                            00000000
+_PORTJbits                        00000000
+_POSTDEC0                         00000000
+_POSTDEC1                         00000000
+_POSTDEC2                         00000000
+_POSTINC0                         00000000
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE 19
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_POSTINC1                         00000000
+_POSTINC2                         00000000
+_PR2                              00000000
+_PR4                              00000000
+_PREINC0                          00000000
+_PREINC1                          00000000
+_PREINC2                          00000000
+_PROD                             00000000
+_PRODH                            00000000
+_PRODL                            00000000
+_PSPCON                           00000000
+_PSPCONbits                       00000000
+_RCON                             00000000
+_RCONbits                         00000000
+_RCREG                            00000000
+_RCREG1                           00000000
+_RCREG2                           00000000
+_RCSTA                            00000000
+_RCSTA1                           00000000
+_RCSTA1bits                       00000000
+_RCSTA2                           00000000
+_RCSTA2bits                       00000000
+_RCSTAbits                        00000000
+_SPBRG                            00000000
+_SPBRG1                           00000000
+_SPBRG2                           00000000
+_SPBRGH                           00000000
+_SPBRGH1                          00000000
+_SPBRGH2                          00000000
+_SSP1ADD                          00000000
+_SSP1BUF                          00000000
+_SSP1CON1                         00000000
+_SSP1CON1bits                     00000000
+_SSP1CON2                         00000000
+_SSP1CON2bits                     00000000
+_SSP1STAT                         00000000
+_SSP1STATbits                     00000000
+_SSP2ADD                          00000000
+_SSP2BUF                          00000000
+_SSP2CON1                         00000000
+_SSP2CON1bits                     00000000
+_SSP2CON2                         00000000
+_SSP2CON2bits                     00000000
+_SSP2STAT                         00000000
+_SSP2STATbits                     00000000
+_SSPADD                           00000000
+_SSPBUF                           00000000
+_SSPCON1                          00000000
+_SSPCON1bits                      00000000
+_SSPCON2                          00000000
+_SSPCON2bits                      00000000
+_SSPSTAT                          00000000
+_SSPSTATbits                      00000000
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE 20
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_STATUS                           00000000
+_STATUSbits                       00000000
+_STKPTR                           00000000
+_STKPTRbits                       00000000
+_T0CON                            00000000
+_T0CONbits                        00000000
+_T1CON                            00000000
+_T1CONbits                        00000000
+_T2CON                            00000000
+_T2CONbits                        00000000
+_T3CON                            00000000
+_T3CONbits                        00000000
+_T4CON                            00000000
+_T4CONbits                        00000000
+_TABLAT                           00000000
+_TBLPTR                           00000000
+_TBLPTRH                          00000000
+_TBLPTRL                          00000000
+_TBLPTRU                          00000000
+_TMR0H                            00000000
+_TMR0L                            00000000
+_TMR1H                            00000000
+_TMR1L                            00000000
+_TMR2                             00000000
+_TMR3H                            00000000
+_TMR3L                            00000000
+_TMR4                             00000000
+_TOS                              00000000
+_TOSH                             00000000
+_TOSL                             00000000
+_TOSU                             00000000
+_TRISA                            00000000
+_TRISAbits                        00000000
+_TRISB                            00000000
+_TRISBbits                        00000000
+_TRISC                            00000000
+_TRISCbits                        00000000
+_TRISD                            00000000
+_TRISDbits                        00000000
+_TRISE                            00000000
+_TRISEbits                        00000000
+_TRISF                            00000000
+_TRISFbits                        00000000
+_TRISG                            00000000
+_TRISGbits                        00000000
+_TRISH                            00000000
+_TRISHbits                        00000000
+_TRISJ                            00000000
+_TRISJbits                        00000000
+_TXREG                            00000000
+_TXREG1                           00000000
+_TXREG2                           00000000
+_TXSTA                            00000000
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/blink   1-4-2013  00:33:16          PAGE 21
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_TXSTA1                           00000000
+_TXSTA1bits                       00000000
+_TXSTA2                           00000000
+_TXSTA2bits                       00000000
+_TXSTAbits                        00000000
+_WDTCON                           00000000
+_WDTCONbits                       00000000
+_WREG                             00000000
+__18F97J60                        00000001
+_configure                        00000000
+_high_isr                         00000000
+_main                             00000000
+_offsetTMR1                       00000000
+_stdin                            00000000
+_stdout                           00000000
+ivec_0x1_high_isr                 00000008
+r0x00                             00000000
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

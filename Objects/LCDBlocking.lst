@@ -1,0 +1,1841 @@
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ;--------------------------------------------------------
+                      00002 ; File Created by SDCC : free open source ANSI-C Compiler
+                      00003 ; Version 3.2.0 #8008 (Jul  6 2012) (Mac OS X i386)
+                      00004 ; This file was generated Fri Jan  4 02:35:11 2013
+                      00005 ;--------------------------------------------------------
+                      00006 ; PIC16 port for the Microchip 16-bit core micros
+                      00007 ;--------------------------------------------------------
+                      00008         list    p=18f97j60
+                      00009 
+                      00010         radix dec
+                      00011 
+                      00012 ;--------------------------------------------------------
+                      00013 ; public variables in this module
+                      00014 ;--------------------------------------------------------
+                      00015         global  _LCDInit
+                      00016         global  _LCDUpdate
+                      00017         global  _LCDErase
+                      00018         global  _LCDText
+                      00019 
+                      00020 ;--------------------------------------------------------
+                      00021 ; extern variables in this module
+                      00022 ;--------------------------------------------------------
+                      00023         extern  _EBSTCONbits
+                      00024         extern  _MISTATbits
+                      00025         extern  _EFLOCONbits
+                      00026         extern  _MACON1bits
+                      00027         extern  _MACON2bits
+                      00028         extern  _MACON3bits
+                      00029         extern  _MACON4bits
+                      00030         extern  _MACLCON1bits
+                      00031         extern  _MACLCON2bits
+                      00032         extern  _MICONbits
+                      00033         extern  _MICMDbits
+                      00034         extern  _EWOLIEbits
+                      00035         extern  _EWOLIRbits
+                      00036         extern  _ERXFCONbits
+                      00037         extern  _EIEbits
+                      00038         extern  _ESTATbits
+                      00039         extern  _ECON2bits
+                      00040         extern  _EIRbits
+                      00041         extern  _EDATAbits
+                      00042         extern  _SSP2CON2bits
+                      00043         extern  _SSP2CON1bits
+                      00044         extern  _SSP2STATbits
+                      00045         extern  _ECCP2DELbits
+                      00046         extern  _ECCP2ASbits
+                      00047         extern  _ECCP3DELbits
+                      00048         extern  _ECCP3ASbits
+                      00049         extern  _RCSTA2bits
+                      00050         extern  _TXSTA2bits
+                      00051         extern  _CCP5CONbits
+                      00052         extern  _CCP4CONbits
+                      00053         extern  _T4CONbits
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00054         extern  _ECCP1DELbits
+                      00055         extern  _BAUDCON2bits
+                      00056         extern  _BAUDCTL2bits
+                      00057         extern  _BAUDCONbits
+                      00058         extern  _BAUDCON1bits
+                      00059         extern  _BAUDCTLbits
+                      00060         extern  _BAUDCTL1bits
+                      00061         extern  _PORTAbits
+                      00062         extern  _PORTBbits
+                      00063         extern  _PORTCbits
+                      00064         extern  _PORTDbits
+                      00065         extern  _PORTEbits
+                      00066         extern  _PORTFbits
+                      00067         extern  _PORTGbits
+                      00068         extern  _PORTHbits
+                      00069         extern  _PORTJbits
+                      00070         extern  _LATAbits
+                      00071         extern  _LATBbits
+                      00072         extern  _LATCbits
+                      00073         extern  _LATDbits
+                      00074         extern  _LATEbits
+                      00075         extern  _LATFbits
+                      00076         extern  _LATGbits
+                      00077         extern  _LATHbits
+                      00078         extern  _LATJbits
+                      00079         extern  _DDRAbits
+                      00080         extern  _TRISAbits
+                      00081         extern  _DDRBbits
+                      00082         extern  _TRISBbits
+                      00083         extern  _DDRCbits
+                      00084         extern  _TRISCbits
+                      00085         extern  _DDRDbits
+                      00086         extern  _TRISDbits
+                      00087         extern  _DDREbits
+                      00088         extern  _TRISEbits
+                      00089         extern  _DDRFbits
+                      00090         extern  _TRISFbits
+                      00091         extern  _DDRGbits
+                      00092         extern  _TRISGbits
+                      00093         extern  _DDRHbits
+                      00094         extern  _TRISHbits
+                      00095         extern  _DDRJbits
+                      00096         extern  _TRISJbits
+                      00097         extern  _OSCTUNEbits
+                      00098         extern  _MEMCONbits
+                      00099         extern  _PIE1bits
+                      00100         extern  _PIR1bits
+                      00101         extern  _IPR1bits
+                      00102         extern  _PIE2bits
+                      00103         extern  _PIR2bits
+                      00104         extern  _IPR2bits
+                      00105         extern  _PIE3bits
+                      00106         extern  _PIR3bits
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00107         extern  _IPR3bits
+                      00108         extern  _EECON1bits
+                      00109         extern  _RCSTAbits
+                      00110         extern  _RCSTA1bits
+                      00111         extern  _TXSTAbits
+                      00112         extern  _TXSTA1bits
+                      00113         extern  _PSPCONbits
+                      00114         extern  _T3CONbits
+                      00115         extern  _CMCONbits
+                      00116         extern  _CVRCONbits
+                      00117         extern  _ECCP1ASbits
+                      00118         extern  _CCP3CONbits
+                      00119         extern  _ECCP3CONbits
+                      00120         extern  _CCP2CONbits
+                      00121         extern  _ECCP2CONbits
+                      00122         extern  _CCP1CONbits
+                      00123         extern  _ECCP1CONbits
+                      00124         extern  _ADCON2bits
+                      00125         extern  _ADCON1bits
+                      00126         extern  _ADCON0bits
+                      00127         extern  _SSP1CON2bits
+                      00128         extern  _SSPCON2bits
+                      00129         extern  _SSP1CON1bits
+                      00130         extern  _SSPCON1bits
+                      00131         extern  _SSP1STATbits
+                      00132         extern  _SSPSTATbits
+                      00133         extern  _T2CONbits
+                      00134         extern  _T1CONbits
+                      00135         extern  _RCONbits
+                      00136         extern  _WDTCONbits
+                      00137         extern  _ECON1bits
+                      00138         extern  _OSCCONbits
+                      00139         extern  _T0CONbits
+                      00140         extern  _STATUSbits
+                      00141         extern  _INTCON3bits
+                      00142         extern  _INTCON2bits
+                      00143         extern  _INTCONbits
+                      00144         extern  _STKPTRbits
+                      00145         extern  _stdin
+                      00146         extern  _stdout
+                      00147         extern  _AN0String
+                      00148         extern  _AppConfig
+                      00149         extern  _activeUDPSocket
+                      00150         extern  _UDPSocketInfo
+                      00151         extern  _UDPTxCount
+                      00152         extern  _UDPRxCount
+                      00153         extern  _MAADR5
+                      00154         extern  _MAADR6
+                      00155         extern  _MAADR3
+                      00156         extern  _MAADR4
+                      00157         extern  _MAADR1
+                      00158         extern  _MAADR2
+                      00159         extern  _EBSTSD
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00160         extern  _EBSTCON
+                      00161         extern  _EBSTCS
+                      00162         extern  _EBSTCSL
+                      00163         extern  _EBSTCSH
+                      00164         extern  _MISTAT
+                      00165         extern  _EFLOCON
+                      00166         extern  _EPAUS
+                      00167         extern  _EPAUSL
+                      00168         extern  _EPAUSH
+                      00169         extern  _MACON1
+                      00170         extern  _MACON2
+                      00171         extern  _MACON3
+                      00172         extern  _MACON4
+                      00173         extern  _MABBIPG
+                      00174         extern  _MAIPG
+                      00175         extern  _MAIPGL
+                      00176         extern  _MAIPGH
+                      00177         extern  _MACLCON1
+                      00178         extern  _MACLCON2
+                      00179         extern  _MAMXFL
+                      00180         extern  _MAMXFLL
+                      00181         extern  _MAMXFLH
+                      00182         extern  _MICON
+                      00183         extern  _MICMD
+                      00184         extern  _MIREGADR
+                      00185         extern  _MIWR
+                      00186         extern  _MIWRL
+                      00187         extern  _MIWRH
+                      00188         extern  _MIRD
+                      00189         extern  _MIRDL
+                      00190         extern  _MIRDH
+                      00191         extern  _EHT0
+                      00192         extern  _EHT1
+                      00193         extern  _EHT2
+                      00194         extern  _EHT3
+                      00195         extern  _EHT4
+                      00196         extern  _EHT5
+                      00197         extern  _EHT6
+                      00198         extern  _EHT7
+                      00199         extern  _EPMM0
+                      00200         extern  _EPMM1
+                      00201         extern  _EPMM2
+                      00202         extern  _EPMM3
+                      00203         extern  _EPMM4
+                      00204         extern  _EPMM5
+                      00205         extern  _EPMM6
+                      00206         extern  _EPMM7
+                      00207         extern  _EPMCS
+                      00208         extern  _EPMCSL
+                      00209         extern  _EPMCSH
+                      00210         extern  _EPMO
+                      00211         extern  _EPMOL
+                      00212         extern  _EPMOH
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00213         extern  _EWOLIE
+                      00214         extern  _EWOLIR
+                      00215         extern  _ERXFCON
+                      00216         extern  _EPKTCNT
+                      00217         extern  _EWRPT
+                      00218         extern  _EWRPTL
+                      00219         extern  _EWRPTH
+                      00220         extern  _ETXST
+                      00221         extern  _ETXSTL
+                      00222         extern  _ETXSTH
+                      00223         extern  _ETXND
+                      00224         extern  _ETXNDL
+                      00225         extern  _ETXNDH
+                      00226         extern  _ERXST
+                      00227         extern  _ERXSTL
+                      00228         extern  _ERXSTH
+                      00229         extern  _ERXND
+                      00230         extern  _ERXNDL
+                      00231         extern  _ERXNDH
+                      00232         extern  _ERXRDPT
+                      00233         extern  _ERXRDPTL
+                      00234         extern  _ERXRDPTH
+                      00235         extern  _ERXWRPT
+                      00236         extern  _ERXWRPTL
+                      00237         extern  _ERXWRPTH
+                      00238         extern  _EDMAST
+                      00239         extern  _EDMASTL
+                      00240         extern  _EDMASTH
+                      00241         extern  _EDMAND
+                      00242         extern  _EDMANDL
+                      00243         extern  _EDMANDH
+                      00244         extern  _EDMADST
+                      00245         extern  _EDMADSTL
+                      00246         extern  _EDMADSTH
+                      00247         extern  _EDMACS
+                      00248         extern  _EDMACSL
+                      00249         extern  _EDMACSH
+                      00250         extern  _EIE
+                      00251         extern  _ESTAT
+                      00252         extern  _ECON2
+                      00253         extern  _EIR
+                      00254         extern  _EDATA
+                      00255         extern  _SSP2CON2
+                      00256         extern  _SSP2CON1
+                      00257         extern  _SSP2STAT
+                      00258         extern  _SSP2ADD
+                      00259         extern  _SSP2BUF
+                      00260         extern  _ECCP2DEL
+                      00261         extern  _ECCP2AS
+                      00262         extern  _ECCP3DEL
+                      00263         extern  _ECCP3AS
+                      00264         extern  _RCSTA2
+                      00265         extern  _TXSTA2
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00266         extern  _TXREG2
+                      00267         extern  _RCREG2
+                      00268         extern  _SPBRG2
+                      00269         extern  _CCP5CON
+                      00270         extern  _CCPR5
+                      00271         extern  _CCPR5L
+                      00272         extern  _CCPR5H
+                      00273         extern  _CCP4CON
+                      00274         extern  _CCPR4
+                      00275         extern  _CCPR4L
+                      00276         extern  _CCPR4H
+                      00277         extern  _T4CON
+                      00278         extern  _PR4
+                      00279         extern  _TMR4
+                      00280         extern  _ECCP1DEL
+                      00281         extern  _ERDPT
+                      00282         extern  _ERDPTL
+                      00283         extern  _ERDPTH
+                      00284         extern  _BAUDCON2
+                      00285         extern  _BAUDCTL2
+                      00286         extern  _SPBRGH2
+                      00287         extern  _BAUDCON
+                      00288         extern  _BAUDCON1
+                      00289         extern  _BAUDCTL
+                      00290         extern  _BAUDCTL1
+                      00291         extern  _SPBRGH
+                      00292         extern  _SPBRGH1
+                      00293         extern  _PORTA
+                      00294         extern  _PORTB
+                      00295         extern  _PORTC
+                      00296         extern  _PORTD
+                      00297         extern  _PORTE
+                      00298         extern  _PORTF
+                      00299         extern  _PORTG
+                      00300         extern  _PORTH
+                      00301         extern  _PORTJ
+                      00302         extern  _LATA
+                      00303         extern  _LATB
+                      00304         extern  _LATC
+                      00305         extern  _LATD
+                      00306         extern  _LATE
+                      00307         extern  _LATF
+                      00308         extern  _LATG
+                      00309         extern  _LATH
+                      00310         extern  _LATJ
+                      00311         extern  _DDRA
+                      00312         extern  _TRISA
+                      00313         extern  _DDRB
+                      00314         extern  _TRISB
+                      00315         extern  _DDRC
+                      00316         extern  _TRISC
+                      00317         extern  _DDRD
+                      00318         extern  _TRISD
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00319         extern  _DDRE
+                      00320         extern  _TRISE
+                      00321         extern  _DDRF
+                      00322         extern  _TRISF
+                      00323         extern  _DDRG
+                      00324         extern  _TRISG
+                      00325         extern  _DDRH
+                      00326         extern  _TRISH
+                      00327         extern  _DDRJ
+                      00328         extern  _TRISJ
+                      00329         extern  _OSCTUNE
+                      00330         extern  _MEMCON
+                      00331         extern  _PIE1
+                      00332         extern  _PIR1
+                      00333         extern  _IPR1
+                      00334         extern  _PIE2
+                      00335         extern  _PIR2
+                      00336         extern  _IPR2
+                      00337         extern  _PIE3
+                      00338         extern  _PIR3
+                      00339         extern  _IPR3
+                      00340         extern  _EECON1
+                      00341         extern  _EECON2
+                      00342         extern  _RCSTA
+                      00343         extern  _RCSTA1
+                      00344         extern  _TXSTA
+                      00345         extern  _TXSTA1
+                      00346         extern  _TXREG
+                      00347         extern  _TXREG1
+                      00348         extern  _RCREG
+                      00349         extern  _RCREG1
+                      00350         extern  _SPBRG
+                      00351         extern  _SPBRG1
+                      00352         extern  _PSPCON
+                      00353         extern  _T3CON
+                      00354         extern  _TMR3L
+                      00355         extern  _TMR3H
+                      00356         extern  _CMCON
+                      00357         extern  _CVRCON
+                      00358         extern  _ECCP1AS
+                      00359         extern  _CCP3CON
+                      00360         extern  _ECCP3CON
+                      00361         extern  _CCPR3
+                      00362         extern  _CCPR3L
+                      00363         extern  _CCPR3H
+                      00364         extern  _CCP2CON
+                      00365         extern  _ECCP2CON
+                      00366         extern  _CCPR2
+                      00367         extern  _CCPR2L
+                      00368         extern  _CCPR2H
+                      00369         extern  _CCP1CON
+                      00370         extern  _ECCP1CON
+                      00371         extern  _CCPR1
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00372         extern  _CCPR1L
+                      00373         extern  _CCPR1H
+                      00374         extern  _ADCON2
+                      00375         extern  _ADCON1
+                      00376         extern  _ADCON0
+                      00377         extern  _ADRES
+                      00378         extern  _ADRESL
+                      00379         extern  _ADRESH
+                      00380         extern  _SSP1CON2
+                      00381         extern  _SSPCON2
+                      00382         extern  _SSP1CON1
+                      00383         extern  _SSPCON1
+                      00384         extern  _SSP1STAT
+                      00385         extern  _SSPSTAT
+                      00386         extern  _SSP1ADD
+                      00387         extern  _SSPADD
+                      00388         extern  _SSP1BUF
+                      00389         extern  _SSPBUF
+                      00390         extern  _T2CON
+                      00391         extern  _PR2
+                      00392         extern  _TMR2
+                      00393         extern  _T1CON
+                      00394         extern  _TMR1L
+                      00395         extern  _TMR1H
+                      00396         extern  _RCON
+                      00397         extern  _WDTCON
+                      00398         extern  _ECON1
+                      00399         extern  _OSCCON
+                      00400         extern  _T0CON
+                      00401         extern  _TMR0L
+                      00402         extern  _TMR0H
+                      00403         extern  _STATUS
+                      00404         extern  _FSR2L
+                      00405         extern  _FSR2H
+                      00406         extern  _PLUSW2
+                      00407         extern  _PREINC2
+                      00408         extern  _POSTDEC2
+                      00409         extern  _POSTINC2
+                      00410         extern  _INDF2
+                      00411         extern  _BSR
+                      00412         extern  _FSR1L
+                      00413         extern  _FSR1H
+                      00414         extern  _PLUSW1
+                      00415         extern  _PREINC1
+                      00416         extern  _POSTDEC1
+                      00417         extern  _POSTINC1
+                      00418         extern  _INDF1
+                      00419         extern  _WREG
+                      00420         extern  _FSR0L
+                      00421         extern  _FSR0H
+                      00422         extern  _PLUSW0
+                      00423         extern  _PREINC0
+                      00424         extern  _POSTDEC0
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00425         extern  _POSTINC0
+                      00426         extern  _INDF0
+                      00427         extern  _INTCON3
+                      00428         extern  _INTCON2
+                      00429         extern  _INTCON
+                      00430         extern  _PROD
+                      00431         extern  _PRODL
+                      00432         extern  _PRODH
+                      00433         extern  _TABLAT
+                      00434         extern  _TBLPTR
+                      00435         extern  _TBLPTRL
+                      00436         extern  _TBLPTRH
+                      00437         extern  _TBLPTRU
+                      00438         extern  _PC
+                      00439         extern  _PCL
+                      00440         extern  _PCLATH
+                      00441         extern  _PCLATU
+                      00442         extern  _STKPTR
+                      00443         extern  _TOS
+                      00444         extern  _TOSL
+                      00445         extern  _TOSH
+                      00446         extern  _TOSU
+                      00447         extern  _memset
+                      00448 
+                      00449 ;--------------------------------------------------------
+                      00450 ;       Equates to used internal registers
+                      00451 ;--------------------------------------------------------
+  00000FD8            00452 STATUS  equ     0xfd8
+  00000FE8            00453 WREG    equ     0xfe8
+  00000FE9            00454 FSR0L   equ     0xfe9
+  00000FEA            00455 FSR0H   equ     0xfea
+  00000FE1            00456 FSR1L   equ     0xfe1
+  00000FD9            00457 FSR2L   equ     0xfd9
+  00000FEF            00458 INDF0   equ     0xfef
+  00000FE6            00459 POSTINC1        equ     0xfe6
+  00000FE5            00460 POSTDEC1        equ     0xfe5
+  00000FE4            00461 PREINC1 equ     0xfe4
+  00000FDB            00462 PLUSW2  equ     0xfdb
+  00000FF4            00463 PRODH   equ     0xff4
+                      00464 
+                      00465 
+                      00466 ; Internal registers
+                      00467 .registers      udata_ovr       0x0000
+000000                00468 r0x00   res     1
+000001                00469 r0x01   res     1
+000002                00470 r0x02   res     1
+000003                00471 r0x03   res     1
+000004                00472 r0x04   res     1
+000005                00473 r0x05   res     1
+000006                00474 r0x06   res     1
+000007                00475 r0x07   res     1
+000008                00476 r0x08   res     1
+                      00477 
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00478 udata_LCDBlocking_0     udata
+000000                00479 _LCDText        res     33
+                      00480 
+                      00481 ;--------------------------------------------------------
+                      00482 ; global & static initialisations
+                      00483 ;--------------------------------------------------------
+                      00484 ; I code from now on!
+                      00485 ; ; Starting pCode block
+                      00486 S_LCDBlocking__LCDErase code
+000000                00487 _LCDErase:
+                      00488 ;       .line   392; TCPIP_Stack/LCDBlocking.c  void LCDErase(void)
+000000 CFD9 FFE5      00489         MOVFF   FSR2L, POSTDEC1
+000004 CFE1 FFD9      00490         MOVFF   FSR1L, FSR2L
+000008 C??? FFE5      00491         MOVFF   r0x00, POSTDEC1
+00000C C??? FFE5      00492         MOVFF   r0x01, POSTDEC1
+000010 C??? FFE5      00493         MOVFF   r0x02, POSTDEC1
+000014 C??? FFE5      00494         MOVFF   r0x03, POSTDEC1
+000018 C??? FFE5      00495         MOVFF   r0x04, POSTDEC1
+00001C C??? FFE5      00496         MOVFF   r0x05, POSTDEC1
+000020 C??? FFE5      00497         MOVFF   r0x06, POSTDEC1
+000024 C??? FFE5      00498         MOVFF   r0x07, POSTDEC1
+                      00499 ;       .line   395; TCPIP_Stack/LCDBlocking.c  LCDWrite(0, 0x01);
+000028 0E01           00500         MOVLW   0x01
+00002A 6EE5           00501         MOVWF   POSTDEC1
+00002C 0E00           00502         MOVLW   0x00
+00002E 6EE5           00503         MOVWF   POSTDEC1
+000030 EC?? F???      00504         CALL    _LCDWrite
+000034 52E6           00505         MOVF    POSTINC1, F
+000036 52E6           00506         MOVF    POSTINC1, F
+                      00507 ;       .line   396; TCPIP_Stack/LCDBlocking.c  DelayMs(2);
+000038 0E48           00508         MOVLW   0x48
+00003A 6E??           00509         MOVWF   r0x00
+00003C 0E0D           00510         MOVLW   0x0d
+00003E 6E??           00511         MOVWF   r0x01
+000040 6A??           00512         CLRF    r0x02
+000042 6A??           00513         CLRF    r0x03
+000044                00514 _00338_DS_:
+000044 C??? F???      00515         MOVFF   r0x00, r0x04
+000048 C??? F???      00516         MOVFF   r0x01, r0x05
+00004C C??? F???      00517         MOVFF   r0x02, r0x06
+000050 C??? F???      00518         MOVFF   r0x03, r0x07
+000054 0EFF           00519         MOVLW   0xff
+000056 26??           00520         ADDWF   r0x00, F
+000058 22??           00521         ADDWFC  r0x01, F
+00005A 22??           00522         ADDWFC  r0x02, F
+00005C 22??           00523         ADDWFC  r0x03, F
+00005E 50??           00524         MOVF    r0x04, W
+000060 10??           00525         IORWF   r0x05, W
+000062 10??           00526         IORWF   r0x06, W
+000064 10??           00527         IORWF   r0x07, W
+000066 E1??           00528         BNZ     _00338_DS_
+                      00529 ;       .line   399; TCPIP_Stack/LCDBlocking.c  memset(LCDText, ' ', 32);
+000068 0E??           00530         MOVLW   LOW(_LCDText)
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00006A 6E??           00531         MOVWF   r0x00
+00006C 0E??           00532         MOVLW   HIGH(_LCDText)
+00006E 6E??           00533         MOVWF   r0x01
+000070 0E00           00534         MOVLW   0x00
+000072 6EE5           00535         MOVWF   POSTDEC1
+000074 0E20           00536         MOVLW   0x20
+000076 6EE5           00537         MOVWF   POSTDEC1
+000078 0E20           00538         MOVLW   0x20
+00007A 6EE5           00539         MOVWF   POSTDEC1
+00007C 50??           00540         MOVF    r0x01, W
+00007E 6EE5           00541         MOVWF   POSTDEC1
+000080 50??           00542         MOVF    r0x00, W
+000082 6EE5           00543         MOVWF   POSTDEC1
+000084 EC?? F???      00544         CALL    _memset
+000088 0E05           00545         MOVLW   0x05
+00008A 26E1           00546         ADDWF   FSR1L, F
+00008C CFE4 F???      00547         MOVFF   PREINC1, r0x07
+000090 CFE4 F???      00548         MOVFF   PREINC1, r0x06
+000094 CFE4 F???      00549         MOVFF   PREINC1, r0x05
+000098 CFE4 F???      00550         MOVFF   PREINC1, r0x04
+00009C CFE4 F???      00551         MOVFF   PREINC1, r0x03
+0000A0 CFE4 F???      00552         MOVFF   PREINC1, r0x02
+0000A4 CFE4 F???      00553         MOVFF   PREINC1, r0x01
+0000A8 CFE4 F???      00554         MOVFF   PREINC1, r0x00
+0000AC CFE4 FFD9      00555         MOVFF   PREINC1, FSR2L
+0000B0 0012           00556         RETURN  
+                      00557 
+                      00558 ; ; Starting pCode block
+                      00559 S_LCDBlocking__LCDUpdate        code
+000000                00560 _LCDUpdate:
+                      00561 ;       .line   332; TCPIP_Stack/LCDBlocking.c  void LCDUpdate(void)
+000000 CFD9 FFE5      00562         MOVFF   FSR2L, POSTDEC1
+000004 CFE1 FFD9      00563         MOVFF   FSR1L, FSR2L
+000008 C??? FFE5      00564         MOVFF   r0x00, POSTDEC1
+00000C C??? FFE5      00565         MOVFF   r0x01, POSTDEC1
+000010 C??? FFE5      00566         MOVFF   r0x02, POSTDEC1
+000014 C??? FFE5      00567         MOVFF   r0x03, POSTDEC1
+000018 C??? FFE5      00568         MOVFF   r0x04, POSTDEC1
+00001C C??? FFE5      00569         MOVFF   r0x05, POSTDEC1
+000020 C??? FFE5      00570         MOVFF   r0x06, POSTDEC1
+000024 C??? FFE5      00571         MOVFF   r0x07, POSTDEC1
+000028 C??? FFE5      00572         MOVFF   r0x08, POSTDEC1
+                      00573 ;       .line   337; TCPIP_Stack/LCDBlocking.c  LCDWrite(0, 0x02);
+00002C 0E02           00574         MOVLW   0x02
+00002E 6EE5           00575         MOVWF   POSTDEC1
+000030 0E00           00576         MOVLW   0x00
+000032 6EE5           00577         MOVWF   POSTDEC1
+000034 EC?? F???      00578         CALL    _LCDWrite
+000038 52E6           00579         MOVF    POSTINC1, F
+00003A 52E6           00580         MOVF    POSTINC1, F
+                      00581 ;       .line   338; TCPIP_Stack/LCDBlocking.c  DelayMs(2);
+00003C 0E48           00582         MOVLW   0x48
+00003E 6E??           00583         MOVWF   r0x00
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000040 0E0D           00584         MOVLW   0x0d
+000042 6E??           00585         MOVWF   r0x01
+000044 6A??           00586         CLRF    r0x02
+000046 6A??           00587         CLRF    r0x03
+000048                00588 _00240_DS_:
+000048 C??? F???      00589         MOVFF   r0x00, r0x04
+00004C C??? F???      00590         MOVFF   r0x01, r0x05
+000050 C??? F???      00591         MOVFF   r0x02, r0x06
+000054 C??? F???      00592         MOVFF   r0x03, r0x07
+000058 0EFF           00593         MOVLW   0xff
+00005A 26??           00594         ADDWF   r0x00, F
+00005C 22??           00595         ADDWFC  r0x01, F
+00005E 22??           00596         ADDWFC  r0x02, F
+000060 22??           00597         ADDWFC  r0x03, F
+000062 50??           00598         MOVF    r0x04, W
+000064 10??           00599         IORWF   r0x05, W
+000066 10??           00600         IORWF   r0x06, W
+000068 10??           00601         IORWF   r0x07, W
+00006A E1??           00602         BNZ     _00240_DS_
+                      00603 ;       .line   341; TCPIP_Stack/LCDBlocking.c  for(i = 0; i < 16u; i++)
+00006C 6A??           00604         CLRF    r0x00
+00006E                00605 _00272_DS_:
+00006E C??? F???      00606         MOVFF   r0x00, r0x01
+000072 6A??           00607         CLRF    r0x02
+000074 0E00           00608         MOVLW   0x00
+000076 5C??           00609         SUBWF   r0x02, W
+000078 E1??           00610         BNZ     _00330_DS_
+00007A 0E10           00611         MOVLW   0x10
+00007C 5C??           00612         SUBWF   r0x01, W
+00007E                00613 _00330_DS_:
+00007E B0D8           00614         BTFSC   STATUS, 0
+000080 D???           00615         BRA     _00275_DS_
+                      00616 ;       .line   345; TCPIP_Stack/LCDBlocking.c  if(LCDText[i] == 0u)
+000082 0E??           00617         MOVLW   LOW(_LCDText)
+000084 24??           00618         ADDWF   r0x00, W
+000086 6E??           00619         MOVWF   r0x01
+000088 6A??           00620         CLRF    r0x02
+00008A 0E??           00621         MOVLW   HIGH(_LCDText)
+00008C 22??           00622         ADDWFC  r0x02, F
+00008E C??? FFE9      00623         MOVFF   r0x01, FSR0L
+000092 C??? FFEA      00624         MOVFF   r0x02, FSR0H
+000096 CFEF F???      00625         MOVFF   INDF0, r0x01
+00009A 50??           00626         MOVF    r0x01, W
+00009C E1??           00627         BNZ     _00247_DS_
+                      00628 ;       .line   347; TCPIP_Stack/LCDBlocking.c  for(j=i; j < 16u; j++)
+00009E C??? F???      00629         MOVFF   r0x00, r0x01
+0000A2                00630 _00268_DS_:
+0000A2 C??? F???      00631         MOVFF   r0x01, r0x02
+0000A6 6A??           00632         CLRF    r0x03
+0000A8 0E00           00633         MOVLW   0x00
+0000AA 5C??           00634         SUBWF   r0x03, W
+0000AC E1??           00635         BNZ     _00331_DS_
+0000AE 0E10           00636         MOVLW   0x10
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0000B0 5C??           00637         SUBWF   r0x02, W
+0000B2                00638 _00331_DS_:
+0000B2 E2??           00639         BC      _00247_DS_
+                      00640 ;       .line   349; TCPIP_Stack/LCDBlocking.c  LCDText[j] = ' ';
+0000B4 0E??           00641         MOVLW   LOW(_LCDText)
+0000B6 24??           00642         ADDWF   r0x01, W
+0000B8 6E??           00643         MOVWF   r0x02
+0000BA 6A??           00644         CLRF    r0x03
+0000BC 0E??           00645         MOVLW   HIGH(_LCDText)
+0000BE 22??           00646         ADDWFC  r0x03, F
+0000C0 C??? FFE9      00647         MOVFF   r0x02, FSR0L
+0000C4 C??? FFEA      00648         MOVFF   r0x03, FSR0H
+0000C8 0E20           00649         MOVLW   0x20
+0000CA 6EEF           00650         MOVWF   INDF0
+                      00651 ;       .line   347; TCPIP_Stack/LCDBlocking.c  for(j=i; j < 16u; j++)
+0000CC 2A??           00652         INCF    r0x01, F
+0000CE D???           00653         BRA     _00268_DS_
+0000D0                00654 _00247_DS_:
+                      00655 ;       .line   352; TCPIP_Stack/LCDBlocking.c  LCDWrite(1, LCDText[i]);
+0000D0 0E??           00656         MOVLW   LOW(_LCDText)
+0000D2 24??           00657         ADDWF   r0x00, W
+0000D4 6E??           00658         MOVWF   r0x01
+0000D6 6A??           00659         CLRF    r0x02
+0000D8 0E??           00660         MOVLW   HIGH(_LCDText)
+0000DA 22??           00661         ADDWFC  r0x02, F
+0000DC C??? FFE9      00662         MOVFF   r0x01, FSR0L
+0000E0 C??? FFEA      00663         MOVFF   r0x02, FSR0H
+0000E4 CFEF F???      00664         MOVFF   INDF0, r0x01
+0000E8 50??           00665         MOVF    r0x01, W
+0000EA 6EE5           00666         MOVWF   POSTDEC1
+0000EC 0E01           00667         MOVLW   0x01
+0000EE 6EE5           00668         MOVWF   POSTDEC1
+0000F0 EC?? F???      00669         CALL    _LCDWrite
+0000F4 52E6           00670         MOVF    POSTINC1, F
+0000F6 52E6           00671         MOVF    POSTINC1, F
+                      00672 ;       .line   353; TCPIP_Stack/LCDBlocking.c  Delay10us(5);
+0000F8 0E55           00673         MOVLW   0x55
+0000FA 6E??           00674         MOVWF   r0x01
+0000FC 6A??           00675         CLRF    r0x02
+0000FE 6A??           00676         CLRF    r0x03
+000100 6A??           00677         CLRF    r0x04
+000102                00678 _00248_DS_:
+000102 C??? F???      00679         MOVFF   r0x01, r0x05
+000106 C??? F???      00680         MOVFF   r0x02, r0x06
+00010A C??? F???      00681         MOVFF   r0x03, r0x07
+00010E C??? F???      00682         MOVFF   r0x04, r0x08
+000112 0EFF           00683         MOVLW   0xff
+000114 26??           00684         ADDWF   r0x01, F
+000116 22??           00685         ADDWFC  r0x02, F
+000118 22??           00686         ADDWFC  r0x03, F
+00011A 22??           00687         ADDWFC  r0x04, F
+00011C 50??           00688         MOVF    r0x05, W
+00011E 10??           00689         IORWF   r0x06, W
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000120 10??           00690         IORWF   r0x07, W
+000122 10??           00691         IORWF   r0x08, W
+000124 E1??           00692         BNZ     _00248_DS_
+                      00693 ;       .line   341; TCPIP_Stack/LCDBlocking.c  for(i = 0; i < 16u; i++)
+000126 2A??           00694         INCF    r0x00, F
+000128 D???           00695         BRA     _00272_DS_
+00012A                00696 _00275_DS_:
+                      00697 ;       .line   357; TCPIP_Stack/LCDBlocking.c  LCDWrite(0, 0xC0);
+00012A 0EC0           00698         MOVLW   0xc0
+00012C 6EE5           00699         MOVWF   POSTDEC1
+00012E 0E00           00700         MOVLW   0x00
+000130 6EE5           00701         MOVWF   POSTDEC1
+000132 EC?? F???      00702         CALL    _LCDWrite
+000136 52E6           00703         MOVF    POSTINC1, F
+000138 52E6           00704         MOVF    POSTINC1, F
+                      00705 ;       .line   358; TCPIP_Stack/LCDBlocking.c  Delay10us(5);
+00013A 0E55           00706         MOVLW   0x55
+00013C 6E??           00707         MOVWF   r0x00
+00013E 6A??           00708         CLRF    r0x01
+000140 6A??           00709         CLRF    r0x02
+000142 6A??           00710         CLRF    r0x03
+000144                00711 _00254_DS_:
+000144 C??? F???      00712         MOVFF   r0x00, r0x04
+000148 C??? F???      00713         MOVFF   r0x01, r0x05
+00014C C??? F???      00714         MOVFF   r0x02, r0x06
+000150 C??? F???      00715         MOVFF   r0x03, r0x07
+000154 0EFF           00716         MOVLW   0xff
+000156 26??           00717         ADDWF   r0x00, F
+000158 22??           00718         ADDWFC  r0x01, F
+00015A 22??           00719         ADDWFC  r0x02, F
+00015C 22??           00720         ADDWFC  r0x03, F
+00015E 50??           00721         MOVF    r0x04, W
+000160 10??           00722         IORWF   r0x05, W
+000162 10??           00723         IORWF   r0x06, W
+000164 10??           00724         IORWF   r0x07, W
+000166 E1??           00725         BNZ     _00254_DS_
+                      00726 ;       .line   361; TCPIP_Stack/LCDBlocking.c  for(i = 16; i < 32u; i++)
+000168 0E10           00727         MOVLW   0x10
+00016A 6E??           00728         MOVWF   r0x00
+00016C                00729 _00280_DS_:
+00016C C??? F???      00730         MOVFF   r0x00, r0x01
+000170 6A??           00731         CLRF    r0x02
+000172 0E00           00732         MOVLW   0x00
+000174 5C??           00733         SUBWF   r0x02, W
+000176 E1??           00734         BNZ     _00332_DS_
+000178 0E20           00735         MOVLW   0x20
+00017A 5C??           00736         SUBWF   r0x01, W
+00017C                00737 _00332_DS_:
+00017C B0D8           00738         BTFSC   STATUS, 0
+00017E D???           00739         BRA     _00284_DS_
+                      00740 ;       .line   365; TCPIP_Stack/LCDBlocking.c  if(LCDText[i] == 0u)
+000180 0E??           00741         MOVLW   LOW(_LCDText)
+000182 24??           00742         ADDWF   r0x00, W
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000184 6E??           00743         MOVWF   r0x01
+000186 6A??           00744         CLRF    r0x02
+000188 0E??           00745         MOVLW   HIGH(_LCDText)
+00018A 22??           00746         ADDWFC  r0x02, F
+00018C C??? FFE9      00747         MOVFF   r0x01, FSR0L
+000190 C??? FFEA      00748         MOVFF   r0x02, FSR0H
+000194 CFEF F???      00749         MOVFF   INDF0, r0x01
+000198 50??           00750         MOVF    r0x01, W
+00019A E1??           00751         BNZ     _00261_DS_
+                      00752 ;       .line   367; TCPIP_Stack/LCDBlocking.c  for(j=i; j < 32u; j++)
+00019C C??? F???      00753         MOVFF   r0x00, r0x01
+0001A0                00754 _00276_DS_:
+0001A0 C??? F???      00755         MOVFF   r0x01, r0x02
+0001A4 6A??           00756         CLRF    r0x03
+0001A6 0E00           00757         MOVLW   0x00
+0001A8 5C??           00758         SUBWF   r0x03, W
+0001AA E1??           00759         BNZ     _00333_DS_
+0001AC 0E20           00760         MOVLW   0x20
+0001AE 5C??           00761         SUBWF   r0x02, W
+0001B0                00762 _00333_DS_:
+0001B0 E2??           00763         BC      _00261_DS_
+                      00764 ;       .line   369; TCPIP_Stack/LCDBlocking.c  LCDText[j] = ' ';
+0001B2 0E??           00765         MOVLW   LOW(_LCDText)
+0001B4 24??           00766         ADDWF   r0x01, W
+0001B6 6E??           00767         MOVWF   r0x02
+0001B8 6A??           00768         CLRF    r0x03
+0001BA 0E??           00769         MOVLW   HIGH(_LCDText)
+0001BC 22??           00770         ADDWFC  r0x03, F
+0001BE C??? FFE9      00771         MOVFF   r0x02, FSR0L
+0001C2 C??? FFEA      00772         MOVFF   r0x03, FSR0H
+0001C6 0E20           00773         MOVLW   0x20
+0001C8 6EEF           00774         MOVWF   INDF0
+                      00775 ;       .line   367; TCPIP_Stack/LCDBlocking.c  for(j=i; j < 32u; j++)
+0001CA 2A??           00776         INCF    r0x01, F
+0001CC D???           00777         BRA     _00276_DS_
+0001CE                00778 _00261_DS_:
+                      00779 ;       .line   372; TCPIP_Stack/LCDBlocking.c  LCDWrite(1, LCDText[i]);
+0001CE 0E??           00780         MOVLW   LOW(_LCDText)
+0001D0 24??           00781         ADDWF   r0x00, W
+0001D2 6E??           00782         MOVWF   r0x01
+0001D4 6A??           00783         CLRF    r0x02
+0001D6 0E??           00784         MOVLW   HIGH(_LCDText)
+0001D8 22??           00785         ADDWFC  r0x02, F
+0001DA C??? FFE9      00786         MOVFF   r0x01, FSR0L
+0001DE C??? FFEA      00787         MOVFF   r0x02, FSR0H
+0001E2 CFEF F???      00788         MOVFF   INDF0, r0x01
+0001E6 50??           00789         MOVF    r0x01, W
+0001E8 6EE5           00790         MOVWF   POSTDEC1
+0001EA 0E01           00791         MOVLW   0x01
+0001EC 6EE5           00792         MOVWF   POSTDEC1
+0001EE EC?? F???      00793         CALL    _LCDWrite
+0001F2 52E6           00794         MOVF    POSTINC1, F
+0001F4 52E6           00795         MOVF    POSTINC1, F
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00796 ;       .line   373; TCPIP_Stack/LCDBlocking.c  Delay10us(5);
+0001F6 0E55           00797         MOVLW   0x55
+0001F8 6E??           00798         MOVWF   r0x01
+0001FA 6A??           00799         CLRF    r0x02
+0001FC 6A??           00800         CLRF    r0x03
+0001FE 6A??           00801         CLRF    r0x04
+000200                00802 _00262_DS_:
+000200 C??? F???      00803         MOVFF   r0x01, r0x05
+000204 C??? F???      00804         MOVFF   r0x02, r0x06
+000208 C??? F???      00805         MOVFF   r0x03, r0x07
+00020C C??? F???      00806         MOVFF   r0x04, r0x08
+000210 0EFF           00807         MOVLW   0xff
+000212 26??           00808         ADDWF   r0x01, F
+000214 22??           00809         ADDWFC  r0x02, F
+000216 22??           00810         ADDWFC  r0x03, F
+000218 22??           00811         ADDWFC  r0x04, F
+00021A 50??           00812         MOVF    r0x05, W
+00021C 10??           00813         IORWF   r0x06, W
+00021E 10??           00814         IORWF   r0x07, W
+000220 10??           00815         IORWF   r0x08, W
+000222 E1??           00816         BNZ     _00262_DS_
+                      00817 ;       .line   361; TCPIP_Stack/LCDBlocking.c  for(i = 16; i < 32u; i++)
+000224 2A??           00818         INCF    r0x00, F
+000226 D???           00819         BRA     _00280_DS_
+000228                00820 _00284_DS_:
+000228 CFE4 F???      00821         MOVFF   PREINC1, r0x08
+00022C CFE4 F???      00822         MOVFF   PREINC1, r0x07
+000230 CFE4 F???      00823         MOVFF   PREINC1, r0x06
+000234 CFE4 F???      00824         MOVFF   PREINC1, r0x05
+000238 CFE4 F???      00825         MOVFF   PREINC1, r0x04
+00023C CFE4 F???      00826         MOVFF   PREINC1, r0x03
+000240 CFE4 F???      00827         MOVFF   PREINC1, r0x02
+000244 CFE4 F???      00828         MOVFF   PREINC1, r0x01
+000248 CFE4 F???      00829         MOVFF   PREINC1, r0x00
+00024C CFE4 FFD9      00830         MOVFF   PREINC1, FSR2L
+000250 0012           00831         RETURN  
+                      00832 
+                      00833 ; ; Starting pCode block
+                      00834 S_LCDBlocking__LCDInit  code
+000000                00835 _LCDInit:
+                      00836 ;       .line   207; TCPIP_Stack/LCDBlocking.c  void LCDInit(void)
+000000 CFD9 FFE5      00837         MOVFF   FSR2L, POSTDEC1
+000004 CFE1 FFD9      00838         MOVFF   FSR1L, FSR2L
+000008 C??? FFE5      00839         MOVFF   r0x00, POSTDEC1
+00000C C??? FFE5      00840         MOVFF   r0x01, POSTDEC1
+000010 C??? FFE5      00841         MOVFF   r0x02, POSTDEC1
+000014 C??? FFE5      00842         MOVFF   r0x03, POSTDEC1
+000018 C??? FFE5      00843         MOVFF   r0x04, POSTDEC1
+00001C C??? FFE5      00844         MOVFF   r0x05, POSTDEC1
+000020 C??? FFE5      00845         MOVFF   r0x06, POSTDEC1
+000024 C??? FFE5      00846         MOVFF   r0x07, POSTDEC1
+000028 C??? FFE5      00847         MOVFF   r0x08, POSTDEC1
+                      00848 ;       .line   211; TCPIP_Stack/LCDBlocking.c  memset(LCDText, ' ', sizeof(LCDText)-1);
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00002C 0E??           00849         MOVLW   LOW(_LCDText)
+00002E 6E??           00850         MOVWF   r0x00
+000030 0E??           00851         MOVLW   HIGH(_LCDText)
+000032 6E??           00852         MOVWF   r0x01
+000034 0E00           00853         MOVLW   0x00
+000036 6EE5           00854         MOVWF   POSTDEC1
+000038 0E20           00855         MOVLW   0x20
+00003A 6EE5           00856         MOVWF   POSTDEC1
+00003C 0E20           00857         MOVLW   0x20
+00003E 6EE5           00858         MOVWF   POSTDEC1
+000040 50??           00859         MOVF    r0x01, W
+000042 6EE5           00860         MOVWF   POSTDEC1
+000044 50??           00861         MOVF    r0x00, W
+000046 6EE5           00862         MOVWF   POSTDEC1
+000048 EC?? F???      00863         CALL    _memset
+00004C 0E05           00864         MOVLW   0x05
+00004E 26E1           00865         ADDWF   FSR1L, F
+000050 ????           00866         BANKSEL (_LCDText + 32)
+                      00867 ;       .line   212; TCPIP_Stack/LCDBlocking.c  LCDText[sizeof(LCDText)-1] = 0;
+000052 6B??           00868         CLRF    (_LCDText + 32), B
+                      00869 ;       .line   215; TCPIP_Stack/LCDBlocking.c  LCD_E_IO = 0;
+000054 90??           00870         BCF     _LATHbits, 0
+                      00871 ;       .line   216; TCPIP_Stack/LCDBlocking.c  LCD_RD_WR_IO = 0;
+000056 92??           00872         BCF     _LATHbits, 1
+                      00873 ;       .line   220; TCPIP_Stack/LCDBlocking.c  LCD_DATA_TRIS = 0x00;
+000058 6A??           00874         CLRF    _TRISE
+                      00875 ;       .line   233; TCPIP_Stack/LCDBlocking.c  LCD_RD_WR_TRIS = 0;
+00005A 92??           00876         BCF     _TRISHbits, 1
+                      00877 ;       .line   234; TCPIP_Stack/LCDBlocking.c  LCD_RS_TRIS = 0;
+00005C 94??           00878         BCF     _TRISHbits, 2
+                      00879 ;       .line   235; TCPIP_Stack/LCDBlocking.c  LCD_E_TRIS = 0;
+00005E 90??           00880         BCF     _TRISHbits, 0
+                      00881 ;       .line   239; TCPIP_Stack/LCDBlocking.c  DelayMs(40);
+000060 0EA0           00882         MOVLW   0xa0
+000062 6E??           00883         MOVWF   r0x00
+000064 0E09           00884         MOVLW   0x09
+000066 6E??           00885         MOVWF   r0x01
+000068 0E01           00886         MOVLW   0x01
+00006A 6E??           00887         MOVWF   r0x02
+00006C 6A??           00888         CLRF    r0x03
+00006E                00889 _00143_DS_:
+00006E C??? F???      00890         MOVFF   r0x00, r0x04
+000072 C??? F???      00891         MOVFF   r0x01, r0x05
+000076 C??? F???      00892         MOVFF   r0x02, r0x06
+00007A C??? F???      00893         MOVFF   r0x03, r0x07
+00007E 0EFF           00894         MOVLW   0xff
+000080 26??           00895         ADDWF   r0x00, F
+000082 22??           00896         ADDWFC  r0x01, F
+000084 22??           00897         ADDWFC  r0x02, F
+000086 22??           00898         ADDWFC  r0x03, F
+000088 50??           00899         MOVF    r0x04, W
+00008A 10??           00900         IORWF   r0x05, W
+00008C 10??           00901         IORWF   r0x06, W
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00008E 10??           00902         IORWF   r0x07, W
+000090 E1??           00903         BNZ     _00143_DS_
+                      00904 ;       .line   247; TCPIP_Stack/LCDBlocking.c  LCD_RS_IO = 0;
+000092 94??           00905         BCF     _LATHbits, 2
+                      00906 ;       .line   249; TCPIP_Stack/LCDBlocking.c  LCD_DATA_IO = 0x03;
+000094 0E03           00907         MOVLW   0x03
+000096 6E??           00908         MOVWF   _LATE
+000098 0000           00909         nop 
+00009A 0000           00910         nop 
+                      00911 ;       .line   264; TCPIP_Stack/LCDBlocking.c  for(i = 0; i < 3u; i++)
+00009C 6A??           00912         CLRF    r0x00
+00009E                00913 _00191_DS_:
+00009E C??? F???      00914         MOVFF   r0x00, r0x01
+0000A2 6A??           00915         CLRF    r0x02
+0000A4 0E00           00916         MOVLW   0x00
+0000A6 5C??           00917         SUBWF   r0x02, W
+0000A8 E1??           00918         BNZ     _00235_DS_
+0000AA 0E03           00919         MOVLW   0x03
+0000AC 5C??           00920         SUBWF   r0x01, W
+0000AE                00921 _00235_DS_:
+0000AE E2??           00922         BC      _00194_DS_
+                      00923 ;       .line   266; TCPIP_Stack/LCDBlocking.c  LCD_E_IO = 1;
+0000B0 80??           00924         BSF     _LATHbits, 0
+                      00925 ;       .line   267; TCPIP_Stack/LCDBlocking.c  Delay10us(1);           // Wait E Pulse width time (min 230ns)
+0000B2 0E11           00926         MOVLW   0x11
+0000B4 6E??           00927         MOVWF   r0x01
+0000B6 6A??           00928         CLRF    r0x02
+0000B8 6A??           00929         CLRF    r0x03
+0000BA 6A??           00930         CLRF    r0x04
+0000BC                00931 _00155_DS_:
+0000BC C??? F???      00932         MOVFF   r0x01, r0x05
+0000C0 C??? F???      00933         MOVFF   r0x02, r0x06
+0000C4 C??? F???      00934         MOVFF   r0x03, r0x07
+0000C8 C??? F???      00935         MOVFF   r0x04, r0x08
+0000CC 0EFF           00936         MOVLW   0xff
+0000CE 26??           00937         ADDWF   r0x01, F
+0000D0 22??           00938         ADDWFC  r0x02, F
+0000D2 22??           00939         ADDWFC  r0x03, F
+0000D4 22??           00940         ADDWFC  r0x04, F
+0000D6 50??           00941         MOVF    r0x05, W
+0000D8 10??           00942         IORWF   r0x06, W
+0000DA 10??           00943         IORWF   r0x07, W
+0000DC 10??           00944         IORWF   r0x08, W
+0000DE E1??           00945         BNZ     _00155_DS_
+                      00946 ;       .line   268; TCPIP_Stack/LCDBlocking.c  LCD_E_IO = 0;
+0000E0 90??           00947         BCF     _LATHbits, 0
+                      00948 ;       .line   269; TCPIP_Stack/LCDBlocking.c  DelayMs(2);
+0000E2 0E48           00949         MOVLW   0x48
+0000E4 6E??           00950         MOVWF   r0x01
+0000E6 0E0D           00951         MOVLW   0x0d
+0000E8 6E??           00952         MOVWF   r0x02
+0000EA 6A??           00953         CLRF    r0x03
+0000EC 6A??           00954         CLRF    r0x04
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0000EE                00955 _00161_DS_:
+0000EE C??? F???      00956         MOVFF   r0x01, r0x05
+0000F2 C??? F???      00957         MOVFF   r0x02, r0x06
+0000F6 C??? F???      00958         MOVFF   r0x03, r0x07
+0000FA C??? F???      00959         MOVFF   r0x04, r0x08
+0000FE 0EFF           00960         MOVLW   0xff
+000100 26??           00961         ADDWF   r0x01, F
+000102 22??           00962         ADDWFC  r0x02, F
+000104 22??           00963         ADDWFC  r0x03, F
+000106 22??           00964         ADDWFC  r0x04, F
+000108 50??           00965         MOVF    r0x05, W
+00010A 10??           00966         IORWF   r0x06, W
+00010C 10??           00967         IORWF   r0x07, W
+00010E 10??           00968         IORWF   r0x08, W
+000110 E1??           00969         BNZ     _00161_DS_
+                      00970 ;       .line   264; TCPIP_Stack/LCDBlocking.c  for(i = 0; i < 3u; i++)
+000112 2A??           00971         INCF    r0x00, F
+000114 D???           00972         BRA     _00191_DS_
+000116                00973 _00194_DS_:
+                      00974 ;       .line   295; TCPIP_Stack/LCDBlocking.c  LCDWrite(0, 0x38);
+000116 0E38           00975         MOVLW   0x38
+000118 6EE5           00976         MOVWF   POSTDEC1
+00011A 0E00           00977         MOVLW   0x00
+00011C 6EE5           00978         MOVWF   POSTDEC1
+00011E EC?? F???      00979         CALL    _LCDWrite
+000122 52E6           00980         MOVF    POSTINC1, F
+000124 52E6           00981         MOVF    POSTINC1, F
+                      00982 ;       .line   297; TCPIP_Stack/LCDBlocking.c  Delay10us(5);
+000126 0E55           00983         MOVLW   0x55
+000128 6E??           00984         MOVWF   r0x00
+00012A 6A??           00985         CLRF    r0x01
+00012C 6A??           00986         CLRF    r0x02
+00012E 6A??           00987         CLRF    r0x03
+000130                00988 _00167_DS_:
+000130 C??? F???      00989         MOVFF   r0x00, r0x04
+000134 C??? F???      00990         MOVFF   r0x01, r0x05
+000138 C??? F???      00991         MOVFF   r0x02, r0x06
+00013C C??? F???      00992         MOVFF   r0x03, r0x07
+000140 0EFF           00993         MOVLW   0xff
+000142 26??           00994         ADDWF   r0x00, F
+000144 22??           00995         ADDWFC  r0x01, F
+000146 22??           00996         ADDWFC  r0x02, F
+000148 22??           00997         ADDWFC  r0x03, F
+00014A 50??           00998         MOVF    r0x04, W
+00014C 10??           00999         IORWF   r0x05, W
+00014E 10??           01000         IORWF   r0x06, W
+000150 10??           01001         IORWF   r0x07, W
+000152 E1??           01002         BNZ     _00167_DS_
+                      01003 ;       .line   300; TCPIP_Stack/LCDBlocking.c  LCDWrite(0, 0x06);      // Increment after each write, do not shift
+000154 0E06           01004         MOVLW   0x06
+000156 6EE5           01005         MOVWF   POSTDEC1
+000158 0E00           01006         MOVLW   0x00
+00015A 6EE5           01007         MOVWF   POSTDEC1
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00015C EC?? F???      01008         CALL    _LCDWrite
+000160 52E6           01009         MOVF    POSTINC1, F
+000162 52E6           01010         MOVF    POSTINC1, F
+                      01011 ;       .line   301; TCPIP_Stack/LCDBlocking.c  Delay10us(5);
+000164 0E55           01012         MOVLW   0x55
+000166 6E??           01013         MOVWF   r0x00
+000168 6A??           01014         CLRF    r0x01
+00016A 6A??           01015         CLRF    r0x02
+00016C 6A??           01016         CLRF    r0x03
+00016E                01017 _00173_DS_:
+00016E C??? F???      01018         MOVFF   r0x00, r0x04
+000172 C??? F???      01019         MOVFF   r0x01, r0x05
+000176 C??? F???      01020         MOVFF   r0x02, r0x06
+00017A C??? F???      01021         MOVFF   r0x03, r0x07
+00017E 0EFF           01022         MOVLW   0xff
+000180 26??           01023         ADDWF   r0x00, F
+000182 22??           01024         ADDWFC  r0x01, F
+000184 22??           01025         ADDWFC  r0x02, F
+000186 22??           01026         ADDWFC  r0x03, F
+000188 50??           01027         MOVF    r0x04, W
+00018A 10??           01028         IORWF   r0x05, W
+00018C 10??           01029         IORWF   r0x06, W
+00018E 10??           01030         IORWF   r0x07, W
+000190 E1??           01031         BNZ     _00173_DS_
+                      01032 ;       .line   304; TCPIP_Stack/LCDBlocking.c  LCDWrite(0, 0x0C);      // Turn display on, no cusor, no cursor blink
+000192 0E0C           01033         MOVLW   0x0c
+000194 6EE5           01034         MOVWF   POSTDEC1
+000196 0E00           01035         MOVLW   0x00
+000198 6EE5           01036         MOVWF   POSTDEC1
+00019A EC?? F???      01037         CALL    _LCDWrite
+00019E 52E6           01038         MOVF    POSTINC1, F
+0001A0 52E6           01039         MOVF    POSTINC1, F
+                      01040 ;       .line   305; TCPIP_Stack/LCDBlocking.c  Delay10us(5);
+0001A2 0E55           01041         MOVLW   0x55
+0001A4 6E??           01042         MOVWF   r0x00
+0001A6 6A??           01043         CLRF    r0x01
+0001A8 6A??           01044         CLRF    r0x02
+0001AA 6A??           01045         CLRF    r0x03
+0001AC                01046 _00179_DS_:
+0001AC C??? F???      01047         MOVFF   r0x00, r0x04
+0001B0 C??? F???      01048         MOVFF   r0x01, r0x05
+0001B4 C??? F???      01049         MOVFF   r0x02, r0x06
+0001B8 C??? F???      01050         MOVFF   r0x03, r0x07
+0001BC 0EFF           01051         MOVLW   0xff
+0001BE 26??           01052         ADDWF   r0x00, F
+0001C0 22??           01053         ADDWFC  r0x01, F
+0001C2 22??           01054         ADDWFC  r0x02, F
+0001C4 22??           01055         ADDWFC  r0x03, F
+0001C6 50??           01056         MOVF    r0x04, W
+0001C8 10??           01057         IORWF   r0x05, W
+0001CA 10??           01058         IORWF   r0x06, W
+0001CC 10??           01059         IORWF   r0x07, W
+0001CE E1??           01060         BNZ     _00179_DS_
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      01061 ;       .line   308; TCPIP_Stack/LCDBlocking.c  LCDWrite(0, 0x01);      
+0001D0 0E01           01062         MOVLW   0x01
+0001D2 6EE5           01063         MOVWF   POSTDEC1
+0001D4 0E00           01064         MOVLW   0x00
+0001D6 6EE5           01065         MOVWF   POSTDEC1
+0001D8 EC?? F???      01066         CALL    _LCDWrite
+0001DC 52E6           01067         MOVF    POSTINC1, F
+0001DE 52E6           01068         MOVF    POSTINC1, F
+                      01069 ;       .line   309; TCPIP_Stack/LCDBlocking.c  DelayMs(2);
+0001E0 0E48           01070         MOVLW   0x48
+0001E2 6E??           01071         MOVWF   r0x00
+0001E4 0E0D           01072         MOVLW   0x0d
+0001E6 6E??           01073         MOVWF   r0x01
+0001E8 6A??           01074         CLRF    r0x02
+0001EA 6A??           01075         CLRF    r0x03
+0001EC                01076 _00185_DS_:
+0001EC C??? F???      01077         MOVFF   r0x00, r0x04
+0001F0 C??? F???      01078         MOVFF   r0x01, r0x05
+0001F4 C??? F???      01079         MOVFF   r0x02, r0x06
+0001F8 C??? F???      01080         MOVFF   r0x03, r0x07
+0001FC 0EFF           01081         MOVLW   0xff
+0001FE 26??           01082         ADDWF   r0x00, F
+000200 22??           01083         ADDWFC  r0x01, F
+000202 22??           01084         ADDWFC  r0x02, F
+000204 22??           01085         ADDWFC  r0x03, F
+000206 50??           01086         MOVF    r0x04, W
+000208 10??           01087         IORWF   r0x05, W
+00020A 10??           01088         IORWF   r0x06, W
+00020C 10??           01089         IORWF   r0x07, W
+00020E E1??           01090         BNZ     _00185_DS_
+000210 CFE4 F???      01091         MOVFF   PREINC1, r0x08
+000214 CFE4 F???      01092         MOVFF   PREINC1, r0x07
+000218 CFE4 F???      01093         MOVFF   PREINC1, r0x06
+00021C CFE4 F???      01094         MOVFF   PREINC1, r0x05
+000220 CFE4 F???      01095         MOVFF   PREINC1, r0x04
+000224 CFE4 F???      01096         MOVFF   PREINC1, r0x03
+000228 CFE4 F???      01097         MOVFF   PREINC1, r0x02
+00022C CFE4 F???      01098         MOVFF   PREINC1, r0x01
+000230 CFE4 F???      01099         MOVFF   PREINC1, r0x00
+000234 CFE4 FFD9      01100         MOVFF   PREINC1, FSR2L
+000238 0012           01101         RETURN  
+                      01102 
+                      01103 ; ; Starting pCode block
+                      01104 S_LCDBlocking__LCDWrite code
+000000                01105 _LCDWrite:
+                      01106 ;       .line   94; TCPIP_Stack/LCDBlocking.c   static void LCDWrite(BYTE RS, BYTE Data)
+000000 CFD9 FFE5      01107         MOVFF   FSR2L, POSTDEC1
+000004 CFE1 FFD9      01108         MOVFF   FSR1L, FSR2L
+000008 C??? FFE5      01109         MOVFF   r0x00, POSTDEC1
+00000C C??? FFE5      01110         MOVFF   r0x01, POSTDEC1
+000010 0E02           01111         MOVLW   0x02
+000012 CFDB F???      01112         MOVFF   PLUSW2, r0x00
+000016 0E03           01113         MOVLW   0x03
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 22
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000018 CFDB F???      01114         MOVFF   PLUSW2, r0x01
+                      01115 ;       .line   97; TCPIP_Stack/LCDBlocking.c   LCD_DATA_TRIS = 0x00;
+00001C 6A??           01116         CLRF    _TRISE
+                      01117 ;       .line   110; TCPIP_Stack/LCDBlocking.c  LCD_RS_TRIS = 0;
+00001E 94??           01118         BCF     _TRISHbits, 2
+                      01119 ;       .line   111; TCPIP_Stack/LCDBlocking.c  LCD_RD_WR_TRIS = 0;
+000020 92??           01120         BCF     _TRISHbits, 1
+                      01121 ;       .line   112; TCPIP_Stack/LCDBlocking.c  LCD_RD_WR_IO = 0;
+000022 92??           01122         BCF     _LATHbits, 1
+                      01123 ;       .line   113; TCPIP_Stack/LCDBlocking.c  LCD_RS_IO = RS;
+000024 50??           01124         MOVF    r0x00, W
+000026 0B01           01125         ANDLW   0x01
+000028 44E8           01126         RLNCF   WREG, W
+00002A 44E8           01127         RLNCF   WREG, W
+00002C 6EF4           01128         MOVWF   PRODH
+00002E 50??           01129         MOVF    _LATHbits, W
+000030 0BFB           01130         ANDLW   0xfb
+000032 10F4           01131         IORWF   PRODH, W
+000034 6E??           01132         MOVWF   _LATHbits
+                      01133 ;       .line   140; TCPIP_Stack/LCDBlocking.c  LCD_DATA_IO = Data;
+000036 C??? F???      01134         MOVFF   r0x01, _LATE
+00003A 0000           01135         nop 
+00003C 0000           01136         nop 
+                      01137 ;       .line   155; TCPIP_Stack/LCDBlocking.c  LCD_E_IO = 1;
+00003E 80??           01138         BSF     _LATHbits, 0
+000040 0000           01139         nop 
+000042 0000           01140         nop 
+000044 0000           01141         nop 
+000046 0000           01142         nop 
+000048 0000           01143         nop 
+00004A 0000           01144         nop 
+00004C 0000           01145         nop 
+00004E 0000           01146         nop 
+000050 0000           01147         nop 
+                      01148 ;       .line   165; TCPIP_Stack/LCDBlocking.c  LCD_E_IO = 0;
+000052 90??           01149         BCF     _LATHbits, 0
+000054 CFE4 F???      01150         MOVFF   PREINC1, r0x01
+000058 CFE4 F???      01151         MOVFF   PREINC1, r0x00
+00005C CFE4 FFD9      01152         MOVFF   PREINC1, FSR2L
+000060 0012           01153         RETURN  
+                      01154 
+                      01155 
+                      01156 
+                      01157 ; Statistics:
+                      01158 ; code size:     1440 (0x05a0) bytes ( 1.10%)
+                      01159 ;                 720 (0x02d0) words
+                      01160 ; udata size:      33 (0x0021) bytes ( 0.86%)
+                      01161 ; access size:      9 (0x0009) bytes
+                      01162 
+                      01163 
+                      01164         end
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 23
+
+
+SYMBOL TABLE
+  LABEL                             VALUE
+
+FSR0H                             00000FEA
+FSR0L                             00000FE9
+FSR1L                             00000FE1
+FSR2L                             00000FD9
+INDF0                             00000FEF
+PLUSW2                            00000FDB
+POSTDEC1                          00000FE5
+POSTINC1                          00000FE6
+PREINC1                           00000FE4
+PRODH                             00000FF4
+STATUS                            00000FD8
+WREG                              00000FE8
+_00143_DS_                        0000006E
+_00155_DS_                        000000BC
+_00161_DS_                        000000EE
+_00167_DS_                        00000130
+_00173_DS_                        0000016E
+_00179_DS_                        000001AC
+_00185_DS_                        000001EC
+_00191_DS_                        0000009E
+_00194_DS_                        00000116
+_00235_DS_                        000000AE
+_00240_DS_                        00000048
+_00247_DS_                        000000D0
+_00248_DS_                        00000102
+_00254_DS_                        00000144
+_00261_DS_                        000001CE
+_00262_DS_                        00000200
+_00268_DS_                        000000A2
+_00272_DS_                        0000006E
+_00275_DS_                        0000012A
+_00276_DS_                        000001A0
+_00280_DS_                        0000016C
+_00284_DS_                        00000228
+_00330_DS_                        0000007E
+_00331_DS_                        000000B2
+_00332_DS_                        0000017C
+_00333_DS_                        000001B0
+_00338_DS_                        00000044
+_ADCON0                           00000000
+_ADCON0bits                       00000000
+_ADCON1                           00000000
+_ADCON1bits                       00000000
+_ADCON2                           00000000
+_ADCON2bits                       00000000
+_ADRES                            00000000
+_ADRESH                           00000000
+_ADRESL                           00000000
+_AN0String                        00000000
+_AppConfig                        00000000
+_BAUDCON                          00000000
+_BAUDCON1                         00000000
+_BAUDCON1bits                     00000000
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 24
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_BAUDCON2                         00000000
+_BAUDCON2bits                     00000000
+_BAUDCONbits                      00000000
+_BAUDCTL                          00000000
+_BAUDCTL1                         00000000
+_BAUDCTL1bits                     00000000
+_BAUDCTL2                         00000000
+_BAUDCTL2bits                     00000000
+_BAUDCTLbits                      00000000
+_BSR                              00000000
+_CCP1CON                          00000000
+_CCP1CONbits                      00000000
+_CCP2CON                          00000000
+_CCP2CONbits                      00000000
+_CCP3CON                          00000000
+_CCP3CONbits                      00000000
+_CCP4CON                          00000000
+_CCP4CONbits                      00000000
+_CCP5CON                          00000000
+_CCP5CONbits                      00000000
+_CCPR1                            00000000
+_CCPR1H                           00000000
+_CCPR1L                           00000000
+_CCPR2                            00000000
+_CCPR2H                           00000000
+_CCPR2L                           00000000
+_CCPR3                            00000000
+_CCPR3H                           00000000
+_CCPR3L                           00000000
+_CCPR4                            00000000
+_CCPR4H                           00000000
+_CCPR4L                           00000000
+_CCPR5                            00000000
+_CCPR5H                           00000000
+_CCPR5L                           00000000
+_CMCON                            00000000
+_CMCONbits                        00000000
+_CVRCON                           00000000
+_CVRCONbits                       00000000
+_DDRA                             00000000
+_DDRAbits                         00000000
+_DDRB                             00000000
+_DDRBbits                         00000000
+_DDRC                             00000000
+_DDRCbits                         00000000
+_DDRD                             00000000
+_DDRDbits                         00000000
+_DDRE                             00000000
+_DDREbits                         00000000
+_DDRF                             00000000
+_DDRFbits                         00000000
+_DDRG                             00000000
+_DDRGbits                         00000000
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 25
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_DDRH                             00000000
+_DDRHbits                         00000000
+_DDRJ                             00000000
+_DDRJbits                         00000000
+_EBSTCON                          00000000
+_EBSTCONbits                      00000000
+_EBSTCS                           00000000
+_EBSTCSH                          00000000
+_EBSTCSL                          00000000
+_EBSTSD                           00000000
+_ECCP1AS                          00000000
+_ECCP1ASbits                      00000000
+_ECCP1CON                         00000000
+_ECCP1CONbits                     00000000
+_ECCP1DEL                         00000000
+_ECCP1DELbits                     00000000
+_ECCP2AS                          00000000
+_ECCP2ASbits                      00000000
+_ECCP2CON                         00000000
+_ECCP2CONbits                     00000000
+_ECCP2DEL                         00000000
+_ECCP2DELbits                     00000000
+_ECCP3AS                          00000000
+_ECCP3ASbits                      00000000
+_ECCP3CON                         00000000
+_ECCP3CONbits                     00000000
+_ECCP3DEL                         00000000
+_ECCP3DELbits                     00000000
+_ECON1                            00000000
+_ECON1bits                        00000000
+_ECON2                            00000000
+_ECON2bits                        00000000
+_EDATA                            00000000
+_EDATAbits                        00000000
+_EDMACS                           00000000
+_EDMACSH                          00000000
+_EDMACSL                          00000000
+_EDMADST                          00000000
+_EDMADSTH                         00000000
+_EDMADSTL                         00000000
+_EDMAND                           00000000
+_EDMANDH                          00000000
+_EDMANDL                          00000000
+_EDMAST                           00000000
+_EDMASTH                          00000000
+_EDMASTL                          00000000
+_EECON1                           00000000
+_EECON1bits                       00000000
+_EECON2                           00000000
+_EFLOCON                          00000000
+_EFLOCONbits                      00000000
+_EHT0                             00000000
+_EHT1                             00000000
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 26
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_EHT2                             00000000
+_EHT3                             00000000
+_EHT4                             00000000
+_EHT5                             00000000
+_EHT6                             00000000
+_EHT7                             00000000
+_EIE                              00000000
+_EIEbits                          00000000
+_EIR                              00000000
+_EIRbits                          00000000
+_EPAUS                            00000000
+_EPAUSH                           00000000
+_EPAUSL                           00000000
+_EPKTCNT                          00000000
+_EPMCS                            00000000
+_EPMCSH                           00000000
+_EPMCSL                           00000000
+_EPMM0                            00000000
+_EPMM1                            00000000
+_EPMM2                            00000000
+_EPMM3                            00000000
+_EPMM4                            00000000
+_EPMM5                            00000000
+_EPMM6                            00000000
+_EPMM7                            00000000
+_EPMO                             00000000
+_EPMOH                            00000000
+_EPMOL                            00000000
+_ERDPT                            00000000
+_ERDPTH                           00000000
+_ERDPTL                           00000000
+_ERXFCON                          00000000
+_ERXFCONbits                      00000000
+_ERXND                            00000000
+_ERXNDH                           00000000
+_ERXNDL                           00000000
+_ERXRDPT                          00000000
+_ERXRDPTH                         00000000
+_ERXRDPTL                         00000000
+_ERXST                            00000000
+_ERXSTH                           00000000
+_ERXSTL                           00000000
+_ERXWRPT                          00000000
+_ERXWRPTH                         00000000
+_ERXWRPTL                         00000000
+_ESTAT                            00000000
+_ESTATbits                        00000000
+_ETXND                            00000000
+_ETXNDH                           00000000
+_ETXNDL                           00000000
+_ETXST                            00000000
+_ETXSTH                           00000000
+_ETXSTL                           00000000
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 27
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_EWOLIE                           00000000
+_EWOLIEbits                       00000000
+_EWOLIR                           00000000
+_EWOLIRbits                       00000000
+_EWRPT                            00000000
+_EWRPTH                           00000000
+_EWRPTL                           00000000
+_FSR0H                            00000000
+_FSR0L                            00000000
+_FSR1H                            00000000
+_FSR1L                            00000000
+_FSR2H                            00000000
+_FSR2L                            00000000
+_INDF0                            00000000
+_INDF1                            00000000
+_INDF2                            00000000
+_INTCON                           00000000
+_INTCON2                          00000000
+_INTCON2bits                      00000000
+_INTCON3                          00000000
+_INTCON3bits                      00000000
+_INTCONbits                       00000000
+_IPR1                             00000000
+_IPR1bits                         00000000
+_IPR2                             00000000
+_IPR2bits                         00000000
+_IPR3                             00000000
+_IPR3bits                         00000000
+_LATA                             00000000
+_LATAbits                         00000000
+_LATB                             00000000
+_LATBbits                         00000000
+_LATC                             00000000
+_LATCbits                         00000000
+_LATD                             00000000
+_LATDbits                         00000000
+_LATE                             00000000
+_LATEbits                         00000000
+_LATF                             00000000
+_LATFbits                         00000000
+_LATG                             00000000
+_LATGbits                         00000000
+_LATH                             00000000
+_LATHbits                         00000000
+_LATJ                             00000000
+_LATJbits                         00000000
+_LCDErase                         00000000
+_LCDInit                          00000000
+_LCDText                          00000000
+_LCDUpdate                        00000000
+_LCDWrite                         00000000
+_MAADR1                           00000000
+_MAADR2                           00000000
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 28
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_MAADR3                           00000000
+_MAADR4                           00000000
+_MAADR5                           00000000
+_MAADR6                           00000000
+_MABBIPG                          00000000
+_MACLCON1                         00000000
+_MACLCON1bits                     00000000
+_MACLCON2                         00000000
+_MACLCON2bits                     00000000
+_MACON1                           00000000
+_MACON1bits                       00000000
+_MACON2                           00000000
+_MACON2bits                       00000000
+_MACON3                           00000000
+_MACON3bits                       00000000
+_MACON4                           00000000
+_MACON4bits                       00000000
+_MAIPG                            00000000
+_MAIPGH                           00000000
+_MAIPGL                           00000000
+_MAMXFL                           00000000
+_MAMXFLH                          00000000
+_MAMXFLL                          00000000
+_MEMCON                           00000000
+_MEMCONbits                       00000000
+_MICMD                            00000000
+_MICMDbits                        00000000
+_MICON                            00000000
+_MICONbits                        00000000
+_MIRD                             00000000
+_MIRDH                            00000000
+_MIRDL                            00000000
+_MIREGADR                         00000000
+_MISTAT                           00000000
+_MISTATbits                       00000000
+_MIWR                             00000000
+_MIWRH                            00000000
+_MIWRL                            00000000
+_OSCCON                           00000000
+_OSCCONbits                       00000000
+_OSCTUNE                          00000000
+_OSCTUNEbits                      00000000
+_PC                               00000000
+_PCL                              00000000
+_PCLATH                           00000000
+_PCLATU                           00000000
+_PIE1                             00000000
+_PIE1bits                         00000000
+_PIE2                             00000000
+_PIE2bits                         00000000
+_PIE3                             00000000
+_PIE3bits                         00000000
+_PIR1                             00000000
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 29
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_PIR1bits                         00000000
+_PIR2                             00000000
+_PIR2bits                         00000000
+_PIR3                             00000000
+_PIR3bits                         00000000
+_PLUSW0                           00000000
+_PLUSW1                           00000000
+_PLUSW2                           00000000
+_PORTA                            00000000
+_PORTAbits                        00000000
+_PORTB                            00000000
+_PORTBbits                        00000000
+_PORTC                            00000000
+_PORTCbits                        00000000
+_PORTD                            00000000
+_PORTDbits                        00000000
+_PORTE                            00000000
+_PORTEbits                        00000000
+_PORTF                            00000000
+_PORTFbits                        00000000
+_PORTG                            00000000
+_PORTGbits                        00000000
+_PORTH                            00000000
+_PORTHbits                        00000000
+_PORTJ                            00000000
+_PORTJbits                        00000000
+_POSTDEC0                         00000000
+_POSTDEC1                         00000000
+_POSTDEC2                         00000000
+_POSTINC0                         00000000
+_POSTINC1                         00000000
+_POSTINC2                         00000000
+_PR2                              00000000
+_PR4                              00000000
+_PREINC0                          00000000
+_PREINC1                          00000000
+_PREINC2                          00000000
+_PROD                             00000000
+_PRODH                            00000000
+_PRODL                            00000000
+_PSPCON                           00000000
+_PSPCONbits                       00000000
+_RCON                             00000000
+_RCONbits                         00000000
+_RCREG                            00000000
+_RCREG1                           00000000
+_RCREG2                           00000000
+_RCSTA                            00000000
+_RCSTA1                           00000000
+_RCSTA1bits                       00000000
+_RCSTA2                           00000000
+_RCSTA2bits                       00000000
+_RCSTAbits                        00000000
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 30
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_SPBRG                            00000000
+_SPBRG1                           00000000
+_SPBRG2                           00000000
+_SPBRGH                           00000000
+_SPBRGH1                          00000000
+_SPBRGH2                          00000000
+_SSP1ADD                          00000000
+_SSP1BUF                          00000000
+_SSP1CON1                         00000000
+_SSP1CON1bits                     00000000
+_SSP1CON2                         00000000
+_SSP1CON2bits                     00000000
+_SSP1STAT                         00000000
+_SSP1STATbits                     00000000
+_SSP2ADD                          00000000
+_SSP2BUF                          00000000
+_SSP2CON1                         00000000
+_SSP2CON1bits                     00000000
+_SSP2CON2                         00000000
+_SSP2CON2bits                     00000000
+_SSP2STAT                         00000000
+_SSP2STATbits                     00000000
+_SSPADD                           00000000
+_SSPBUF                           00000000
+_SSPCON1                          00000000
+_SSPCON1bits                      00000000
+_SSPCON2                          00000000
+_SSPCON2bits                      00000000
+_SSPSTAT                          00000000
+_SSPSTATbits                      00000000
+_STATUS                           00000000
+_STATUSbits                       00000000
+_STKPTR                           00000000
+_STKPTRbits                       00000000
+_T0CON                            00000000
+_T0CONbits                        00000000
+_T1CON                            00000000
+_T1CONbits                        00000000
+_T2CON                            00000000
+_T2CONbits                        00000000
+_T3CON                            00000000
+_T3CONbits                        00000000
+_T4CON                            00000000
+_T4CONbits                        00000000
+_TABLAT                           00000000
+_TBLPTR                           00000000
+_TBLPTRH                          00000000
+_TBLPTRL                          00000000
+_TBLPTRU                          00000000
+_TMR0H                            00000000
+_TMR0L                            00000000
+_TMR1H                            00000000
+_TMR1L                            00000000
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 31
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_TMR2                             00000000
+_TMR3H                            00000000
+_TMR3L                            00000000
+_TMR4                             00000000
+_TOS                              00000000
+_TOSH                             00000000
+_TOSL                             00000000
+_TOSU                             00000000
+_TRISA                            00000000
+_TRISAbits                        00000000
+_TRISB                            00000000
+_TRISBbits                        00000000
+_TRISC                            00000000
+_TRISCbits                        00000000
+_TRISD                            00000000
+_TRISDbits                        00000000
+_TRISE                            00000000
+_TRISEbits                        00000000
+_TRISF                            00000000
+_TRISFbits                        00000000
+_TRISG                            00000000
+_TRISGbits                        00000000
+_TRISH                            00000000
+_TRISHbits                        00000000
+_TRISJ                            00000000
+_TRISJbits                        00000000
+_TXREG                            00000000
+_TXREG1                           00000000
+_TXREG2                           00000000
+_TXSTA                            00000000
+_TXSTA1                           00000000
+_TXSTA1bits                       00000000
+_TXSTA2                           00000000
+_TXSTA2bits                       00000000
+_TXSTAbits                        00000000
+_UDPRxCount                       00000000
+_UDPSocketInfo                    00000000
+_UDPTxCount                       00000000
+_WDTCON                           00000000
+_WDTCONbits                       00000000
+_WREG                             00000000
+__18F97J60                        00000001
+_activeUDPSocket                  00000000
+_memset                           00000000
+_stdin                            00000000
+_stdout                           00000000
+r0x00                             00000000
+r0x01                             00000001
+r0x02                             00000002
+r0x03                             00000003
+r0x04                             00000004
+r0x05                             00000005
+r0x06                             00000006
+gpasm-0.14.3 #861 (Dec 27 2012) Objects/LCDBl   1-4-2013  02:35:11          PAGE 32
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+r0x07                             00000007
+r0x08                             00000008
+
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+
