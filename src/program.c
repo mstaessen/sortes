@@ -15,18 +15,18 @@ void tick() {
     if (wholeSecond) {
         Time_tick(currentTime);
         outputTime(currentTime);
-        
+
         if (Time_equals(currentTime, alarmTime)) {
             alarmTicks = 30;
         }
-        
+
         if (alarmTicks > 0) {
-            Led_setState(LED_ONE, true);
+            Led_toggleState(LED_ONE);
         }
     } else {
         if (alarmTicks > 0) {
             alarmTicks--;
-            Led_setState(LED_ONE, false);
+            Led_toggleState(LED_ONE);
         }
     }
 }
@@ -34,14 +34,14 @@ void tick() {
 int main(void) {
     LCD_init();
     Led_init(LED_ONE);
-    
-    currentTime = inputTime("Set cur time:");
+
+    currentTime = inputTime("Set Current Time");
     if (currentTime == NULL) {
         LCD_setLine(LINE_ONE, "MemError");
         while (true);
         return 1;
     }
-    alarmTime = inputTime("Set alarm time:");
+    alarmTime = inputTime("Set Alarm Time");
     if (alarmTime == NULL) {
         LCD_setLine(LINE_ONE, "MemError");
         while (true);
@@ -51,7 +51,8 @@ int main(void) {
     LCD_clear();
     
     wholeSecond = true;
-    Timer_setInterval(500, 500, tick);
+    Timer_init();
+    Timer_setInterval(1, tick);
     
     while (true);
     

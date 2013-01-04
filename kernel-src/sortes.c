@@ -4,6 +4,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define NB_INTERRUPTS_PER_HALF_SECOND 12206
+#define REMAINDER_TICKS_PER_HALF_SECOND 22 
+
+unsigned int count = 0;
+
 interruptFunction buttonOneInterruptFunction;
 interruptFunction buttonTwoInterruptFunction;
 interruptFunction timerInterruptFunction;
@@ -13,8 +18,28 @@ int min(int a, int b)
     return a > b ? b : a;
 }
 
-void interrupt(void) __interrupt (1)
+void preloadTimer() 
 {
+    TMR0L = REMAINDER_TICKS_PER_HALF_SECOND;
+    count = 0;
+}
+
+void resetTimer() 
+{
+    TMR0L += REMAINDER_TICKS_PER_HALF_SECOND;
+    count = 0;
+}
+
+void interrupt(void) __interrupt(1)
+{
+    if (INTCONbits.T0IF) {
+        if (count++ == NB_INTERRUPTS_PER_HALF_SECOND) {
+            if (timerInterruptFunction) timerInterruptFunction();
+            resetTimer();
+        }
+        INTCONbits.T0IF = 0;
+    }
+    
     if (INTCON3bits.INT3F) {
         INTCON3bits.INT3F = 0;
         if (buttonOneInterruptFunction)
@@ -25,12 +50,6 @@ void interrupt(void) __interrupt (1)
         INTCON3bits.INT1F = 0;
         if (buttonTwoInterruptFunction)
             buttonTwoInterruptFunction();
-    }
-    
-    if (INTCONbits.T0IF) {
-        INTCONbits.T0IF = 0;
-        if (timerInterruptFunction)
-            timerInterruptFunction();
     }
 }
 
@@ -159,19 +178,45 @@ bool Led_getState(Led led)
     return false;
 }
 
-void LCD_clear() {
-    LCD_setLine(LINE_ONE, "");
-    LCD_setLine(LINE_TWO, "");
+void Led_toggleState(Led led)
+{
+    switch (led) {
+        case LED_ONE:
+            LED0_IO ^= 1;
+            break;
+        case LED_TWO:
+            LED1_IO ^= 1;
+            break;
+        case LED_THREE:
+            LED2_IO ^= 1;
+            break;
+    }
 }
 
 void LCD_init()
 {
     LCDInit();
+    LED3_TRIS = 0;
 }
 
 void LCD_setBacklightState(bool on)
 {
-    PORTGbits.RG5 = on;
+    LED3_IO = on;
+}
+
+bool LCD_getBacklightState()
+{
+    return LED3_IO;
+}
+
+void LCD_toggleBacklightState()
+{
+    LED3_IO ^= 1;
+}
+
+void LCD_clear() {
+    LCD_setLine(LINE_ONE, "");
+    LCD_setLine(LINE_TWO, "");
 }
 
 void LCD_setLine(Line line, char *content)
@@ -181,30 +226,23 @@ void LCD_setLine(Line line, char *content)
         start += 16;
     
     strncpy( start, content, min((int) strlen(content), 16) );
-    // Clear the rest of the line...
-    /*size_t i;
-    for(i = strlen(content) + 1; i < 16; i++) {
-        strncpy((char *)&LCDText + i, " ", 1);
-    }*/
     LCDUpdate();
 }
 
-void Timer_setInterval(time_t timeout, time_t interval, interruptFunction func)
+void Timer_init()
 {
+    // Use 8-bit operation
     T0CONbits.T08BIT = 1;
+    // Use internal instruction cycle clock
     T0CONbits.T0CS = 0;
+    // Don't use the prescaler
     T0CONbits.PSA = 1;
-    T0CONbits.TMR0ON = 1;
-    INTCONbits.T0IE = 1;
-    INTCON2bits.T0IP = 1;
-    INTCONbits.T0IF = 0;
-    
-    // TODO configure timer for interrupt
+    // Enable interrupts
+    INTCONbits.TMR0IE = 1;
+}
+
+void Timer_setInterval(time_t interval, interruptFunction func)
+{
+    preloadTimer();
     timerInterruptFunction = func;
 }
-
-void Timer_setTimeout(time_t time, interruptFunction func)
-{
-    
-}
-
