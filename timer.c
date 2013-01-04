@@ -59,8 +59,12 @@ void interruptServiceRoutine (void) __interrupt(1)
             sprintf(str, "Elapsed ticks:  %lu + %hu", ticks, remainder);
             LCDDisplay(str, 0);
             
+            // Reset timer0 and ticks for next measurement
+            TMR0L = 0x0;
+            ticks = 0;
+            
             // Disable timer1
-            T1CONbits.TMR1ON = 0;
+            //T1CONbits.TMR1ON = 0;
         }
         
         // Clear interrupt flag

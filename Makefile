@@ -46,6 +46,7 @@ Objects/LCDBlocking.o : TCPIP_Stack/LCDBlocking.c $(SDCC_HEADERS) $(APP_HEADERS)
     
 init : 
 	mkdir -p build
+	mkdir -p Objects
 
 clean : 
 	$(RM) $(OBJECTS)
