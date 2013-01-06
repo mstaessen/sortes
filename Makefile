@@ -27,6 +27,9 @@ INCLUDES=-IInclude -I/usr/local/share/sdcc/include/ -I/usr/local/share/sdcc/incl
 
 main: init obj/program.o obj/time.o obj/time_input.o obj/incl/lcd.o obj/kernel/sortes.o
 	$(LD) $(LDFLAGS) obj/*.o obj/incl/*.o obj/kernel/*.o
+	
+clock: init obj/clock.o obj/time.o obj/incl/lcd.o obj/kernel/sortes.o
+	$(LD) $(LDFLAGS) obj/*.o obj/incl/*.o obj/kernel/*.o
 
 init:
 	mkdir -p obj/incl obj/kernel
@@ -45,4 +48,4 @@ obj/kernel/%.o: kernel-src/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $<
 
 clean : 
-	$(RM) -rf obj main.hex main.cod main.lst
+	$(RM) -rf obj *.hex *.cod *.lst

@@ -4,10 +4,17 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define NB_INTERRUPTS_PER_HALF_SECOND 12206
-#define REMAINDER_TICKS_PER_HALF_SECOND 22 
+/*
+ * In the experiments, timer0 ticked 12497920 + 168 times to complete two seconds...
+ * This is approx. 48820 TMR0L overflows in 2 seconds
+ * Ergo: 48820 overflows / 2 seconds = 24410 overflows / second 
+ *                                   = 12205 overflows / 500 ms
+ */
 
-unsigned int count = 0;
+#define OVERFLOWS_PER_HALF_SECOND 12205
+
+unsigned int overflowCount = 0;
+unsigned int timeoutCount = 0;
 
 interruptFunction buttonOneInterruptFunction;
 interruptFunction buttonTwoInterruptFunction;
@@ -18,38 +25,31 @@ int min(int a, int b)
     return a > b ? b : a;
 }
 
-void preloadTimer() 
-{
-    TMR0L = REMAINDER_TICKS_PER_HALF_SECOND;
-    count = 0;
-}
-
-void resetTimer() 
-{
-    TMR0L += REMAINDER_TICKS_PER_HALF_SECOND;
-    count = 0;
-}
-
 void interrupt(void) __interrupt(1)
 {
     if (INTCONbits.T0IF) {
-        if (count++ == NB_INTERRUPTS_PER_HALF_SECOND) {
-            if (timerInterruptFunction) timerInterruptFunction();
-            resetTimer();
+        overflowCount += 1;
+        if (overflowCount == timeoutCount) {
+            if (timerInterruptFunction) {
+                timerInterruptFunction();
+            }
+            Timer_reset();
         }
         INTCONbits.T0IF = 0;
     }
     
     if (INTCON3bits.INT3F) {
-        INTCON3bits.INT3F = 0;
-        if (buttonOneInterruptFunction)
+        if (buttonOneInterruptFunction) {
             buttonOneInterruptFunction();
+        }
+        INTCON3bits.INT3F = 0;
     }
     
     if (INTCON3bits.INT1F) {
-        INTCON3bits.INT1F = 0;
-        if (buttonTwoInterruptFunction)
+        if (buttonTwoInterruptFunction) {
             buttonTwoInterruptFunction();
+        }
+        INTCON3bits.INT1F = 0;
     }
 }
 
@@ -193,7 +193,7 @@ void Led_toggleState(Led led)
     }
 }
 
-void LCD_init()
+void LCD_init(void)
 {
     LCDInit();
     LED3_TRIS = 0;
@@ -204,19 +204,20 @@ void LCD_setBacklightState(bool on)
     LED3_IO = on;
 }
 
-bool LCD_getBacklightState()
+bool LCD_getBacklightState(void)
 {
     return LED3_IO;
 }
 
-void LCD_toggleBacklightState()
+void LCD_toggleBacklightState(void)
 {
     LED3_IO ^= 1;
 }
 
-void LCD_clear() {
-    LCD_setLine(LINE_ONE, "");
-    LCD_setLine(LINE_TWO, "");
+void LCD_clear(void) 
+{
+    LCD_setLine(LINE_ONE, "                ");
+    LCD_setLine(LINE_TWO, "                ");
 }
 
 void LCD_setLine(Line line, char *content)
@@ -229,7 +230,15 @@ void LCD_setLine(Line line, char *content)
     LCDUpdate();
 }
 
-void Timer_init()
+void LCD_displayString(char *content, int offset)
+{
+    if (offset < 33) {
+        strncpy( (char *)(&LCDText + offset), content, min(strlen(content), 32 - offset) );
+        LCDUpdate();
+    }
+}
+
+void Timer_init(void)
 {
     // Use 8-bit operation
     T0CONbits.T08BIT = 1;
@@ -241,8 +250,28 @@ void Timer_init()
     INTCONbits.TMR0IE = 1;
 }
 
-void Timer_setInterval(time_t interval, interruptFunction func)
+void Timer_setActive(bool on)
 {
-    preloadTimer();
-    timerInterruptFunction = func;
+    T0CONbits.TMR0ON = on;
+}
+
+bool Timer_isActive(void)
+{
+    return T0CONbits.TMR0ON;
+}
+
+void Timer_reset(void)
+{
+    overflowCount = 0;
+}
+
+void Timer_setTimeout(time_t nbHalfSeconds)
+{
+    timeoutCount = nbHalfSeconds * OVERFLOWS_PER_HALF_SECOND;
+    Timer_reset();
+}
+
+void Timer_setInterrupt(interruptFunction function)
+{
+    timerInterruptFunction = function;
 }

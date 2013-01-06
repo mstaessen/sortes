@@ -19,8 +19,7 @@ Time createTime() {
 }
 
 void Time_setSeconds(Time time, uint s) {
-    if (s < 60)
-        time->seconds = s;
+    time->seconds = s % 60;
 }
 
 uint Time_getSeconds(Time time) {
@@ -28,8 +27,7 @@ uint Time_getSeconds(Time time) {
 }
 
 void Time_setMinutes(Time time, uint m) {
-    if (m < 60)
-        time->minutes = m;
+    time->minutes = m % 60;
 }
 
 uint Time_getMinutes(Time time) {
@@ -37,8 +35,7 @@ uint Time_getMinutes(Time time) {
 }
 
 void Time_setHours(Time time, uint h) {
-    if (h < 24)
-        time->hours = h;
+    time->hours = h % 24;
 }
 
 uint Time_getHours(Time time) {
@@ -50,15 +47,18 @@ void Time_print(Time time, char *str) {
 }
 
 void Time_addSecond(Time time) {
-    time->seconds = (time->seconds + 1) % 60;
+    time->seconds = time->seconds + 1;
+    if (time->seconds == 60) time->seconds = 0;
 }
 
 void Time_addMinute(Time time) {
-    time->minutes = (time->minutes + 1) % 60;
+    time->minutes = time->minutes + 1;
+    if (time->minutes == 60) time->minutes = 0;
 }
 
 void Time_addHour(Time time) {
-    time->hours = (time->hours + 1) % 60;
+    time->hours = (time->hours + 1);
+    if (time->hours == 24) time->hours = 0;
 }
 
 void Time_tick(Time time) {

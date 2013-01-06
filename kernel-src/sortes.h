@@ -42,24 +42,32 @@ void Led_toggleState(Led led);
 
 typedef enum { LINE_ONE, LINE_TWO } Line;
 
-void LCD_init();
+void LCD_init(void);
 
 void LCD_setBacklightState(bool on);
 
-bool LCD_getBacklightState();
+bool LCD_getBacklightState(void);
 
-void LCD_toggleBacklightState();
+void LCD_toggleBacklightState(void);
 
 void LCD_setLine(Line line, char *content);
 
-void LCD_clear();
+void LCD_displayString(char *content, int offset);
+
+void LCD_clear(void);
 
 // Timer
 
-void Timer_init();
+void Timer_init(void);
 
-void Timer_setInterval(time_t nbHalfSeconds, interruptFunction func);
+void Timer_setActive(bool on);
 
-//void Timer_setTimeout(time_t time, interruptFunction func);
+bool Timer_isActive(void);
+
+void Timer_reset(void);
+
+void Timer_setTimeout(time_t nbHalfSeconds);
+
+void Timer_setInterrupt(interruptFunction function);
 
 #endif
