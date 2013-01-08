@@ -8,7 +8,7 @@
 #include <sortes.h>
 #include "time.h"
 
-#define ALARM_DURATION_IN_HALF_SECONDS 120 
+#define ALARM_DURATION_IN_HALF_SECONDS 60 
 
 unsigned char _MALLOC_SPEC heap[256];
 
