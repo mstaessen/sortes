@@ -28,6 +28,8 @@ APP_HEADERS = Include/GenericTypeDefs.h \
    Include/Compiler.h \
    Include/HardwareProfile.h 
 
+main: timer blinker
+
 timer : init Objects/timer.o $(OBJECTS)
 	$(LD) $(LDFLAGS) Objects/timer.o $(OBJECTS)
 	mv timer.hex build/
@@ -49,4 +51,4 @@ init :
 	mkdir -p Objects
 
 clean : 
-	$(RM) $(OBJECTS)
+	$(RM) -rf Objects/ build/
