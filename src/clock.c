@@ -56,6 +56,10 @@ void tick(void)
     if (_alarmTicks > 0) {
         Led_toggleState(LED_ONE);
         _alarmTicks -= 1;
+        
+        if (_alarmTicks == 0) {
+            LCD_displayString("      ", OFFSET_ALARM);
+        }
     }
 }
 
