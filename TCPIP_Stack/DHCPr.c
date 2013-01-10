@@ -79,8 +79,11 @@ void DHCPRelayTask(void) {
 
 static
 void ForwardToClient() {
-    if (UDPIsPutReady(SocketToClient) < 300) return;
-    if (UDPIsGetReady(SocketToServer) < 250) return;
+    LED0_IO ^= 1;
+    if (UDPIsPutReady(SocketToClient) < 300u) return;
+    LED1_IO ^= 1;
+    if (UDPIsGetReady(SocketToServer) < 250u) return;
+    LED2_IO ^= 1;
     
     // Skip the header etc. until GIADDR
     cur = (BYTE *)buff;

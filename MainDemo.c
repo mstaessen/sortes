@@ -240,7 +240,7 @@ static DWORD dwLastIP = 0;
         if((nt - t) >= (DWORD)(TICK_SECOND/1024ul))
         {
             t = nt;
-            LED0_IO ^= 1;
+            // LED0_IO ^= 1;
             ClrWdt();  //Clear the watchdog
         }
 
