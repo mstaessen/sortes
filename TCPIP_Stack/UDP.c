@@ -441,7 +441,7 @@ WORD UDPIsPutReady(UDP_SOCKET s)
 	LastPutSocket = s;
 	UDPTxCount = 0;
 	UDPSetTxBuffer(0);
-    }	
+    }
     activeUDPSocket = s;
 
     return MAC_TX_BUFFER_SIZE-sizeof(IP_HEADER)-sizeof(UDP_HEADER)-UDPTxCount;

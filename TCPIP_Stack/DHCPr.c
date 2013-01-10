@@ -28,8 +28,6 @@ static void ForwardToClient();
 static void ForwardToServer();
 
 void DHCPRelayInit(BYTE vInterface) {
-	if(!MACIsLinked()) return;
-    
     {
         int i;
         BYTE routerMac[] = _DHCP_ROUTER_MAC;
@@ -63,7 +61,6 @@ void DHCPRelayInit(BYTE vInterface) {
     }
 
     isAlreadyInit = TRUE;
-    LED1_IO = 1;
 }
 
 void DHCPRelayTask(void) {
@@ -142,7 +139,27 @@ void ForwardToClient() {
 
 static
 void ForwardToServer() {
-    // nop
+    LED0_IO ^= 1;
+    if (UDPIsPutReady(SocketToServer) < 300u) return;
+    LED1_IO ^= 1;
+    if (UDPIsGetReady(SocketToClient) < 241u) return;
+    LED2_IO ^= 1;
+    
+    cur = (BYTE *)buff;
+    UDPGetArray(cur, 241);
+    cur += 241;
+    
+    UDPDiscard(); 
+    
+    length = (cur - buff);
+    if (UDPIsPutReady(SocketToServer) >= length) {
+        UDPPutArray(buff, length);
+        
+        while (UDPTxCount < 300u) {
+            UDPPut(0);
+        }
+        UDPFlush();
+    }
 }
 
 #endif // defined(STACK_USE_DHCP_RELAY)
