@@ -12,7 +12,7 @@ AR = ar
 RM = rm
 
 OBJECTS=Objects/MainDemo.o  Objects/Announce.o Objects/ARP.o Objects/Delay.o \
-   Objects/DHCP.o Objects/DHCPs.o Objects/DNS.o  Objects/ETH97J60.o  \
+   Objects/DHCP.o Objects/DHCPr.o Objects/DHCPs.o Objects/DNS.o  Objects/ETH97J60.o  \
    Objects/Hashes.o Objects/Helpers.o Objects/ICMP.o Objects/IP.o \
    Objects/LCDBlocking.o Objects/StackTsk.o Objects/UDPPerformanceTest.o \
    Objects/Tick.o Objects/UDP.o
@@ -82,8 +82,11 @@ APP_HEADERS=Include/GenericTypeDefs.h \
    Include/mib.h \
    Include/MainDemo.h
 
-TCPIP_Demo : $(OBJECTS) 
+TCPIP_Demo : init $(OBJECTS) 
 	$(LD) $(LDFLAGS) $(OBJECTS)
+
+init:
+	mkdir -p Objects
 
 Objects/MainDemo.o : MainDemo.c $(SDCC_HEADERS) $(SDCC_PIC16_HEADERS) \
    $(APP_HEADERS) $(TCPIP_HEADERS)
@@ -118,6 +121,11 @@ Objects/DHCP.o : TCPIP_Stack/DHCP.c  $(SDCC_HEADERS)  \
    $(SDCC_PIC16_HEADERS) $(APP_HEADERS) $(TCPIP_HEADERS)
 	$(CC) -c -mpic16 -p18f97j60  -o"Objects/DHCP.o" \
    -L/usr/local/lib/pic16  TCPIP_Stack/DHCP.c
+
+Objects/DHCPr.o : TCPIP_Stack/DHCPr.c  $(SDCC_HEADERS)  \
+   $(SDCC_PIC16_HEADERS) $(APP_HEADERS) $(TCPIP_HEADERS)
+	$(CC) -c -mpic16 -p18f97j60  -o"Objects/DHCPr.o" \
+   -L/usr/local/lib/pic16  TCPIP_Stack/DHCPr.c
 
 Objects/DHCPs.o : TCPIP_Stack/DHCPs.c  $(SDCC_HEADERS)  \
    $(SDCC_PIC16_HEADERS) $(APP_HEADERS) $(TCPIP_HEADERS)
@@ -339,5 +347,5 @@ Objects/CustomSSLCert.o : CustomSSLCert.c $(SDCC_HEADERS)  \
 	$(CC) -c -mpic16 -p18f97j60  -o"Objects/CustomSSLCert.o" -L/usr/local/lib/pic16  TCPIP_Stack/CustomSSLCert.c
 
 clean : 
-	$(RM) $(OBJECTS)
+	$(RM) -rf Objects/ *.lst *.hex *.cod
 

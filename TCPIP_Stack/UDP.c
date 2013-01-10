@@ -914,7 +914,7 @@ void UDPDiscard(void)
 	processing.
 
   Precondition:
-	UDPInit() has been called an a UDP segment is ready in the MAC buffer.
+	UDPInit() has been called and a UDP segment is ready in the MAC buffer.
 
   Parameters:
 	remoteNode - The remote node that sent this segment.
@@ -976,14 +976,14 @@ BOOL UDPProcess(NODE_INFO *remoteNode, IP_ADDR *localIP, WORD len)
         // If there is no matching socket, There is no one to handle
         // this data.  Discard it.
         MACDiscardRx();
-	return FALSE;
+	    return FALSE;
     }
     else
     {
-	SocketWithRxData = s;
+	    SocketWithRxData = s;
         UDPRxCount = h.Length;
         Flags.bFirstRead = 1;
-	Flags.bWasDiscarded = 0;
+	    Flags.bWasDiscarded = 0;
     }
 
 

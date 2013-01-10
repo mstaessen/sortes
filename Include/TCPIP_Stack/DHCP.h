@@ -129,6 +129,10 @@ typedef enum
 void DHCPInit(BYTE vInterface);
 void DHCPTask(void);
 void DHCPServerTask(void);
+
+void DHCPRelayInit(BYTE vInterface);
+void DHCPRelayTask(void);
+
 void DHCPDisable(BYTE vInterface);
 void DHCPEnable(BYTE vInterface);
 BOOL DHCPIsEnabled(BYTE vInterface);

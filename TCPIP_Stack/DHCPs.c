@@ -68,7 +68,9 @@
 // Duration of our DHCP Lease in seconds.  This is extrememly short so 
 // the client won't use our IP for long if we inadvertantly 
 // provide a lease on a network that has a more authoratative DHCP server.
+#ifndef DHCP_LEASE_DURATION
 #define DHCP_LEASE_DURATION				60ul
+#endif
 /// Ignore: #define DHCP_MAX_LEASES					2		// Not implemented
 
 // DHCP Control Block.  Lease IP address is derived from index into DCB array.

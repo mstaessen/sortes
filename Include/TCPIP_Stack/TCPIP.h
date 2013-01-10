@@ -337,7 +337,7 @@
 	#include "UART.h"
 #endif
 
-#if defined(STACK_USE_DHCP_CLIENT) || defined(STACK_USE_DHCP_SERVER)
+#if defined(STACK_USE_DHCP_CLIENT) || defined(STACK_USE_DHCP_SERVER) || defined(STACK_USE_DHCP_RELAY)
 	#include "DHCP.h"
 #endif
 

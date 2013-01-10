@@ -71,7 +71,6 @@
 
 #include "../Include/TCPIP_Stack/TCPIP.h"
 
-
 #if defined( ZG_CS_TRIS )
     #if defined(ZG_CONFIG_LINKMGRII) 
         #include "TCPIP Stack\ZGLinkMgrII.h"
@@ -177,6 +176,10 @@ void StackInit(void)
     {
         DHCPDisable(0);  
     }
+#endif
+    
+#if defined(STACK_USE_DHCP_RELAY)
+    DHCPRelayInit(0);
 #endif
 
 #if defined(STACK_USE_DYNAMICDNS_CLIENT)
@@ -400,6 +403,10 @@ void StackApplications(void)
 	#if defined(STACK_USE_DHCP_SERVER)
 	DHCPServerTask();
 	#endif
+    
+    #if defined(STACK_USE_DHCP_RELAY)
+    DHCPRelayTask();
+    #endif
 	
 	#if defined (STACK_USE_DYNAMICDNS_CLIENT)
 	DDNSTask();
