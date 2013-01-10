@@ -153,7 +153,7 @@ void ForwardToServer() {
     cur += sizeof(header);
     
     {
-		unsigned i = 64+128+(16-sizeof(MAC_ADDR));
+		WORD i = 64+128+(16-sizeof(MAC_ADDR));
 		UDPGetArray(cur, i);
         cur += i;
     }
