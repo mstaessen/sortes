@@ -30,6 +30,9 @@ main: clock
 clock: init obj/clock.o obj/time.o obj/incl/lcd.o obj/kernel/sortes.o
 	$(LD) $(LDFLAGS) obj/*.o obj/incl/*.o obj/kernel/*.o
 
+interruptcounter: init obj/interruptcounter.o obj/incl/lcd.o
+	$(LD) $(LDFLAGS) obj/interruptcounter.o obj/incl/*.o
+
 init:
 	mkdir -p obj/incl obj/kernel
 
