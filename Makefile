@@ -7,7 +7,7 @@ AS = gpasm
 CC = sdcc
 CFLAGS= -c -mpic16 -p18f97j60  -o$@ 
 LD = sdcc
-LDFLAGS= -mpic16 -p18f97j60 -L/usr/local/lib/pic16 -llibio18f97j60.lib -llibdev18f97j60.lib -llibc18f.a
+LDFLAGS= -mpic16 -p18f97j60 -L/usr/local/lib/pic16 -llibio18f97j60.lib -llibdev18f97j60.lib -llibc18f.lib
 AR = ar
 RM = rm
 
