@@ -1,9 +1,9 @@
 /*********************************************************************
- *#include <pic18f97j60.h> //ML
- *                  Microchip TCP/IP Stack Definitions
+ *
+ *                  General Delay rouines
  *
  *********************************************************************
- * FileName:        StackTsk.h
+ * FileName:        Delay.h
  * Dependencies:    Compiler.h
  * Processor:       PIC18, PIC24F, PIC24H, dsPIC30F, dsPIC33F, PIC32
  * Compiler:        Microchip C32 v1.05 or higher
@@ -46,86 +46,49 @@
  *
  * Author               Date    Comment
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Nilesh Rajbharti     8/10/01 Original        (Rev 1.0)
- * Nilesh Rajbharti     2/9/02  Cleanup
- * Nilesh Rajbharti     5/22/02 Rev 2.0 (See version.log for detail)
- * Nilesh Rajbharti     8/7/03  Rev 2.21 - TFTP Client addition
- * Howard Schlunder		9/30/04	Added MCHP_MAC, MAC_POWER_ON_TEST, 
- 								EEPROM_BUFFER_SIZE, USE_LCD
- * Howard Schlunder		8/09/06	Removed MCHP_MAC, added STACK_USE_NBNS, 
- *								STACK_USE_DNS, and STACK_USE_GENERIC_TCP_EXAMPLE
+ * Nilesh Rajbharti     5/9/02  Original        (Rev 1.0)
+ * Nilesh Rajbharti     6/10/02 Fixed C18 ms and us routines
+ * Howard Schlunder		4/04/06	Changed for C30
  ********************************************************************/
-#ifndef __STACK_TSK_H
-#define __STACK_TSK_H
+#ifndef __DELAY_H
+#define __DELAY_H
 
-
-// Check for potential configuration errors in "TCPIPConfig.h"
-#if (MAX_UDP_SOCKETS <= 0 || MAX_UDP_SOCKETS > 255 )
-#error Invlaid MAX_UDP_SOCKETS value specified
+#include "../Compiler.h"
+#include "../HardwareProfile.h"
+#if defined(__18CXX) && !defined(HI_TECH_C)
+	#include "../delays.h"
 #endif
 
-// Check for potential configuration errors in "TCPIPConfig.h"
-#if (MAX_HTTP_CONNECTIONS <= 0 || MAX_HTTP_CONNECTIONS > 255 )
-#error Invalid MAX_HTTP_CONNECTIONS value specified.
+#if !defined(GetInstructionClock)
+	#error GetInstructionClock() must be defined.
 #endif
 
+#if defined(__18CXX) && !defined(HI_TECH_C)
+	#define Delay10us(us)		Delay10TCYx(((GetInstructionClock()/1000000)*(us)))
+	#define DelayMs(ms)												\
+	do														bg
+		\
+	{																\
+		unsigned int _iTemp = (ms); 								\
+		while(_iTemp--)												\
+			Delay1KTCYx((GetInstructionClock()+999999)/1000000);	\
+	} while(0)
 
-typedef struct __attribute__((__packed__))
-{
-    BYTE v[6];
-} MAC_ADDR;
+#elif defined(__C30__) || defined(__C32__)
+	void Delay10us(DWORD dwCount);
+	void DelayMs(WORD ms);
 
-#define IP_ADDR		DWORD_VAL
-
-typedef struct __attribute__((__packed__))
-{
-    IP_ADDR     IPAddr;
-    MAC_ADDR    MACAddr;
-} NODE_INFO;
-
-
-typedef struct __attribute__((__packed__)) 
-{
-	IP_ADDR		MyIPAddr;
-	IP_ADDR		MyMask;
-	IP_ADDR		MyGateway;
-	IP_ADDR		PrimaryDNSServer;
-	IP_ADDR		SecondaryDNSServer;
-	IP_ADDR		DefaultIPAddr;
-	IP_ADDR		DefaultMask;
-	BYTE		NetBIOSName[16];
-	struct
-	{
-		unsigned char : 5;
-        unsigned char bConfigureAutoIP : 1;
-		unsigned char bIsDHCPEnabled : 1;
-		unsigned char bInConfigMode : 1;
-	} Flags;
-	MAC_ADDR	MyMACAddr;
-
-#if defined(ZG_CS_TRIS)
-	BYTE		MySSID[32];
-#endif
-	
-#if defined(STACK_USE_SNMP_SERVER)
-	// SNMPv2C Read community names
-	// SNMP_COMMUNITY_MAX_LEN (8) + 1 null termination byte
-	BYTE readCommunity[SNMP_MAX_COMMUNITY_SUPPORT][SNMP_COMMUNITY_MAX_LEN+1]; 
-
-	// SNMPv2C Write community names
-	// SNMP_COMMUNITY_MAX_LEN (8) + 1 null termination byte
-	BYTE writeCommunity[SNMP_MAX_COMMUNITY_SUPPORT][SNMP_COMMUNITY_MAX_LEN+1];
-#endif
-
-} APP_CONFIG;
-
-#ifndef THIS_IS_STACK_APPLICATION
-    extern APP_CONFIG AppConfig;
+#else
+	#define Delay10us(x)			\
+	do 								\
+	{								\
+		unsigned long _dcnt;		\
+		_dcnt=x*((unsigned long)(0.00001/(1.0/GetInstructionClock())/6));	\
+		while(_dcnt--);				\
+	} while(0)
+	void DelayMs(WORD ms);
 #endif
 
 
-void StackInit(void);
-void StackTask(void);
-void StackApplications(void);
 
 #endif

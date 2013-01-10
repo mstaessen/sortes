@@ -50,10 +50,11 @@
  * Nilesh Rajbharti     2/9/02  Cleanup
  * Nilesh Rajbharti     5/22/02 Rev 2.0 (See version.log for detail)
  * Nilesh Rajbharti     8/7/03  Rev 2.21 - TFTP Client addition
- * Howard Schlunder		9/30/04	Added MCHP_MAC, MAC_POWER_ON_TEST, 
- 								EEPROM_BUFFER_SIZE, USE_LCD
- * Howard Schlunder		8/09/06	Removed MCHP_MAC, added STACK_USE_NBNS, 
- *								STACK_USE_DNS, and STACK_USE_GENERIC_TCP_EXAMPLE
+ * Howard Schlunder	9/30/04	Added MCHP_MAC, MAC_POWER_ON_TEST, 
+ 				EEPROM_BUFFER_SIZE, USE_LCD
+ * Howard Schlunder	8/09/06	Removed MCHP_MAC, added STACK_USE_NBNS, 
+ *				STACK_USE_DNS, and 
+ *                              STACK_USE_GENERIC_TCP_EXAMPLE
  ********************************************************************/
 #ifndef __STACK_TSK_H
 #define __STACK_TSK_H
@@ -108,13 +109,13 @@ typedef struct __attribute__((__packed__))
 #endif
 	
 #if defined(STACK_USE_SNMP_SERVER)
-	// SNMPv2C Read community names
-	// SNMP_COMMUNITY_MAX_LEN (8) + 1 null termination byte
-	BYTE readCommunity[SNMP_MAX_COMMUNITY_SUPPORT][SNMP_COMMUNITY_MAX_LEN+1]; 
+    // SNMPv2C Read community names
+    // SNMP_COMMUNITY_MAX_LEN (8) + 1 null termination byte
+    BYTE readCommunity[SNMP_MAX_COMMUNITY_SUPPORT][SNMP_COMMUNITY_MAX_LEN+1]; 
 
-	// SNMPv2C Write community names
-	// SNMP_COMMUNITY_MAX_LEN (8) + 1 null termination byte
-	BYTE writeCommunity[SNMP_MAX_COMMUNITY_SUPPORT][SNMP_COMMUNITY_MAX_LEN+1];
+    // SNMPv2C Write community names
+    // SNMP_COMMUNITY_MAX_LEN (8) + 1 null termination byte
+    BYTE writeCommunity[SNMP_MAX_COMMUNITY_SUPPORT][SNMP_COMMUNITY_MAX_LEN+1];
 #endif
 
 } APP_CONFIG;

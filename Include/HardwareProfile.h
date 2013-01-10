@@ -46,8 +46,9 @@
  *
  * Author               Date		Comment
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Howard Schlunder		10/03/06	Original, copied from Compiler.h
- * Ken Hesky            07/01/08    Added ZG2100-specific features
+ * Howard Schlunder	10/03/06	Original, copied from Compiler.h
+ * Ken Hesky            07/01/08        Added ZG2100-specific features
+ * Marc Lobelle         03/15/10        added sdcc support
  ********************************************************************/
 #ifndef __HARDWARE_PROFILE_H
 #define __HARDWARE_PROFILE_H
@@ -106,9 +107,9 @@
 	#endif
 #endif
 
-// Set configuration fuses (but only once): THIS_IS_STACK_APPLICATION
+// Set configuration fuses (but only once): THIS_INCLUDES_THE_MAIN_FUNCTION
 // may only be defined in the .c file that includes main()
-#if defined(THIS_IS_STACK_APPLICATION)
+#if defined(THIS_INCLUDES_THE_MAIN_FUNCTION)
     #if defined(__18CXX)  //PIC 18 family of devices
 	#if defined(__EXTENDED18__)
 	    #pragma config XINST=ON

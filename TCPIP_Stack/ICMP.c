@@ -49,12 +49,15 @@
  *
  * Author               Date    	Comment
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * Howard Schlunder		03/16/07	Original
+ * Howard Schlunder    03/16/07	Original
+ * Marc Lobelle        03/15/10 added support for sdcc compiler
+ *                              commented out rom usage (not sure it is 
+ *                              needed; only tested with ICMP server
  ********************************************************************/
 #define __ICMP_C
 #define __18F97J60
-#define __SDCC__
-#include <pic18f97j60.h> //ML
+#define __SDCC__   //ML
+#include "../Include/HardwareProfile.h" //ML
 
 
 #include "../Include/TCPIP_Stack/TCPIP.h"
@@ -112,13 +115,13 @@ static enum
  * PreCondition:    MAC buffer contains ICMP type packet.
  *
  * Input:           *remote: Pointer to a NODE_INFO structure of the 
- *					ping requester
- *					len: Count of how many bytes the ping header and 
- *					payload are in this IP packet
+ *		    ping requester
+ *		    len: Count of how many bytes the ping header and 
+ *		    payload are in this IP packet
  *
  * Output:          Generates an echo reply, if requested
- *					Validates and sets ICMPFlags.bReplyValid if a 
- *					correct ping response to one of ours is received.
+ *		    Validates and sets ICMPFlags.bReplyValid if a 
+ *		    correct ping response to one of ours is received.
  *
  * Side Effects:    None
  *
@@ -128,7 +131,7 @@ static enum
  ********************************************************************/
 void ICMPProcess(NODE_INFO *remote, WORD len)
 {
-	DWORD_VAL dwVal;
+    DWORD_VAL dwVal;
 
     // Obtain the ICMP header Type, Code, and Checksum fields
     MACGetArray((BYTE*)&dwVal, sizeof(dwVal));
@@ -136,44 +139,45 @@ void ICMPProcess(NODE_INFO *remote, WORD len)
 	// See if this is an ICMP echo (ping) request
 	if(dwVal.w[0] == 0x0008u)
 	{
-		// Validate the checksum using the Microchip MAC's DMA module
-		// The checksum data includes the precomputed checksum in the 
-		// header, so a valid packet will always have a checksum of 
-		// 0x0000 if the packet is not disturbed.
-		if(MACCalcRxChecksum(0+sizeof(IP_HEADER), len))
-			return;
+	    // Validate the checksum using the Microchip MAC's DMA module
+	    // The checksum data includes the precomputed checksum in the 
+	    // header, so a valid packet will always have a checksum of 
+	    // 0x0000 if the packet is not disturbed.
+	    if(MACCalcRxChecksum(0+sizeof(IP_HEADER), len))
+		return;
 	
-		// Calculate new Type, Code, and Checksum values
-		dwVal.v[0] = 0x00;	// Type: 0 (ICMP echo/ping reply)
-		dwVal.v[2] += 8;	// Subtract 0x0800 from the checksum
-		if(dwVal.v[2] < 8u)
-		{
-			dwVal.v[3]++;
-			if(dwVal.v[3] == 0u)
-				dwVal.v[2]++;
-		}
+	    // Calculate new Type, Code, and Checksum values
+	    dwVal.v[0] = 0x00;	// Type: 0 (ICMP echo/ping reply)
+	    dwVal.v[2] += 8;	// Subtract 0x0800 from the checksum
+	    if(dwVal.v[2] < 8u)
+	    {
+		dwVal.v[3]++;
+		if(dwVal.v[3] == 0u) dwVal.v[2]++;
+	    }
 	
 	    // Wait for TX hardware to become available (finish transmitting 
 	    // any previous packet)
 	    while(!IPIsTxReady());
 
-		// Position the write pointer for the next IPPutHeader operation
-		// NOTE: do not put this before the IPIsTxReady() call for ZG compatbility
+	    // Position the write pointer for the next IPPutHeader operation
+	    // NOTE: do not put this before the IPIsTxReady() call for ZG 
+            //compatbility
 	    MACSetWritePtr(BASE_TX_ADDR + sizeof(ETHER_HEADER));
         	
-		// Create IP header in TX memory
-		IPPutHeader(remote, IP_PROT_ICMP, len);
+	    // Create IP header in TX memory
+	    IPPutHeader(remote, IP_PROT_ICMP, len);
+       
+	    // Copy ICMP response into the TX memory
+	    MACPutArray((BYTE*)&dwVal, sizeof(dwVal));
+	    MACMemCopyAsync(-1, -1, len-4);
+	    while(!MACIsMemCopyDone());
 	
-		// Copy ICMP response into the TX memory
-		MACPutArray((BYTE*)&dwVal, sizeof(dwVal));
-		MACMemCopyAsync(-1, -1, len-4);
-		while(!MACIsMemCopyDone());
-	
-		// Transmit the echo reply packet
+	    // Transmit the echo reply packet
 	    MACFlush();
 	}
 #if defined(STACK_USE_ICMP_CLIENT)
-	else if(dwVal.w[0] == 0x0000u)	// See if this an ICMP Echo reply to our request
+	else if(dwVal.w[0] == 0x0000u)	// See if this an ICMP Echo 
+                                        //reply to our request
 	{
 		// Get the sequence number and identifier fields
 		MACGetArray((BYTE*)&dwVal, sizeof(dwVal));
@@ -187,10 +191,12 @@ void ICMPProcess(NODE_INFO *remote, WORD len)
 
 		// Validate the ICMP checksum field
 	    IPSetRxBuffer(0);
-		if(CalcIPBufferChecksum(sizeof(ICMP_PACKET)))	// Two bytes of payload were sent in the echo request
+		if(CalcIPBufferChecksum(sizeof(ICMP_PACKET)))	// Two bytes 
+		  //of payload were sent in the echo request
 			return;
 		
-		// Flag that we received the response and stop the timer ticking
+		// Flag that we received the response and stop the timer 
+		//ticking
 		ICMPFlags.bReplyValid = 1;
 		ICMPTimer = TickGet() - ICMPTimer;
 	}
@@ -203,12 +209,12 @@ void ICMPProcess(NODE_INFO *remote, WORD len)
  * PreCondition:    ICMPBeginUsage() returned TRUE
  *
  * Input:           dwRemoteIP: IP Address to ping.  Must be stored 
- *								big endian.  Ex: 192.168.0.1 should be
- *								passed as 0xC0A80001.
+ *	       	    big endian.  Ex: 192.168.0.1 should be
+ *		    passed as 0xC0A80001.
  *
  * Output:          Begins the process of transmitting an ICMP echo 
- *					request.  This normally involves an ARP 
- *					resolution procedure first.
+ *		    request.  This normally involves an ARP 
+ *		    resolution procedure first.
  *
  * Side Effects:    None
  *
@@ -257,13 +263,13 @@ ML*/
  * Input:           None
  *
  * Output:          -3: Could not resolve hostname (DNS timeout or 
- *						hostname invalid)
- *					-2: No response received yet
- *					-1: Operation timed out (longer than ICMP_TIMEOUT) 
- *						has elapsed.
- *					>=0: Number of TICKs that elapsed between 
- *						 initial ICMP transmission and reception of 
- *						 a valid echo.
+ *			hostname invalid)
+ *		    -2: No response received yet
+ *		    -1: Operation timed out (longer than ICMP_TIMEOUT) 
+ *			has elapsed.
+ *		    >=0: Number of TICKs that elapsed between 
+ *			initial ICMP transmission and reception of 
+ *			a valid echo.
  *
  * Side Effects:    None
  *
@@ -273,116 +279,116 @@ ML*/
  ********************************************************************/
 LONG ICMPGetReply(void)
 {
-	ICMP_PACKET ICMPPacket;
+    ICMP_PACKET ICMPPacket;
 
-	switch(ICMPState)
-	{
+    switch(ICMPState)
+    {
 #if defined(STACK_USE_DNS)
-		case SM_DNS_SEND_QUERY:
-			// Obtain DNS module ownership
-			if(!DNSBeginUsage())
-				break;
+	case SM_DNS_SEND_QUERY:
+	    // Obtain DNS module ownership
+	    if(!DNSBeginUsage())
+	    break;
 			
-			// Send DNS query
-//ML			if(ICMPFlags.bRemoteHostIsROM)
-//ML				DNSResolveROM(StaticVars.RemoteHost.szROM, DNS_TYPE_A);
-//ML			else
-				DNSResolve(StaticVars.RemoteHost.szRAM, DNS_TYPE_A);
+	    // Send DNS query
+//ML	    if(ICMPFlags.bRemoteHostIsROM)
+//ML		DNSResolveROM(StaticVars.RemoteHost.szROM, DNS_TYPE_A);
+//ML	    else
+		DNSResolve(StaticVars.RemoteHost.szRAM, DNS_TYPE_A);
 			
-			ICMPState = SM_DNS_GET_RESPONSE;
-			break;
+	    ICMPState = SM_DNS_GET_RESPONSE;
+	    break;
 				
-		case SM_DNS_GET_RESPONSE:
-			// See if DNS is done, and if so, get the remote IP address
-			if(!DNSIsResolved(&StaticVars.ICMPRemote.IPAddr))
-				break;
+	case SM_DNS_GET_RESPONSE:
+	    // See if DNS is done, and if so, get the remote IP address
+	    if(!DNSIsResolved(&StaticVars.ICMPRemote.IPAddr))
+	    break;
 			
-			// Free the DNS module
-			DNSEndUsage();
+	    // Free the DNS module
+	    DNSEndUsage();
 			
-			// Return error code if the DNS query failed
-			if(StaticVars.ICMPRemote.IPAddr.Val == 0x00000000ul)
-			{
-				ICMPState = SM_IDLE;
-				return -3;
-			}
+	    // Return error code if the DNS query failed
+	    if(StaticVars.ICMPRemote.IPAddr.Val == 0x00000000ul)
+	    {
+		ICMPState = SM_IDLE;
+		return -3;
+	    }
 
-			ICMPState = SM_ARP_SEND_QUERY;	
-			// No break;	
+	    ICMPState = SM_ARP_SEND_QUERY;	
+	    // No break;	
 #endif
 
-		case SM_ARP_SEND_QUERY:
-			ARPResolve(&StaticVars.ICMPRemote.IPAddr);
-			ICMPState = SM_ARP_GET_RESPONSE;
-			break;
+	case SM_ARP_SEND_QUERY:
+	    ARPResolve(&StaticVars.ICMPRemote.IPAddr);
+	    ICMPState = SM_ARP_GET_RESPONSE;
+	    break;
 			
-		case SM_ARP_GET_RESPONSE:
-			// See if the ARP reponse was successfully received
-			if(!ARPIsResolved(&StaticVars.ICMPRemote.IPAddr, &StaticVars.ICMPRemote.MACAddr))
-				break;
+	case SM_ARP_GET_RESPONSE:
+	    // See if the ARP reponse was successfully received
+	    if(!ARPIsResolved(&StaticVars.ICMPRemote.IPAddr, 
+                     &StaticVars.ICMPRemote.MACAddr)) break;
 			
-			ICMPState = SM_ICMP_SEND_ECHO_REQUEST;
-			// No break; 
+	    ICMPState = SM_ICMP_SEND_ECHO_REQUEST;
+	    // No break; 
 		
-		case SM_ICMP_SEND_ECHO_REQUEST:
-		    if(!IPIsTxReady())
-		    	break;
+	case SM_ICMP_SEND_ECHO_REQUEST:
+	    if(!IPIsTxReady())  break;
 
-			// Set up the ping packet
-			ICMPPacket.vType = 0x08;	// 0x08: Echo (ping) request
-			ICMPPacket.vCode = 0x00;
-			ICMPPacket.wvChecksum.Val = 0x0000;
-			ICMPPacket.wvIdentifier.Val = 0xEFBE;
-			wICMPSequenceNumber++; 
-			ICMPPacket.wvSequenceNumber.Val = wICMPSequenceNumber;
-			ICMPPacket.wData = 0x2860;
-			ICMPPacket.wvChecksum.Val = CalcIPChecksum((BYTE*)&ICMPPacket, sizeof(ICMPPacket));
+	    // Set up the ping packet
+	    ICMPPacket.vType = 0x08;	// 0x08: Echo (ping) request
+	    ICMPPacket.vCode = 0x00;
+	    ICMPPacket.wvChecksum.Val = 0x0000;
+	    ICMPPacket.wvIdentifier.Val = 0xEFBE;
+	    wICMPSequenceNumber++; 
+	    ICMPPacket.wvSequenceNumber.Val = wICMPSequenceNumber;
+	    ICMPPacket.wData = 0x2860;
+	    ICMPPacket.wvChecksum.Val = CalcIPChecksum((BYTE*)&ICMPPacket, 
+                     sizeof(ICMPPacket));
 		
-			// Record the current time.  This will be used as a basis for 
-			// finding the echo response time, which exludes the ARP and DNS 
-			// steps
-			ICMPTimer = TickGet();
+	    // Record the current time.  This will be used as a basis for 
+	    // finding the echo response time, which exludes the ARP and DNS 
+	    // steps
+	    ICMPTimer = TickGet();
 
-			// Position the write pointer for the next IPPutHeader operation
-		    MACSetWritePtr(BASE_TX_ADDR + sizeof(ETHER_HEADER));
+	    // Position the write pointer for the next IPPutHeader operation
+	    MACSetWritePtr(BASE_TX_ADDR + sizeof(ETHER_HEADER));
 		
-			// Create IP header in TX memory
-			IPPutHeader(&StaticVars.ICMPRemote, IP_PROT_ICMP, sizeof(ICMPPacket));
-			MACPutArray((BYTE*)&ICMPPacket, sizeof(ICMPPacket));
-			MACFlush();
+	    // Create IP header in TX memory
+	    IPPutHeader(&StaticVars.ICMPRemote, IP_PROT_ICMP, 
+                     sizeof(ICMPPacket));
+	    MACPutArray((BYTE*)&ICMPPacket, sizeof(ICMPPacket));
+	    MACFlush();
 
-			// Echo sent, advance state
-			ICMPState = SM_ICMP_GET_ECHO_RESPONSE;
-			break;
+	    // Echo sent, advance state
+	    ICMPState = SM_ICMP_GET_ECHO_RESPONSE;
+	    break;
 
-		case SM_ICMP_GET_ECHO_RESPONSE:
-			// See if the echo was successfully received
-			if(ICMPFlags.bReplyValid)
-				return (LONG)ICMPTimer;
+	case SM_ICMP_GET_ECHO_RESPONSE:
+	    // See if the echo was successfully received
+	    if(ICMPFlags.bReplyValid)
+	    return (LONG)ICMPTimer;
 		
-			break;
+	    break;
 		
-		// SM_IDLE or illegal/impossible state:
-		default:
-			return -1;
-	}
+	// SM_IDLE or illegal/impossible state:
+	default:
+	    return -1;
+    }
 
-	// See if the DNS/ARP/echo request timed out
-	if(TickGet() - ICMPTimer > ICMP_TIMEOUT)
-	{
-		// Free DNS module if we have it in use
-		#if defined(STACK_USE_DNS)
-			if(ICMPState == SM_DNS_GET_RESPONSE)
-				DNSEndUsage();
-		#endif
+    // See if the DNS/ARP/echo request timed out
+    if(TickGet() - ICMPTimer > ICMP_TIMEOUT)
+    {
+	// Free DNS module if we have it in use
+	#if defined(STACK_USE_DNS)
+	    if(ICMPState == SM_DNS_GET_RESPONSE) DNSEndUsage();
+	#endif
 		
-		// Stop ICMP echo test and return error to caller
-		ICMPState = SM_IDLE;
-		return -1;
-	}
+	// Stop ICMP echo test and return error to caller
+	ICMPState = SM_IDLE;
+	return -1;
+    }
 
-	// Still working.  No response to report yet.
-	return -2;
+    // Still working.  No response to report yet.
+    return -2;
 }
 
 
@@ -394,12 +400,12 @@ LONG ICMPGetReply(void)
  * Input:           None
  *
  * Output:          TRUE: You have successfully gained ownership of 
- *						  the ICMP client module and can now use the 
- *						  ICMPSendPing() and ICMPGetReply() functions.
- *					FALSE: Some other application is using the ICMP 
- *						   client module.  Calling ICMPSendPing() 
- *						   will corrupt the other application's ping 
- *						   result.
+ *		          the ICMP client module and can now use the 
+ *			  ICMPSendPing() and ICMPGetReply() functions.
+ *		    FALSE:Some other application is using the ICMP 
+ *			  client module.  Calling ICMPSendPing() 
+ *			  will corrupt the other application's ping 
+ *			  result.
  *
  * Side Effects:    None
  *
