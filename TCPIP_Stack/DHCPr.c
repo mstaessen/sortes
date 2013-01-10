@@ -146,9 +146,43 @@ void ForwardToServer() {
     LED2_IO ^= 1;
     
     cur = (BYTE *)buff;
-    UDPGetArray(cur, 241);
-    cur += 241;
     
+	UDPGetArray(cur, sizeof(BOOTP_HEADER));
+    cur += sizeof(BOOTP_HEADER);
+    
+    {
+		unsigned i = 64+128+(16-sizeof(MAC_ADDR));
+		UDPGetArray(cur, i);
+        cur += i;
+    }
+    
+    // magic word
+    UDPGetArray(cur, sizeof(DWORD));
+    cur += sizeof(DWORD);
+    
+	// Obtain options
+	while(1)
+	{
+		// Get option type
+		if(!UDPGet(&optionCode))
+			break;
+        *cur = optionCode;
+        cur++;
+            
+		if(optionCode == DHCP_END_OPTION)
+			break;
+
+		// Get option length
+		UDPGet(&length);
+        *cur = length;
+        cur ++;
+        
+        // read the option
+        UDPGetArray(cur, length);
+        cur += length;
+    }
+    
+    // discard the rest
     UDPDiscard(); 
     
     length = (cur - buff);
