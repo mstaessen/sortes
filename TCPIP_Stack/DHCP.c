@@ -505,197 +505,197 @@ void DHCPTask(void)
 	        // No break
 
 	    case SM_DHCP_SEND_DISCOVERY:
-		// Assume default IP Lease time of 60 seconds.
-		// This should be minimum possible to make sure that if the
-		// server did not specify lease time, we try again after this 
-		// minimum time.
-		DHCPClient.dwLeaseTime = 60;
-		DHCPClient.validValues.val = 0x00;
-		DHCPClient.flags.bits.bIsBound = FALSE;	
-		DHCPClient.flags.bits.bOfferReceived = FALSE;
+    		// Assume default IP Lease time of 60 seconds.
+    		// This should be minimum possible to make sure that if the
+    		// server did not specify lease time, we try again after this 
+    		// minimum time.
+    		DHCPClient.dwLeaseTime = 60;
+    		DHCPClient.validValues.val = 0x00;
+    		DHCPClient.flags.bits.bIsBound = FALSE;	
+    		DHCPClient.flags.bits.bOfferReceived = FALSE;
 	
-		// No point in wasting time transmitting a discovery if we are 
-		// unlinked.  No one will see it.  
-		if(!MACIsLinked()) break;
+    		// No point in wasting time transmitting a discovery if we are 
+    		// unlinked.  No one will see it.  
+    		if(!MACIsLinked()) break;
 	
-		// Ensure transmitter is ready to accept data
-		if(UDPIsPutReady(DHCPClient.hDHCPSocket) < 300u) break;
+    		// Ensure transmitter is ready to accept data
+    		if(UDPIsPutReady(DHCPClient.hDHCPSocket) < 300u) break;
 
-		// Toggle the BOOTP Broadcast flag to ensure compatibility 
-		// with bad DHCP servers that don't know how to handle 
-		// broadcast responses.  This results in the next discovery 
-		// made using the opposite mode.
-		DHCPClient.flags.bits.bUseUnicastMode ^= 1;
+    		// Toggle the BOOTP Broadcast flag to ensure compatibility 
+    		// with bad DHCP servers that don't know how to handle 
+    		// broadcast responses.  This results in the next discovery 
+    		// made using the opposite mode.
+    		DHCPClient.flags.bits.bUseUnicastMode ^= 1;
 	
-		// Ensure that we transmit to the broadcast IP and MAC 
-		// addresses. The UDP Socket remembers who it was last talking 
-                // to
-	       memset((void*)&UDPSocketInfo[DHCPClient.hDHCPSocket].remoteNode,
-                   0xFF, sizeof(UDPSocketInfo[0].remoteNode));
+    		// Ensure that we transmit to the broadcast IP and MAC 
+    		// addresses. The UDP Socket remembers who it was last talking 
+                    // to
+    	    memset((void*)&UDPSocketInfo[DHCPClient.hDHCPSocket].remoteNode,
+                       0xFF, sizeof(UDPSocketInfo[0].remoteNode));
 	
-		// Send the DHCP Discover broadcast
-		_DHCPSend(DHCP_DISCOVER_MESSAGE, FALSE);
+    		// Send the DHCP Discover broadcast
+    		_DHCPSend(DHCP_DISCOVER_MESSAGE, FALSE);
 	
-		// Start a timer and begin looking for a response
-		DHCPClient.dwTimer = TickGet();
-		DHCPClient.smState = SM_DHCP_GET_OFFER;
-		break;
+    		// Start a timer and begin looking for a response
+    		DHCPClient.dwTimer = TickGet();
+    		DHCPClient.smState = SM_DHCP_GET_OFFER;
+    		break;
 	
    	    case SM_DHCP_GET_OFFER:
-		// Check to see if a packet has arrived
-		if(UDPIsGetReady(DHCPClient.hDHCPSocket) < 250u)
-		{
-		    // Go back and transmit a new discovery if we didn't get an
-                    // offer after 2 seconds
-		    if(TickGet() - DHCPClient.dwTimer >= DHCP_TIMEOUT)
-			DHCPClient.smState = SM_DHCP_SEND_DISCOVERY;
-		    break;
-		}
+    		// Check to see if a packet has arrived
+    		if(UDPIsGetReady(DHCPClient.hDHCPSocket) < 250u)
+    		{
+    		    // Go back and transmit a new discovery if we didn't get an
+                        // offer after 2 seconds
+    		    if(TickGet() - DHCPClient.dwTimer >= DHCP_TIMEOUT)
+    			DHCPClient.smState = SM_DHCP_SEND_DISCOVERY;
+    		    break;
+    		}
 	
-		// Let the DHCP server module know that there is a DHCP server 
-		// on this network
-		DHCPClient.flags.bits.bDHCPServerDetected = TRUE;
+    		// Let the DHCP server module know that there is a DHCP server 
+    		// on this network
+    		DHCPClient.flags.bits.bDHCPServerDetected = TRUE;
 	
-	        // Check to see if we received an offer
-		if(_DHCPReceive() != DHCP_OFFER_MESSAGE) break;
-		DHCPClient.smState = SM_DHCP_SEND_REQUEST;
-		// No break
+    	        // Check to see if we received an offer
+    		if(_DHCPReceive() != DHCP_OFFER_MESSAGE) break;
+    		DHCPClient.smState = SM_DHCP_SEND_REQUEST;
+    		// No break
 	
 	    case SM_DHCP_SEND_REQUEST:
-		if(UDPIsPutReady(DHCPClient.hDHCPSocket) < 258u) break;
+    		if(UDPIsPutReady(DHCPClient.hDHCPSocket) < 258u) break;
 
-		// Ensure that we transmit to the broadcast IP and MAC 
-		// addresses. The UDP Socket remembers who it was last talking 
-		// to, so we must set this back to the broadcast address since 
-		// the current socket values are the unicast addresses of the 
-		// DHCP server.
-	       memset((void*)&UDPSocketInfo[DHCPClient.hDHCPSocket].remoteNode,
-                    0xFF, sizeof(UDPSocketInfo[0].remoteNode));
+    		// Ensure that we transmit to the broadcast IP and MAC 
+    		// addresses. The UDP Socket remembers who it was last talking 
+    		// to, so we must set this back to the broadcast address since 
+    		// the current socket values are the unicast addresses of the 
+    		// DHCP server.
+    	       memset((void*)&UDPSocketInfo[DHCPClient.hDHCPSocket].remoteNode,
+                        0xFF, sizeof(UDPSocketInfo[0].remoteNode));
 	
-		// Send the DHCP request message
-		_DHCPSend(DHCP_REQUEST_MESSAGE, FALSE);	
+    		// Send the DHCP request message
+    		_DHCPSend(DHCP_REQUEST_MESSAGE, FALSE);	
 	
-		// Start a timer and begin looking for a response
-		DHCPClient.dwTimer = TickGet();
-		DHCPClient.smState = SM_DHCP_GET_REQUEST_ACK;
-		break;
+    		// Start a timer and begin looking for a response
+    		DHCPClient.dwTimer = TickGet();
+    		DHCPClient.smState = SM_DHCP_GET_REQUEST_ACK;
+    		break;
 	
    	    case SM_DHCP_GET_REQUEST_ACK:
-		// Check to see if a packet has arrived
-		if(UDPIsGetReady(DHCPClient.hDHCPSocket) < 250u)
-		{
-		    // Go back and transmit a new discovery if we didn't get 
-                    //an ACK after 2 seconds
-		    if(TickGet() - DHCPClient.dwTimer >= DHCP_TIMEOUT)
-		    DHCPClient.smState = SM_DHCP_SEND_DISCOVERY;
-		    break;
-		}
+    		// Check to see if a packet has arrived
+    		if(UDPIsGetReady(DHCPClient.hDHCPSocket) < 250u)
+    		{
+    		    // Go back and transmit a new discovery if we didn't get 
+                        //an ACK after 2 seconds
+    		    if(TickGet() - DHCPClient.dwTimer >= DHCP_TIMEOUT)
+    		    DHCPClient.smState = SM_DHCP_SEND_DISCOVERY;
+    		    break;
+    		}
 	
-		// Check to see if we received an offer
-		switch(_DHCPReceive())
-		{
-		    case DHCP_ACK_MESSAGE:
-		    UDPClose(DHCPClient.hDHCPSocket);
-		    DHCPClient.hDHCPSocket = INVALID_UDP_SOCKET;
-		    DHCPClient.dwTimer = TickGet();
-		    DHCPClient.smState = SM_DHCP_BOUND;
-		    DHCPClient.flags.bits.bEvent = 1;
-		    DHCPClient.flags.bits.bIsBound = TRUE;	
+    		// Check to see if we received an offer
+    		switch(_DHCPReceive())
+    		{
+    		    case DHCP_ACK_MESSAGE:
+        		    UDPClose(DHCPClient.hDHCPSocket);
+        		    DHCPClient.hDHCPSocket = INVALID_UDP_SOCKET;
+        		    DHCPClient.dwTimer = TickGet();
+        		    DHCPClient.smState = SM_DHCP_BOUND;
+        		    DHCPClient.flags.bits.bEvent = 1;
+        		    DHCPClient.flags.bits.bIsBound = TRUE;	
 
-		    if(DHCPClient.validValues.bits.IPAddress)
-		        AppConfig.MyIPAddr.Val = DHCPClient.tempIPAddress.Val;
-		    if(DHCPClient.validValues.bits.Mask)
-			AppConfig.MyMask.Val = DHCPClient.tempMask.Val;
-		    if(DHCPClient.validValues.bits.Gateway)
-			AppConfig.MyGateway.Val = DHCPClient.tempGateway.Val;
+        		    if(DHCPClient.validValues.bits.IPAddress)
+        		        AppConfig.MyIPAddr.Val = DHCPClient.tempIPAddress.Val;
+        		    if(DHCPClient.validValues.bits.Mask)
+            			AppConfig.MyMask.Val = DHCPClient.tempMask.Val;
+        		    if(DHCPClient.validValues.bits.Gateway)
+            			AppConfig.MyGateway.Val = DHCPClient.tempGateway.Val;
 #if defined(STACK_USE_DNS)
-		    if(DHCPClient.validValues.bits.DNS)
-			AppConfig.PrimaryDNSServer.Val =DHCPClient.tempDNS.Val;
-		    AppConfig.SecondaryDNSServer.Val = 0x00000000ul;
-		    if(DHCPClient.validValues.bits.DNS2)
-			AppConfig.SecondaryDNSServer.Val = 
-                                      DHCPClient.tempDNS2.Val;
+        		    if(DHCPClient.validValues.bits.DNS)
+            			AppConfig.PrimaryDNSServer.Val =DHCPClient.tempDNS.Val;
+        		    AppConfig.SecondaryDNSServer.Val = 0x00000000ul;
+        		    if(DHCPClient.validValues.bits.DNS2)
+            			AppConfig.SecondaryDNSServer.Val = 
+                                              DHCPClient.tempDNS2.Val;
 #endif
-		    //if(DHCPClient.validValues.bits.HostName)
-		    //	memcpy(AppConfig.NetBIOSName, 
-                    //            (void*)DHCPClient.tempHostName, 
-                    //            sizeof(AppConfig.NetBIOSName));
+        		    //if(DHCPClient.validValues.bits.HostName)
+        		    //	memcpy(AppConfig.NetBIOSName, 
+                            //            (void*)DHCPClient.tempHostName, 
+                            //            sizeof(AppConfig.NetBIOSName));
 	
-  		    break;
+          		    break;
 	
-		case DHCP_NAK_MESSAGE:
-		    DHCPClient.smState = SM_DHCP_SEND_DISCOVERY;
-		    break;
-		}
-		break;
+        		case DHCP_NAK_MESSAGE:
+        		    DHCPClient.smState = SM_DHCP_SEND_DISCOVERY;
+        		    break;
+        		}
+    		break;
 	
 	    case SM_DHCP_BOUND:
-		if(TickGet() - DHCPClient.dwTimer < TICK_SECOND) break;
+    		if(TickGet() - DHCPClient.dwTimer < TICK_SECOND) break;
 	
-		// Check to see if our lease is still valid, if so, decrement 
-		// lease time
-		if(DHCPClient.dwLeaseTime >= 2ul)
-		{
-		    DHCPClient.dwTimer += TICK_SECOND;
-		    DHCPClient.dwLeaseTime--;
-		    break;
-		}
+    		// Check to see if our lease is still valid, if so, decrement 
+    		// lease time
+    		if(DHCPClient.dwLeaseTime >= 2ul)
+    		{
+    		    DHCPClient.dwTimer += TICK_SECOND;
+    		    DHCPClient.dwLeaseTime--;
+    		    break;
+    		}
 	
-		// Open a socket to send and receive DHCP messages on
-		DHCPClient.hDHCPSocket = UDPOpen(DHCP_CLIENT_PORT, 
-                         NULL, DHCP_SERVER_PORT);
-		if(DHCPClient.hDHCPSocket == INVALID_UDP_SOCKET) break;
+    		// Open a socket to send and receive DHCP messages on
+    		DHCPClient.hDHCPSocket = UDPOpen(DHCP_CLIENT_PORT, 
+                             NULL, DHCP_SERVER_PORT);
+    		if(DHCPClient.hDHCPSocket == INVALID_UDP_SOCKET) break;
 	
-		DHCPClient.smState = SM_DHCP_SEND_RENEW;
-		// No break
+    		DHCPClient.smState = SM_DHCP_SEND_RENEW;
+    		// No break
 	
 	    case SM_DHCP_SEND_RENEW:
 	    case SM_DHCP_SEND_RENEW2:
 	    case SM_DHCP_SEND_RENEW3:
-		if(UDPIsPutReady(DHCPClient.hDHCPSocket) < 258u) break;
+    		if(UDPIsPutReady(DHCPClient.hDHCPSocket) < 258u) break;
 	
-	        // Send the DHCP request message
-		_DHCPSend(DHCP_REQUEST_MESSAGE, TRUE);
-		DHCPClient.flags.bits.bOfferReceived = FALSE;
+    	        // Send the DHCP request message
+    		_DHCPSend(DHCP_REQUEST_MESSAGE, TRUE);
+    		DHCPClient.flags.bits.bOfferReceived = FALSE;
 	
-		// Start a timer and begin looking for a response
-		DHCPClient.dwTimer = TickGet();
-		DHCPClient.smState++;
-		break;
+    		// Start a timer and begin looking for a response
+    		DHCPClient.dwTimer = TickGet();
+    		DHCPClient.smState++;
+    		break;
 	
 	    case SM_DHCP_GET_RENEW_ACK:
 	    case SM_DHCP_GET_RENEW_ACK2:
 	    case SM_DHCP_GET_RENEW_ACK3:
-		// Check to see if a packet has arrived
-		if(UDPIsGetReady(DHCPClient.hDHCPSocket) < 250u)
-		{
-		    // Go back and transmit a new discovery if we didn't get 
-                    //an ACK after 2 seconds
-		    if(TickGet() - DHCPClient.dwTimer >=  DHCP_TIMEOUT)
-		    {
-		       	if(++DHCPClient.smState > SM_DHCP_GET_RENEW_ACK3)
-			DHCPClient.smState = SM_DHCP_SEND_DISCOVERY;
-		    }
-		    break;
-		}
+    		// Check to see if a packet has arrived
+    		if(UDPIsGetReady(DHCPClient.hDHCPSocket) < 250u)
+    		{
+    		    // Go back and transmit a new discovery if we didn't get 
+                        //an ACK after 2 seconds
+    		    if(TickGet() - DHCPClient.dwTimer >=  DHCP_TIMEOUT)
+    		    {
+    		       	if(++DHCPClient.smState > SM_DHCP_GET_RENEW_ACK3)
+    			DHCPClient.smState = SM_DHCP_SEND_DISCOVERY;
+    		    }
+    		    break;
+    		}
 	
-		// Check to see if we received an offer
-		switch(_DHCPReceive())
-		{
-		    case DHCP_ACK_MESSAGE:
-			UDPClose(DHCPClient.hDHCPSocket);
-			DHCPClient.hDHCPSocket = INVALID_UDP_SOCKET;
-			DHCPClient.dwTimer = TickGet();
-			DHCPClient.smState = SM_DHCP_BOUND;
-			DHCPClient.flags.bits.bEvent = 1;
-			break;
+    		// Check to see if we received an offer
+    		switch(_DHCPReceive())
+    		{
+    		    case DHCP_ACK_MESSAGE:
+        			UDPClose(DHCPClient.hDHCPSocket);
+        			DHCPClient.hDHCPSocket = INVALID_UDP_SOCKET;
+        			DHCPClient.dwTimer = TickGet();
+        			DHCPClient.smState = SM_DHCP_BOUND;
+        			DHCPClient.flags.bits.bEvent = 1;
+        			break;
 		
-		    case DHCP_NAK_MESSAGE:
-			DHCPClient.smState = SM_DHCP_SEND_DISCOVERY;
-			break;
-		}
-		break;
-	}
+    		    case DHCP_NAK_MESSAGE:
+        			DHCPClient.smState = SM_DHCP_SEND_DISCOVERY;
+        			break;
+    		}
+    		break;
+    	}
     }
 }
 
@@ -816,104 +816,104 @@ static BYTE _DHCPReceive(void)
 		switch(v)
 		{
 		    case DHCP_MESSAGE_TYPE:
-			UDPGet(&v);     // Skip len
-					// Len must be 1.
+    			UDPGet(&v);     // Skip len
+    					// Len must be 1.
 		        if ( v == 1u )
-			{
-			    UDPGet(&type);                  // Get type
-
-			    // Throw away the packet if we know we don't need 
-                            //it (ie: another offer when we already have one)
-			    if(DHCPClient.flags.bits.bOfferReceived && 
-                                  (type == DHCP_OFFER_MESSAGE))
 			    {
-				goto UDPInvalid;
-			    }
-			}
-			else
-			    goto UDPInvalid;
-			break;
+    			    UDPGet(&type);                  // Get type
+
+    			    // Throw away the packet if we know we don't need 
+                                //it (ie: another offer when we already have one)
+    			    if(DHCPClient.flags.bits.bOfferReceived && 
+                                      (type == DHCP_OFFER_MESSAGE))
+    			    {
+    				goto UDPInvalid;
+    			    }
+    			}
+    			else
+    			    goto UDPInvalid;
+    			break;
 
 		    case DHCP_SUBNET_MASK:
-			UDPGet(&v);     // Skip len
-					// Len must be 4.
-			if ( v == 4u )
-			{
-			    // Check to see if this is the first offer
-			    if(DHCPClient.flags.bits.bOfferReceived)
-			    {
-			        // Discard offered IP mask, we already have an 
-                                // offer
-				for ( i = 0; i < 4u; i++ ) UDPGet(&v);
-			    }
-			    else
-			    {
-				UDPGetArray((BYTE*)&DHCPClient.tempMask, 
-                                    sizeof(DHCPClient.tempMask));
-				DHCPClient.validValues.bits.Mask = 1;
-						}
-			}
-			else
-			    goto UDPInvalid;
-			    break;
+    			UDPGet(&v);     // Skip len
+    					// Len must be 4.
+    			if ( v == 4u )
+    			{
+    			    // Check to see if this is the first offer
+    			    if(DHCPClient.flags.bits.bOfferReceived)
+    			    {
+    			        // Discard offered IP mask, we already have an 
+                                    // offer
+        				for ( i = 0; i < 4u; i++ ) UDPGet(&v);
+        			    }
+        			    else
+        			    {
+        				UDPGetArray((BYTE*)&DHCPClient.tempMask, 
+                                            sizeof(DHCPClient.tempMask));
+        				DHCPClient.validValues.bits.Mask = 1;
+        						}
+        			}
+        			else
+        			    goto UDPInvalid;
+        			    break;
 
-		    case DHCP_ROUTER:
-			UDPGet(&j);
-			// Len must be >= 4.
-			if ( j >= 4u )
-			{
-			    // Check to see if this is the first offer
-			    if(DHCPClient.flags.bits.bOfferReceived)
-			    {
-				// Discard offered Gateway address, we already 
-                                // have an offer
-				for ( i = 0; i < 4u; i++ ) UDPGet(&v);
-			    }
-			    else
-			    {
-				UDPGetArray((BYTE*)&DHCPClient.tempGateway, 
-                                    sizeof(DHCPClient.tempGateway));
-				DHCPClient.validValues.bits.Gateway = 1;
-		     	    }
-			}
-			else goto UDPInvalid;
+    		    case DHCP_ROUTER:
+        			UDPGet(&j);
+        			// Len must be >= 4.
+        			if ( j >= 4u )
+        			{
+        			    // Check to see if this is the first offer
+        			    if(DHCPClient.flags.bits.bOfferReceived)
+        			    {
+        				// Discard offered Gateway address, we already 
+                                        // have an offer
+        				for ( i = 0; i < 4u; i++ ) UDPGet(&v);
+        			    }
+        			    else
+        			    {
+        				UDPGetArray((BYTE*)&DHCPClient.tempGateway, 
+                                            sizeof(DHCPClient.tempGateway));
+        				DHCPClient.validValues.bits.Gateway = 1;
+        		     	    }
+        			}
+        			else goto UDPInvalid;
 
-			// Discard any other router addresses.
-			j -= 4;
-			while(j--) UDPGet(&v);
-			break;
+        			// Discard any other router addresses.
+        			j -= 4;
+        			while(j--) UDPGet(&v);
+        			break;
 
-#if defined(STACK_USE_DNS)
-		    case DHCP_DNS:
-			UDPGet(&j);
-			// Len must be >= 4.
-			if(j < 4u) goto UDPInvalid;
+    #if defined(STACK_USE_DNS)
+    		    case DHCP_DNS:
+        			UDPGet(&j);
+        			// Len must be >= 4.
+        			if(j < 4u) goto UDPInvalid;
 
-			// Check to see if this is the first offer
-			if(!DHCPClient.flags.bits.bOfferReceived)
-			{
-			    UDPGetArray((BYTE*)&DHCPClient.tempDNS, 
-                                sizeof(DHCPClient.tempDNS));
-			    DHCPClient.validValues.bits.DNS = 1;
-			    j -= 4;
-			}
+        			// Check to see if this is the first offer
+        			if(!DHCPClient.flags.bits.bOfferReceived)
+        			{
+        			    UDPGetArray((BYTE*)&DHCPClient.tempDNS, 
+                                        sizeof(DHCPClient.tempDNS));
+        			    DHCPClient.validValues.bits.DNS = 1;
+        			    j -= 4;
+        			}
 
-			// Len must be >= 4 for a secondary DNS server address
-			if(j >= 4u)
-			{
-			    // Check to see if this is the first offer
-			    if(!DHCPClient.flags.bits.bOfferReceived)
-			    {
-				UDPGetArray((BYTE*)&DHCPClient.tempDNS2, 
-					    sizeof(DHCPClient.tempDNS2));
-				DHCPClient.validValues.bits.DNS2 = 1;
-				j -= 4;
-			    }
-			}
+        			// Len must be >= 4 for a secondary DNS server address
+        			if(j >= 4u)
+        			{
+        			    // Check to see if this is the first offer
+        			    if(!DHCPClient.flags.bits.bOfferReceived)
+        			    {
+        				UDPGetArray((BYTE*)&DHCPClient.tempDNS2, 
+        					    sizeof(DHCPClient.tempDNS2));
+        				DHCPClient.validValues.bits.DNS2 = 1;
+        				j -= 4;
+        			    }
+        			}
 
-			// Discard any other DNS server addresses
-			while(j--) UDPGet(&v);
-		      	break;
+        			// Discard any other DNS server addresses
+        			while(j--) UDPGet(&v);
+        		      	break;
 #endif
 //            case DHCP_HOST_NAME:
 //                UDPGet(&j);
@@ -941,55 +941,55 @@ static BYTE _DHCPReceive(void)
 //
 //                break;
 
-	      case DHCP_SERVER_IDENTIFIER:
-		  UDPGet(&v);    // Get len
-				 // Len must be 4.
-		  if ( v == 4u )
-		  {
-		      UDPGet(&tempServerID.v[3]);   // Get the id
-		      UDPGet(&tempServerID.v[2]);
-		      UDPGet(&tempServerID.v[1]);
-		      UDPGet(&tempServerID.v[0]);
-		  }
-		  else	goto UDPInvalid;
-		  break;
+          case DHCP_SERVER_IDENTIFIER:
+    		  UDPGet(&v);    // Get len
+    				 // Len must be 4.
+    		  if ( v == 4u )
+    		  {
+    		      UDPGet(&tempServerID.v[3]);   // Get the id
+    		      UDPGet(&tempServerID.v[2]);
+    		      UDPGet(&tempServerID.v[1]);
+    		      UDPGet(&tempServerID.v[0]);
+    		  }
+    		  else	goto UDPInvalid;
+    		  break;
 
 	    case DHCP_END_OPTION:
-		 lbDone = TRUE;
-		 break;
+    		 lbDone = TRUE;
+    		 break;
 
 	   case DHCP_IP_LEASE_TIME:
-		UDPGet(&v);            // Get len
-					// Len must be 4.
-		if ( v == 4u )
-		{
-		// Check to see if this is the first offer
-		    if(DHCPClient.flags.bits.bOfferReceived)
-		    {
-			// Discard offered lease time, we already have an offer
-			for ( i = 0; i < 4u; i++ ) UDPGet(&v);
-		    }
-		    else
-		    {
-			UDPGet(&(((BYTE*)(&DHCPClient.dwLeaseTime))[3]));
-			UDPGet(&(((BYTE*)(&DHCPClient.dwLeaseTime))[2]));
-			UDPGet(&(((BYTE*)(&DHCPClient.dwLeaseTime))[1]));
-			UDPGet(&(((BYTE*)(&DHCPClient.dwLeaseTime))[0]));
-			// In case if our clock is not as accurate as the 
-			// remote DHCP server's clock, let's treat the lease 
-			// time as only 96.875% of the value given
-			DHCPClient.dwLeaseTime -= DHCPClient.dwLeaseTime>>5;
-		    }
-		}
-		else goto UDPInvalid;
-		break;
+    		UDPGet(&v);            // Get len
+    					// Len must be 4.
+    		if ( v == 4u )
+    		{
+    		// Check to see if this is the first offer
+    		    if(DHCPClient.flags.bits.bOfferReceived)
+    		    {
+    			// Discard offered lease time, we already have an offer
+    			for ( i = 0; i < 4u; i++ ) UDPGet(&v);
+    		    }
+    		    else
+    		    {
+    			UDPGet(&(((BYTE*)(&DHCPClient.dwLeaseTime))[3]));
+    			UDPGet(&(((BYTE*)(&DHCPClient.dwLeaseTime))[2]));
+    			UDPGet(&(((BYTE*)(&DHCPClient.dwLeaseTime))[1]));
+    			UDPGet(&(((BYTE*)(&DHCPClient.dwLeaseTime))[0]));
+    			// In case if our clock is not as accurate as the 
+    			// remote DHCP server's clock, let's treat the lease 
+    			// time as only 96.875% of the value given
+    			DHCPClient.dwLeaseTime -= DHCPClient.dwLeaseTime>>5;
+    		    }
+    		}
+    		else goto UDPInvalid;
+    		break;
 
 	   default:
-		// Ignore all unsupport tags.
-		UDPGet(&j);       // Get option len
-		while( j-- )      // Ignore option values
-		    UDPGet(&v);
-            }
+    		// Ignore all unsupport tags.
+    		UDPGet(&j);       // Get option len
+    		while( j-- )      // Ignore option values
+    		    UDPGet(&v);
+                }
 	} while( !lbDone );
     }
 
