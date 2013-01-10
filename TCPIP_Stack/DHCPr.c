@@ -21,6 +21,7 @@ static BYTE                 buff[256];
 // tmp variables
 static BYTE                 *cur, length, optionCode;
 static BOOL                 done;
+static BOOTP_HEADER         header;
 
 static BOOL isAlreadyInit;
 
@@ -147,8 +148,9 @@ void ForwardToServer() {
     
     cur = (BYTE *)buff;
     
-	UDPGetArray(cur, sizeof(BOOTP_HEADER));
-    cur += sizeof(BOOTP_HEADER);
+	UDPGetArray((BYTE *)&header, sizeof(header));
+    memcpy(cur, &header, sizeof(header));
+    cur += sizeof(header);
     
     {
 		unsigned i = 64+128+(16-sizeof(MAC_ADDR));
