@@ -19,9 +19,10 @@ static IP_ADDR              RelayIP;
 static BYTE                 buff[256];
 
 // tmp variables
-static BYTE                 *cur, length, optionCode;
+static BYTE                 *cur, byteLength, optionCode;
+static WORD                 length;
 static BOOL                 done;
-static BOOTP_HEADER         header;
+static BOOTP_HEADER         *header;
 
 static BOOL isAlreadyInit;
 
@@ -83,8 +84,10 @@ void ForwardToClient() {
     if (UDPIsGetReady(SocketToServer) < 250u) return;
     LED2_IO ^= 1;
     
-    // Skip the header etc. until GIADDR
     cur = (BYTE *)buff;
+    length = 0;
+    
+    // Skip the header etc. until GIADDR
     UDPGetArray(cur, 240);
     cur += 240;
     
@@ -115,11 +118,11 @@ void ForwardToClient() {
             case DHCP_DNS:
 #endif
             default:
-                UDPGet(&length);
-                *cur = length;
+                UDPGet(&byteLength);
+                *cur = byteLength;
                 cur++;
-                UDPGetArray(cur, length);
-                cur += length;
+                UDPGetArray(cur, byteLength);
+                cur += byteLength;
                 break;
         }
     }
@@ -143,27 +146,39 @@ void ForwardToServer() {
     LED0_IO ^= 1;
     if (UDPIsPutReady(SocketToServer) < 300u) return;
     LED1_IO ^= 1;
-    if (UDPIsGetReady(SocketToClient) < 241u) return;
+    if (UDPIsGetReady(SocketToClient) < 240u) return;
     LED2_IO ^= 1;
     
     cur = (BYTE *)buff;
+    length = 0;
     
-	UDPGetArray((BYTE *)&header, sizeof(header));
+    // header
+	/*UDPGetArray((BYTE *)&header, sizeof(header));
     memcpy(cur, &header, sizeof(header));
     cur += sizeof(header);
     
-    {
-		WORD i = 64+128+(16-sizeof(MAC_ADDR));
-		UDPGetArray(cur, i);
-        cur += i;
-    }
+    // legacy BOOTP junk
+	UDPGetArray(cur, 192);
+    cur += 192;
     
     // magic word
     UDPGetArray(cur, sizeof(DWORD));
-    cur += sizeof(DWORD);
+    cur += sizeof(DWORD);*/
     
-	// Obtain options
-	while(1)
+    UDPGetArray(cur, 240);
+    header = (BOOTP_HEADER *)cur;
+    cur += 240;
+    
+    // set the GIADDR
+    memcpy(&(header->RelayAgentIP), &RelayIP, sizeof(RelayIP));
+    
+    // read the rest
+    while ((length = UDPIsGetReady(SocketToClient)) > 0) {
+        UDPGetArray(cur, length);
+        cur += length;
+    }
+	// options
+	/*while(1)
 	{
 		// Get option type
 		if(!UDPGet(&optionCode))
@@ -182,15 +197,16 @@ void ForwardToServer() {
         // read the option
         UDPGetArray(cur, length);
         cur += length;
-    }
+    }*/
     
-    // discard the rest
+    // discard the package
     UDPDiscard(); 
     
     length = (cur - buff);
     if (UDPIsPutReady(SocketToServer) >= length) {
         UDPPutArray(buff, length);
         
+        // pad to 300 if needed
         while (UDPTxCount < 300u) {
             UDPPut(0);
         }
