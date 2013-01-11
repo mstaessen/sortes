@@ -16,7 +16,7 @@ static UDP_SOCKET           SocketToClient;
 static NODE_INFO            ServerInfo;
 static IP_ADDR              RelayIP;
 
-static BYTE                 buff[256];
+static BYTE                 buff[256], buff2[256];
 
 // tmp variables
 static BYTE                 *cur, byteLength, optionCode;
@@ -56,7 +56,7 @@ void DHCPRelayInit(BYTE vInterface) {
     if (SocketToClient == INVALID_UDP_SOCKET) {
         return;
     }
-    SocketToServer = UDPOpen(DHCP_CLIENT_PORT, /*&ServerInfo*/ NULL, DHCP_SERVER_PORT);
+    SocketToServer = UDPOpen(DHCP_CLIENT_PORT, &ServerInfo, DHCP_SERVER_PORT);
     if (SocketToServer == INVALID_UDP_SOCKET) {
         UDPClose(SocketToClient);
         return;
@@ -84,7 +84,7 @@ void ForwardToClient() {
     if (UDPIsGetReady(SocketToServer) < 250u) return;
     LED2_IO ^= 1;
     
-    cur = (BYTE *)buff;
+    /*cur = (BYTE *)buff;
     length = 0;
     
     // Skip the header etc. until GIADDR
@@ -125,14 +125,25 @@ void ForwardToClient() {
                 cur += byteLength;
                 break;
         }
-    }
+    }*/ 
+        
+    // header
+    UDPGetArray(buff, 240);
+    header = (BOOTP_HEADER *)buff;
+    
+    // set the GIADDR
+    memcpy(&(header->RelayAgentIP), &RelayIP, sizeof(RelayIP));
+         
+    length = UDPIsGetReady(SocketToServer);
+    if (length > sizeof(buff2)) length = sizeof(buff2);
+    UDPGetArray(buff2, length);
     
     // drop the rest of the packet
     UDPDiscard();
     
-    length = (cur - buff);
-    if (UDPIsPutReady(SocketToClient) >= length) {
-        UDPPutArray(buff, length);
+    if (UDPIsPutReady(SocketToClient) >= 240 + length) {
+        UDPPutArray(buff, 240);
+        UDPPutArray(buff2, length);
         
         while (UDPTxCount < 300u) {
             UDPPut(0);
@@ -143,68 +154,31 @@ void ForwardToClient() {
 
 static
 void ForwardToServer() {
-    LED0_IO ^= 1;
+    // LED0_IO ^= 1;
     if (UDPIsPutReady(SocketToServer) < 300u) return;
-    LED1_IO ^= 1;
+    // LED1_IO ^= 1;
     if (UDPIsGetReady(SocketToClient) < 240u) return;
-    LED2_IO ^= 1;
+    // LED2_IO ^= 1;
     
-    cur = (BYTE *)buff;
-    length = 0;
-    
-    // header
-	/*UDPGetArray((BYTE *)&header, sizeof(header));
-    memcpy(cur, &header, sizeof(header));
-    cur += sizeof(header);
-    
-    // legacy BOOTP junk
-	UDPGetArray(cur, 192);
-    cur += 192;
-    
-    // magic word
-    UDPGetArray(cur, sizeof(DWORD));
-    cur += sizeof(DWORD);*/
-    
-    UDPGetArray(cur, 240);
-    header = (BOOTP_HEADER *)cur;
-    cur += 240;
+    UDPGetArray(buff, 240);
+    header = (BOOTP_HEADER *)buff;
     
     // set the GIADDR
     memcpy(&(header->RelayAgentIP), &RelayIP, sizeof(RelayIP));
     
     // read the rest
+    cur = buff2;
     while ((length = UDPIsGetReady(SocketToClient)) > 0) {
         UDPGetArray(cur, length);
         cur += length;
     }
-	// options
-	/*while(1)
-	{
-		// Get option type
-		if(!UDPGet(&optionCode))
-			break;
-        *cur = optionCode;
-        cur++;
-            
-		if(optionCode == DHCP_END_OPTION)
-			break;
-
-		// Get option length
-		UDPGet(&length);
-        *cur = length;
-        cur ++;
-        
-        // read the option
-        UDPGetArray(cur, length);
-        cur += length;
-    }*/
     
     // discard the package
     UDPDiscard(); 
     
-    length = (cur - buff);
-    if (UDPIsPutReady(SocketToServer) >= length) {
-        UDPPutArray(buff, length);
+    if (UDPIsPutReady(SocketToServer) >= 240 + length) {
+        UDPPutArray(buff, 240);
+        UDPPutArray(buff2, (cur - buff2));
         
         // pad to 300 if needed
         while (UDPTxCount < 300u) {

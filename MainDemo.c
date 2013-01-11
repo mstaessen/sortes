@@ -436,9 +436,7 @@ static void InitAppConfig(void)
 {
 	AppConfig.Flags.bIsDHCPEnabled = TRUE;
 	AppConfig.Flags.bInConfigMode = TRUE;
-
-//ML using sdcc (MPLAB has a trick to generate serial numbers)
-// first 3 bytes indicate manufacturer; last 3 bytes are serial number
+    
     {
         unsigned long mac[] = _DHCP_MAC;
         AppConfig.MyMACAddr.v[0] = mac[0];
@@ -456,21 +454,33 @@ static void InitAppConfig(void)
             ip[3] <<24ul;
     }
 	AppConfig.DefaultIPAddr.Val = AppConfig.MyIPAddr.Val;
-	AppConfig.MyMask.Val = MY_DEFAULT_MASK_BYTE1 | 
-            MY_DEFAULT_MASK_BYTE2<<8ul | MY_DEFAULT_MASK_BYTE3<<16ul | 
-            MY_DEFAULT_MASK_BYTE4<<24ul;
+    
+    {
+        unsigned long mask[] = _DHCP_NETMASK;
+	    AppConfig.MyMask.Val = mask[0] | 
+            mask[1]<<8ul | mask[2]<<16ul | 
+            mask[3]<<24ul;
+    }
 	AppConfig.DefaultMask.Val = AppConfig.MyMask.Val;
-	AppConfig.MyGateway.Val = MY_DEFAULT_GATE_BYTE1 | 
-            MY_DEFAULT_GATE_BYTE2<<8ul | MY_DEFAULT_GATE_BYTE3<<16ul | 
-            MY_DEFAULT_GATE_BYTE4<<24ul;
-	AppConfig.PrimaryDNSServer.Val = MY_DEFAULT_PRIMARY_DNS_BYTE1 | 
-            MY_DEFAULT_PRIMARY_DNS_BYTE2<<8ul  | 
-            MY_DEFAULT_PRIMARY_DNS_BYTE3<<16ul  | 
-            MY_DEFAULT_PRIMARY_DNS_BYTE4<<24ul;
-	AppConfig.SecondaryDNSServer.Val = MY_DEFAULT_SECONDARY_DNS_BYTE1 | 
-            MY_DEFAULT_SECONDARY_DNS_BYTE2<<8ul  | 
-            MY_DEFAULT_SECONDARY_DNS_BYTE3<<16ul  | 
-            MY_DEFAULT_SECONDARY_DNS_BYTE4<<24ul;
+    
+	{
+        unsigned long gateway[] = _DHCP_GATEWAY;
+        AppConfig.MyGateway.Val = gateway[0] | 
+            gateway[1]<<8ul | gateway[2]<<16ul | 
+            gateway[3]<<24ul;
+    }{
+        unsigned long dns[] = _DHCP_PRIMARY_DNS;
+    	AppConfig.PrimaryDNSServer.Val = dns[0] | 
+                dns[1]<<8ul  | 
+                dns[2]<<16ul  | 
+                dns[3]<<24ul; 
+    }{
+        unsigned long dns[] = _DHCP_SECONDARY_DNS;
+	    AppConfig.SecondaryDNSServer.Val = dns[0] | 
+            dns[1]<<8ul  | 
+            dns[2]<<16ul  | 
+            dns[3]<<24ul;
+    }
 }
 
 /*-------------------------------------------------------------------------

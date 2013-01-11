@@ -2,7 +2,7 @@
 #define _DHCP_RELAY_CONFIG_
 
 #define _DHCP_RELAY_IP      { 192ul, 168ul,  97ul,  60ul }
-#define _DHCP_SERVER_IP     { 192ul, 168ul,  97ul,   1ul }
+#define _DHCP_SERVER_IP     { 192ul, 168ul,  96ul,   2ul }
 
 #define _DHCP_NETMASK       { 255ul, 255ul, 255ul,   0ul }
 #define _DHCP_GATEWAY       { 192ul, 168ul,  97ul,   1ul }
