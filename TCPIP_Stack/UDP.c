@@ -309,8 +309,6 @@ UDP_SOCKET UDPOpen(UDP_PORT this_localPort,
 }
 
 
-
-
 /*****************************************************************************
   Function:
 	void UDPClose(UDP_SOCKET s)
@@ -670,13 +668,16 @@ ML*/
   ***************************************************************************/
 void UDPFlush(void)
 {
+    UDPFlushTo(&UDPSocketInfo[activeUDPSocket]);
+}
+        
+void UDPFlushTo(UDP_SOCKET_INFO *p)
+{
     UDP_HEADER  h;
-    UDP_SOCKET_INFO *p;
     WORD wReadPtrSave;
     WORD wChecksum;
     WORD wUDPLength;
 
-    p = &UDPSocketInfo[activeUDPSocket];
 
     wUDPLength = UDPTxCount + sizeof(UDP_HEADER);
 

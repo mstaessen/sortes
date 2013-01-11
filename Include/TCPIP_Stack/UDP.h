@@ -108,6 +108,7 @@ BOOL UDPPut(BYTE v);
 WORD UDPPutArray(BYTE *cData, WORD wDataLen);
 BYTE* UDPPutString(BYTE *strData);
 void UDPFlush(void);
+void UDPFlushTo(UDP_SOCKET_INFO *p);
 
 // ROM function variants for PIC18
 #if defined(__18CXX)
