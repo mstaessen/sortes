@@ -16,7 +16,6 @@ static UDP_SOCKET			RelaySocket;
 static UDP_SOCKET_INFO      ServerInfo;
 static UDP_SOCKET_INFO      BroadcastInfo;
 static UDP_SOCKET_INFO      ClientInfo;
-static UDP_SOCKET_INFO      *CurrentInfo;
 
 static IP_ADDR              RelayIP;
 
@@ -24,13 +23,20 @@ static BYTE                 buff[240], buff2[256];
 
 // tmp variables
 static BYTE                 *cur, byteLength, optionCode;
-static WORD                 length;
+static WORD                 length, totalLength;
 static BOOL                 retry;
 static BOOTP_HEADER         *header;
 
+static enum {
+    DHCPr_RECEIVE = 0,
+    DHCPr_SEND_CLIENT,
+    DHCPr_SEND_SERVER
+} RelayState;
+
 static BOOL isAlreadyInit;
 
-static void Forward();
+static void DHCPr_Read();
+static void DHCPr_Forward(UDP_SOCKET_INFO *info);
 
 void DHCPRelayInit(BYTE vInterface) {
     // set ServerInfo.remoteNode.MACAddr
@@ -74,18 +80,29 @@ void DHCPRelayInit(BYTE vInterface) {
     }
 
     isAlreadyInit = TRUE;
+    RelayState = DHCPr_RECEIVE;
 }
 
 void DHCPRelayTask(void) {
     if (!isAlreadyInit) return;
     
-    if (UDPIsGetReady(RelaySocket) > 0) {
-        Forward();
+    switch(RelayState) {
+    case DHCPr_RECEIVE:
+        if (UDPIsGetReady(RelaySocket) < 240u) break;
+        DHCPr_Read();
+        //no break
+    default:
+        if (UDPIsPutReady(RelaySocket) < 300u) break;
+        if (RelayState == DHCPr_SEND_SERVER) {
+            DHCPr_Forward(&ServerInfo);
+        } else {
+            DHCPr_Forward(&ClientInfo);
+        }
     }
 }
 
 static
-void Forward() {
+void DHCPr_Read() {
     LED0_IO ^= 1;
     if (UDPIsPutReady(RelaySocket) < 300u) return;
     LED1_IO ^= 1;
@@ -108,20 +125,29 @@ void Forward() {
     
     switch (header->MessageType) {
         case BOOT_REQUEST:
-            CurrentInfo = &ServerInfo;
+            RelayState = DHCPr_SEND_SERVER;
             break;
             
         case BOOT_REPLY:
             memcpy(&ClientInfo.remoteNode.IPAddr, &header->ClientIP, sizeof(header->ClientIP));
             memcpy(&ClientInfo.remoteNode.MACAddr, &header->ClientMAC, sizeof(header->ClientMAC));
-            CurrentInfo = &ClientInfo;
+            RelayState = DHCPr_SEND_CLIENT;
             break;
         
         default:
             return;
     }
-    
-    if (UDPIsPutReady(RelaySocket) >= 240 + length) {
+}
+
+static
+void DHCPr_Forward(UDP_SOCKET_INFO *CurrentInfo) {
+    if (240 + length < 300) {
+        totalLength = 300;
+    } else {
+        totalLength = 240 + length;
+    }
+
+    if (UDPIsPutReady(RelaySocket) >= totalLength) {
         UDPPutArray(buff, 240);
         UDPPutArray(buff2, length);
         
