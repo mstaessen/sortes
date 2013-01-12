@@ -20,7 +20,7 @@
 
 #include "Include/TCPIPConfig.h"
 #include "Include/TCPIP_Stack/TCPIP.h"
-#include "Include/MainDemo.h"
+#include "Include/Main.h"
 #include "Include/TCPIP_Stack/DHCP.h"
 
 typedef struct{

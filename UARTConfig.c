@@ -48,7 +48,7 @@
  *
  * Author               Date      Comment
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * E. Wood     			4/26/08	  Moved from MainDemo.c
+ * E. Wood     			4/26/08	  Moved from Main.c
  ********************************************************************/
 #define __UARTCONFIG_C
 
@@ -57,7 +57,7 @@
 #if defined(STACK_USE_UART)
 
 #include "TCPIP Stack/TCPIP.h"
-#include "MainDemo.h"
+#include "Main.h"
 
 
 #if (defined(MPFS_USE_EEPROM) || defined(MPFS_USE_SPI_FLASH)) && defined(STACK_USE_MPFS)

@@ -193,7 +193,7 @@ KO                  31 Oct 2008 Port to PIC24F and PIC32 for TCP/IP stack v4.52
     #elif defined( __18CXX )
         //============================================================================
         tZGVoidReturn zgEintISR(tZGVoidInput)
-        // Called from LowISR() in MainDemo.c
+        // Called from LowISR() in Main.c
         //============================================================================
         {
             // if EINT enabled

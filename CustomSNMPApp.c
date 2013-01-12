@@ -48,7 +48,7 @@
  *
  * Author               Date      Comment
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * E. Wood     			4/26/08	  Moved from MainDemo.c
+ * E. Wood     			4/26/08	  Moved from Main.c
  * Amit Shirbhate 		09/24/08  SNMPv2c Support added.	
  ********************************************************************/
 #define __CUSTOMSNMPAPP_C
@@ -58,7 +58,7 @@
 #if defined(STACK_USE_SNMP_SERVER)
 
 #include "TCPIP Stack/TCPIP.h"
-#include "MainDemo.h"
+#include "Main.h"
 
 
 

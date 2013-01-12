@@ -46,7 +46,7 @@
  *
  * Author               Date      Comment
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * E. Wood     			4/26/08	  Moved from MainDemo.c
+ * E. Wood     			4/26/08	  Moved from Main.c
  ********************************************************************/
 #define __PINGDEMO_C
 #define __18F97J60
@@ -63,7 +63,7 @@
 #include "Include/TCPIP_Stack/TCPIP.h"
 
 
-#include "Include/MainDemo.h"
+#include "Include/Main.h"
 
 
 #define HOST_TO_PING	"ww1.microchip.com"	// Address that ICMP client will ping.  If the DNS client module is not available in the stack, then this hostname is ignored and the local gateway IP address will be pinged instead.

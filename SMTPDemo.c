@@ -48,7 +48,7 @@
  *
  * Author               Date      Comment
  *~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- * E. Wood     			4/26/08	  Moved from MainDemo.c
+ * E. Wood     			4/26/08	  Moved from Main.c
  ********************************************************************/
 #define __SMTPDEMO_C
 #define __18F97J60
@@ -61,7 +61,7 @@
 #if defined(STACK_USE_SMTP_CLIENT)
 
 #include "Include/TCPIP_Stack/TCPIP.h"
-#include "Include/MainDemo.h"
+#include "Include/Main.h"
 
 /*****************************************************************************
   Function:
