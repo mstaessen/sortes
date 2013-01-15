@@ -16,6 +16,7 @@ static UDP_SOCKET			RelaySocket;
 static UDP_SOCKET_INFO      ServerInfo;
 static UDP_SOCKET_INFO      BroadcastInfo;
 static UDP_SOCKET_INFO      ClientInfo;
+static UDP_SOCKET_INFO      *CurrentInfo;
 
 static IP_ADDR              RelayIP;
 
@@ -29,14 +30,13 @@ static BOOTP_HEADER         *header;
 
 static enum {
     DHCPr_RECEIVE = 0,
-    DHCPr_SEND_CLIENT,
-    DHCPr_SEND_SERVER
+    DHCPr_SEND,
 } RelayState;
 
 static BOOL isAlreadyInit;
 
 static void DHCPr_Read();
-static void DHCPr_Forward(UDP_SOCKET_INFO *info);
+static void DHCPr_Forward();
 
 void DHCPRelayInit(BYTE vInterface) {
     // set ServerInfo.remoteNode.MACAddr
@@ -91,13 +91,9 @@ void DHCPRelayTask(void) {
         if (UDPIsGetReady(RelaySocket) < 240u) break;
         DHCPr_Read();
         //no break
-    default:
+    case DHCPr_SEND:
         if (UDPIsPutReady(RelaySocket) < 300u) break;
-        if (RelayState == DHCPr_SEND_SERVER) {
-            DHCPr_Forward(&ServerInfo);
-        } else {
-            DHCPr_Forward(&ClientInfo);
-        }
+        DHCPr_Forward();
     }
 }
 
@@ -125,13 +121,15 @@ void DHCPr_Read() {
     
     switch (header->MessageType) {
         case BOOT_REQUEST:
-            RelayState = DHCPr_SEND_SERVER;
+            CurrentInfo = &ServerInfo;
+            RelayState = DHCPr_SEND;
             break;
             
         case BOOT_REPLY:
             memcpy(&ClientInfo.remoteNode.IPAddr, &header->ClientIP, sizeof(header->ClientIP));
             memcpy(&ClientInfo.remoteNode.MACAddr, &header->ClientMAC, sizeof(header->ClientMAC));
-            RelayState = DHCPr_SEND_CLIENT;
+            CurrentInfo = &ClientInfo;
+            RelayState = DHCPr_SEND;
             break;
         
         default:
@@ -140,7 +138,7 @@ void DHCPr_Read() {
 }
 
 static
-void DHCPr_Forward(UDP_SOCKET_INFO *CurrentInfo) {
+void DHCPr_Forward() {
     if (240 + length < 300) {
         totalLength = 300;
     } else {
@@ -155,6 +153,8 @@ void DHCPr_Forward(UDP_SOCKET_INFO *CurrentInfo) {
             UDPPut(0);
         }
         UDPFlushTo(CurrentInfo);
+        
+        RelayState = DHCPr_RECEIVE;
     }
 }
 
